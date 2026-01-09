@@ -3,19 +3,35 @@ const supabase = window.supabase.createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqdnllbXhlaHhuaXRqeHl2enZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5NTQyOTksImV4cCI6MjA4MzUzMDI5OX0.rdlJVFPGmHpGnzpCtyRcAYJR-hS1_pBuwtz1VDI81wk"
 );
 
+// ELEMENTS
+const homeTab = document.getElementById("home");
+const chatTab = document.getElementById("chat");
+
 const authBox = document.getElementById("auth-box");
 const chatBox = document.getElementById("chat-box");
+
+const usernameInput = document.getElementById("usernameInput");
+const passwordInput = document.getElementById("passwordInput");
+const messageInput = document.getElementById("messageInput");
 const messagesDiv = document.getElementById("messages");
 
-function switchTab(tab) {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-  document.getElementById(tab).classList.add("active");
+// ROUTING
+function renderRoute() {
+  const hash = window.location.hash || "#home";
+
+  homeTab.style.display = hash === "#home" ? "block" : "none";
+  chatTab.style.display = hash === "#chat" ? "block" : "none";
 }
 
-/* AUTH */
+window.addEventListener("hashchange", renderRoute);
+renderRoute();
+
+// AUTH
 async function signUp() {
-  const username = username.value.trim();
-  const password = password.value;
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+  if (!username || !password) return alert("Missing fields");
+
   const email = `${username}@hub-zero.local`;
 
   const { data, error } = await supabase.auth.signUp({ email, password });
@@ -26,12 +42,12 @@ async function signUp() {
     username
   });
 
-  alert("Account created. You can now log in.");
+  alert("Account created. Now log in.");
 }
 
 async function logIn() {
-  const username = username.value.trim();
-  const password = password.value;
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
   const email = `${username}@hub-zero.local`;
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -42,30 +58,27 @@ async function logIn() {
 
 async function logOut() {
   await supabase.auth.signOut();
-  chatBox.classList.add("hidden");
   authBox.classList.remove("hidden");
+  chatBox.classList.add("hidden");
 }
 
-/* CHAT */
+// CHAT
 async function startChat() {
   authBox.classList.add("hidden");
   chatBox.classList.remove("hidden");
   messagesDiv.innerHTML = "";
-  loadMessages();
 
-  supabase.channel("messages")
-    .on("postgres_changes", { event: "INSERT", table: "messages" },
-      payload => addMessage(payload.new)
-    ).subscribe();
-}
-
-async function loadMessages() {
   const { data } = await supabase
     .from("messages")
     .select("*")
     .order("created_at");
 
   data.forEach(addMessage);
+
+  supabase.channel("messages")
+    .on("postgres_changes", { event: "INSERT", table: "messages" },
+      payload => addMessage(payload.new)
+    ).subscribe();
 }
 
 function addMessage(msg) {
@@ -96,7 +109,13 @@ async function sendMessage() {
   messageInput.value = "";
 }
 
-/* AUTO LOGIN */
+// BUTTON WIRING (IMPORTANT)
+document.getElementById("signupBtn").onclick = signUp;
+document.getElementById("loginBtn").onclick = logIn;
+document.getElementById("logoutBtn").onclick = logOut;
+document.getElementById("sendBtn").onclick = sendMessage;
+
+// AUTO LOGIN
 supabase.auth.onAuthStateChange((_, session) => {
   if (session) startChat();
 });
