@@ -3,6 +3,7 @@ const supabase = window.supabase.createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqdnllbXhlaHhuaXRqeHl2enZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5NTQyOTksImV4cCI6MjA4MzUzMDI5OX0.rdlJVFPGmHpGnzpCtyRcAYJR-hS1_pBuwtz1VDI81wk"
 );
 
+// UI
 const home = document.getElementById("home");
 const chat = document.getElementById("chat");
 const auth = document.getElementById("auth");
@@ -19,11 +20,10 @@ function showChat() {
   chat.classList.remove("hidden");
 }
 
+// AUTH
 async function signUp() {
   const username = usernameInput.value.trim();
   const password = passwordInput.value;
-  if (!username || !password) return alert("Missing fields");
-
   const email = `${username}@hub-zero.local`;
 
   const { data, error } = await supabase.auth.signUp({ email, password });
@@ -34,13 +34,12 @@ async function signUp() {
     username
   });
 
-  alert("Account created. Log in now.");
+  alert("Account created");
 }
 
 async function logIn() {
-  const username = usernameInput.value.trim();
+  const email = `${usernameInput.value.trim()}@hub-zero.local`;
   const password = passwordInput.value;
-  const email = `${username}@hub-zero.local`;
 
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return alert(error.message);
@@ -51,23 +50,9 @@ async function logIn() {
 async function startChat() {
   auth.classList.add("hidden");
   chatBox.classList.remove("hidden");
-  messagesDiv.innerHTML = "";
-
-  const { data } = await supabase.from("messages").select("*").order("created_at");
-  data.forEach(addMessage);
-
-  supabase.channel("messages")
-    .on("postgres_changes", { event: "INSERT", table: "messages" },
-      payload => addMessage(payload.new)
-    ).subscribe();
 }
 
-function addMessage(msg) {
-  const div = document.createElement("div");
-  div.textContent = `${msg.username}: ${msg.content}`;
-  messagesDiv.appendChild(div);
-}
-
+// CHAT
 async function sendMessage() {
   const content = messageInput.value.trim();
   if (!content) return;
@@ -93,7 +78,3 @@ async function logOut() {
   auth.classList.remove("hidden");
   chatBox.classList.add("hidden");
 }
-
-supabase.auth.onAuthStateChange((_, session) => {
-  if (session) startChat();
-});
