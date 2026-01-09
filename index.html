@@ -3,54 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <title>Hub Zero</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <nav>
-    <h2>Hub Zero</h2>
-    <button onclick="showHome()">Home</button>
-    <button onclick="showChat()">Chat</button>
-  </nav>
+<nav>
+  <button onclick="showHome()">Home</button>
+  <button onclick="showChat()">Chat</button>
+</nav>
 
-  <main>
-    <!-- HOME -->
-    <section id="home">
-      <h1>Hub Zero</h1>
-      <p>By SPC — For SPC</p>
-      <p>
-        Hub Zero is a community platform.
-        This description will be expanded later.
-      </p>
-    </section>
+<section id="home">
+  <h1>Hub Zero</h1>
+</section>
 
-    <!-- CHAT -->
-    <section id="chat" class="hidden">
+<section id="chat" class="hidden">
+  <div id="auth">
+    <input id="usernameInput" placeholder="Username">
+    <input id="passwordInput" type="password" placeholder="Password">
+    <button onclick="signUp()">Sign Up</button>
+    <button onclick="logIn()">Log In</button>
+  </div>
 
-      <div id="auth">
-        <h3>Create / Log In</h3>
-        <input id="usernameInput" placeholder="Username">
-        <input id="passwordInput" type="password" placeholder="Password">
-        <button onclick="signUp()">Sign Up</button>
-        <button onclick="logIn()">Log In</button>
-      </div>
+  <div id="chatBox" class="hidden">
+    <div id="messages"></div>
+    <input id="messageInput">
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="logOut()">Log Out</button>
+  </div>
+</section>
 
-      <div id="chatBox" class="hidden">
-        <h3>Global Chat</h3>
-        <div id="messages"></div>
-
-        <input id="messageInput" placeholder="Message">
-        <button onclick="sendMessage()">Send</button>
-
-        <br><br>
-        <button onclick="logOut()">Log Out</button>
-      </div>
-
-    </section>
-  </main>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app.js"></script>
 </body>
 </html>
