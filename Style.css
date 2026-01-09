@@ -6,28 +6,29 @@ body {
   margin: 0;
   font-family: system-ui, sans-serif;
   background: radial-gradient(circle at top, #0b1d3a, #020814);
-  color: #e6f0ff;
+  color: #e5efff;
 }
 
-nav {
+/* NAVBAR */
+.navbar {
   display: flex;
   justify-content: space-between;
   padding: 16px 24px;
   background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 }
 
-.logo {
+.brand {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.logo img {
+.brand img {
   height: 36px;
 }
 
-.tabs button {
+.nav-tabs button {
   background: none;
   border: 1px solid #3b82f6;
   color: #93c5fd;
@@ -36,6 +37,7 @@ nav {
   cursor: pointer;
 }
 
+/* TABS */
 .tab {
   display: none;
   padding: 40px;
@@ -45,27 +47,93 @@ nav {
   display: block;
 }
 
-h1 {
+/* HOME */
+.hero {
+  max-width: 700px;
+  margin: auto;
+  text-align: center;
+}
+
+.hero h1 {
   font-size: 3rem;
 }
 
-.by, .for {
+.blue {
   color: #60a5fa;
 }
 
-#messages {
-  background: rgba(255,255,255,0.05);
-  height: 300px;
-  overflow-y: auto;
+.description {
+  opacity: 0.9;
+  margin-top: 20px;
+}
+
+/* CARDS */
+.card {
+  max-width: 600px;
+  margin: auto;
+  background: rgba(255,255,255,0.06);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+/* AUTH */
+#auth-box input {
+  width: 100%;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-.hidden {
-  display: none;
+button {
+  background: #2563eb;
+  border: none;
+  color: white;
+  padding: 10px 14px;
+  cursor: pointer;
 }
 
-.soon {
+button.secondary {
+  background: transparent;
+  border: 1px solid #60a5fa;
+  margin-left: 8px;
+}
+
+/* CHAT */
+.chat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#messages {
+  height: 300px;
+  overflow-y: auto;
+  margin: 15px 0;
+  padding: 10px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 6px;
+}
+
+.message {
+  margin-bottom: 6px;
+}
+
+.chat-input {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px;
+}
+
+.coming-soon {
   opacity: 0.5;
-  margin-top: 40px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.hidden {
+  display: none;
 }
