@@ -3,50 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <title>Hub Zero</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <nav>
-    <div class="logo">
+
+  <nav class="navbar">
+    <div class="brand">
       <img src="https://www.dropbox.com/scl/fi/8ny2rmws4srfuttw2adxn/Hub-Zero.png?raw=1" />
       <span>Hub Zero</span>
     </div>
-    <div class="tabs">
-      <button onclick="showTab('home')">Home</button>
-      <button onclick="showTab('chat')">Chat</button>
+
+    <div class="nav-tabs">
+      <button onclick="switchTab('home')">Home</button>
+      <button onclick="switchTab('chat')">Chat</button>
     </div>
   </nav>
 
   <!-- HOME -->
   <section id="home" class="tab active">
-    <h1>Hub Zero</h1>
-    <h2><span class="by">By SPC</span> — <span class="for">For SPC</span></h2>
-
-    <div class="about">
-      <p>
-        <!-- Replace later -->
-        Hub Zero is a space-themed community platform built for SPC.
-        This section will describe the mission, features, and future plans.
+    <div class="hero">
+      <h1>Hub Zero</h1>
+      <h2><span class="blue">By SPC</span> — <span class="blue">For SPC</span></h2>
+      <p class="description">
+        Hub Zero is a space-themed community platform designed for students.
+        This area will later describe the mission, goals, and features of the site.
       </p>
     </div>
   </section>
 
   <!-- CHAT -->
   <section id="chat" class="tab">
-    <div id="auth">
+    <div id="auth-box" class="card">
+      <h3>Account Required</h3>
       <input id="username" placeholder="Username" />
       <input id="password" type="password" placeholder="Password" />
-      <button onclick="signup()">Sign Up</button>
-      <button onclick="login()">Log In</button>
+      <button onclick="signUp()">Sign Up</button>
+      <button class="secondary" onclick="logIn()">Log In</button>
     </div>
 
-    <div id="chatArea" class="hidden">
-      <h3>🌍 Global Chat</h3>
-      <div id="messages"></div>
-      <input id="messageInput" placeholder="Type a message..." />
-      <button onclick="sendMessage()">Send</button>
+    <div id="chat-box" class="card hidden">
+      <div class="chat-header">
+        <h3>🌍 Global Chat</h3>
+        <button class="secondary" onclick="logOut()">Log Out</button>
+      </div>
 
-      <h3 class="soon">🎓 Verified Student Chat (Coming soon)</h3>
+      <div id="messages"></div>
+
+      <div class="chat-input">
+        <input id="messageInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+
+      <div class="coming-soon">
+        🎓 Verified Student Chat — Coming Soon
+      </div>
     </div>
   </section>
 
