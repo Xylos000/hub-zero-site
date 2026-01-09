@@ -3,22 +3,22 @@ const supabase = window.supabase.createClient(
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpqdnllbXhlaHhuaXRqeHl2enZ2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc5NTQyOTksImV4cCI6MjA4MzUzMDI5OX0.rdlJVFPGmHpGnzpCtyRcAYJR-hS1_pBuwtz1VDI81wk"
 );
 
-function showTab(tab) {
+const authBox = document.getElementById("auth-box");
+const chatBox = document.getElementById("chat-box");
+const messagesDiv = document.getElementById("messages");
+
+function switchTab(tab) {
   document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
   document.getElementById(tab).classList.add("active");
 }
 
-async function signup() {
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
-
+/* AUTH */
+async function signUp() {
+  const username = username.value.trim();
+  const password = password.value;
   const email = `${username}@hub-zero.local`;
 
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password
-  });
-
+  const { data, error } = await supabase.auth.signUp({ email, password });
   if (error) return alert(error.message);
 
   await supabase.from("profiles").insert({
@@ -29,34 +29,34 @@ async function signup() {
   alert("Account created. You can now log in.");
 }
 
-async function login() {
-  const username = usernameInput.value.trim();
-  const password = passwordInput.value;
+async function logIn() {
+  const username = username.value.trim();
+  const password = password.value;
   const email = `${username}@hub-zero.local`;
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
-  });
-
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) return alert(error.message);
 
   startChat();
 }
 
+async function logOut() {
+  await supabase.auth.signOut();
+  chatBox.classList.add("hidden");
+  authBox.classList.remove("hidden");
+}
+
+/* CHAT */
 async function startChat() {
-  auth.classList.add("hidden");
-  chatArea.classList.remove("hidden");
+  authBox.classList.add("hidden");
+  chatBox.classList.remove("hidden");
+  messagesDiv.innerHTML = "";
   loadMessages();
 
-  supabase
-    .channel("messages")
-    .on(
-      "postgres_changes",
-      { event: "INSERT", schema: "public", table: "messages" },
+  supabase.channel("messages")
+    .on("postgres_changes", { event: "INSERT", table: "messages" },
       payload => addMessage(payload.new)
-    )
-    .subscribe();
+    ).subscribe();
 }
 
 async function loadMessages() {
@@ -70,9 +70,10 @@ async function loadMessages() {
 
 function addMessage(msg) {
   const div = document.createElement("div");
+  div.className = "message";
   div.textContent = `${msg.username}: ${msg.content}`;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
+  messagesDiv.appendChild(div);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
 }
 
 async function sendMessage() {
@@ -94,3 +95,8 @@ async function sendMessage() {
 
   messageInput.value = "";
 }
+
+/* AUTO LOGIN */
+supabase.auth.onAuthStateChange((_, session) => {
+  if (session) startChat();
+});
