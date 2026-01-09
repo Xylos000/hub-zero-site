@@ -1,11 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Hub Zero</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Hub Zero</h1>
-  <p>Site is live. NO ABHIJOT FOR PAYMENT</p>
+  <nav>
+    <div class="logo">
+      <img src="https://www.dropbox.com/scl/fi/8ny2rmws4srfuttw2adxn/Hub-Zero.png?raw=1" />
+      <span>Hub Zero</span>
+    </div>
+    <div class="tabs">
+      <button onclick="showTab('home')">Home</button>
+      <button onclick="showTab('chat')">Chat</button>
+    </div>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home" class="tab active">
+    <h1>Hub Zero</h1>
+    <h2><span class="by">By SPC</span> — <span class="for">For SPC</span></h2>
+
+    <div class="about">
+      <p>
+        <!-- Replace later -->
+        Hub Zero is a space-themed community platform built for SPC.
+        This section will describe the mission, features, and future plans.
+      </p>
+    </div>
+  </section>
+
+  <!-- CHAT -->
+  <section id="chat" class="tab">
+    <div id="auth">
+      <input id="username" placeholder="Username" />
+      <input id="password" type="password" placeholder="Password" />
+      <button onclick="signup()">Sign Up</button>
+      <button onclick="login()">Log In</button>
+    </div>
+
+    <div id="chatArea" class="hidden">
+      <h3>🌍 Global Chat</h3>
+      <div id="messages"></div>
+      <input id="messageInput" placeholder="Type a message..." />
+      <button onclick="sendMessage()">Send</button>
+
+      <h3 class="soon">🎓 Verified Student Chat (Coming soon)</h3>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
 </body>
 </html>
