@@ -286,6 +286,65 @@ body::after{
 <div id="app"></div>
 <script>
 
+/* ═══════════ BASIC CLIENT PROTECTION ═══════════ */
+(function () {
+
+  // Disable right click
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+
+  // Disable key shortcuts
+  document.addEventListener('keydown', function (e) {
+    const key = e.key.toLowerCase();
+
+    // F12
+    if (key === 'f12') e.preventDefault();
+
+    // Ctrl+Shift+I/J/C/K
+    if (e.ctrlKey && e.shiftKey && (
+      key === 'i' || key === 'j' || key === 'c' || key === 'k'
+    )) {
+      e.preventDefault();
+    }
+
+    // Ctrl+U (view source)
+    if (e.ctrlKey && key === 'u') e.preventDefault();
+
+    // Ctrl+S (save)
+    if (e.ctrlKey && key === 's') e.preventDefault();
+  });
+
+  // Disable text selection
+  document.addEventListener('selectstart', function (e) {
+    e.preventDefault();
+  });
+
+  // Disable drag
+  document.addEventListener('dragstart', function (e) {
+    e.preventDefault();
+  });
+
+})();
+
+(function () {
+
+  function devtoolsOpen() {
+    const threshold = 160;
+    return (
+      window.outerWidth - window.innerWidth > threshold ||
+      window.outerHeight - window.innerHeight > threshold
+    );
+  }
+
+  setInterval(() => {
+    if (devtoolsOpen()) {
+      window.location.replace("about:blank");
+    }
+  }, 1000);
+
+})();
+
 
 /* ═══════════ CONSTANTS ═══════════ */
 const IMG       = (p,s='w780') => p?`https://image.tmdb.org/t/p/${s}${p}`:'';
