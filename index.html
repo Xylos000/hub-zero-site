@@ -1,1 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Loading...</title>
+</head>
+<body>
+    <script>
+        // 1. Get the current time and date
+        const now = new Date();
+        const timestamp = now.toLocaleString("en-AU", { timeZone: "Australia/Brisbane" });
 
+        // 2. Save the opening event locally to your browser's history log
+        let opensLog = JSON.parse(localStorage.getItem("email_opens")) || [];
+        opensLog.push("Email opened at: " + timestamp);
+        localStorage.setItem("email_opens", JSON.stringify(opensLog));
+
+        // 3. Immediately show a tiny transparent pixel image so it acts like one
+        window.location.href = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    </script>
+</body>
+</html>
