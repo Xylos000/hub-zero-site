@@ -209,7 +209,24 @@
     color: var(--accent);
   }
 
-  /* hero stats & scroll cue removed */
+  /* Hero Arrow Indicator */
+  .hero-arrow {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+  .hero-arrow svg {
+    animation: arrowBounce 2s infinite ease-in-out;
+  }
+  @keyframes arrowBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+  }
 
   /* Marquee */
   .marquee {
@@ -251,15 +268,18 @@
 
   /* Services */
   .services {
-    padding: 140px 40px;
+    padding: 140px 40px 220px;
     border-bottom: 1px solid var(--line);
   }
   .services-header {
     display: flex;
     justify-content: space-between;
     align-items: end;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
     gap: 40px;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
   }
   .services-title {
     font-size: clamp(40px, 6vw, 88px);
@@ -290,7 +310,13 @@
   .services-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 80px 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  /* Stagger columns to create a high-end architectural gallery arrangement */
+  .services-grid > *:nth-child(even) {
+    transform: translateY(60px);
   }
   .services-item {
     position: relative;
@@ -298,27 +324,27 @@
     background: var(--card);
     border: 1px solid var(--line);
     aspect-ratio: 16/10;
-    transition: border-color 0.6s var(--ease), box-shadow 0.6s var(--ease), transform 0.6s var(--ease);
+    transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .services-item:hover {
     border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(212, 255, 58, 0.05);
-    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(212, 255, 58, 0.08);
+    transform: translateY(-8px);
   }
   .services-item img {
     width: 100%; height: 100%;
     object-fit: cover;
-    transition: transform 1.2s var(--ease), filter 1.2s var(--ease);
+    transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1);
     filter: grayscale(30%) brightness(0.85);
   }
   .services-item:hover img {
     transform: scale(1.08);
-    filter: grayscale(0%) brightness(1);
+    filter: grayscale(0%) brightness(1.05);
   }
   .services-item-info {
     position: absolute;
     inset: 0;
-    padding: 20px;
+    padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -330,6 +356,13 @@
     font-size: 11px;
     color: var(--accent);
     letter-spacing: 0.12em;
+    transform: translateY(-10px);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .services-item:hover .services-item-num {
+    transform: translateY(0);
+    opacity: 1;
   }
   .services-item-name {
     font-family: 'JetBrains Mono', monospace;
@@ -341,7 +374,18 @@
     background: rgba(0,0,0,0.65);
     padding: 6px 12px;
     backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid var(--line);
+    transform: translateY(10px);
+    opacity: 0;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
+  }
+  .services-item:hover .services-item-name {
+    transform: translateY(0);
+    opacity: 1;
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
   }
 
   /* Footer Redesign */
@@ -389,10 +433,11 @@
   /* Reveal utility */
   .fade-up {
     opacity: 0;
-    transform: translateY(30px) scale(0.96);
-    transition: opacity 1.2s var(--ease), transform 1.2s var(--ease);
+    transform: translateY(50px);
+    filter: blur(8px);
+    transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1), transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), filter 1.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
-  .fade-up.in { opacity: 1; transform: translateY(0) scale(1); }
+  .fade-up.in { opacity: 1; transform: translateY(0); filter: blur(0); }
   .fade-up.d1 { transition-delay: 0.1s; }
   .fade-up.d2 { transition-delay: 0.2s; }
   .fade-up.d3 { transition-delay: 0.3s; }
@@ -405,10 +450,11 @@
     .nav-sub { display: none; }
     .hero { padding: 120px 20px 40px; }
     .hero-side { display: none; }
-    .services { padding: 80px 20px; }
+    .services { padding: 80px 20px 120px; }
     .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
     .services-tag { text-align: left; }
-    .services-grid { grid-template-columns: 1fr; }
+    .services-grid { grid-template-columns: 1fr; gap: 40px; }
+    .services-grid > *:nth-child(even) { transform: none; }
     footer { padding: 80px 20px 30px; }
     .footer-logo { margin-bottom: 60px; }
   }
@@ -459,6 +505,13 @@
       <span class="line"><span>ZERO<em>.</em></span></span>
     </h1>
   </div>
+  
+  <!-- Moving Green Arrow pointing down -->
+  <div class="hero-arrow fade-up d2">
+    <svg width="32" height="64" viewBox="0 0 24 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 0V44M12 44L2 34M12 44L22 34" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
 </section>
 
 <div class="marquee">
@@ -484,7 +537,7 @@
     <div class="services-item fade-up">
       <div class="services-item-info">
         <div class="services-item-num">01</div>
-        <div class="services-item-name">EP-HUB.png</div>
+        <div class="services-item-name">EP-Hub.png</div>
       </div>
       <img src="EP-HUB.png" alt="EP Hub" loading="lazy">
     </div>
