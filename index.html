@@ -865,26 +865,36 @@
     }
   }
 
-  // Preloader transition triggers body loaded class and checks pop-up / browser
+  function checkModalState() {
+    if (!isEdge) {
+      step1.style.display = 'none';
+      step2.style.display = 'none';
+      document.getElementById('modal-step-edge').style.display = 'flex';
+      document.body.classList.add('modal-open');
+      overlay.classList.add('active');
+    } else if (!localStorage.getItem('Signed_in')) {
+      step1.style.display = 'flex';
+      step2.style.display = 'none';
+      document.body.classList.add('modal-open');
+      overlay.classList.add('active');
+    }
+  }
+
+  // Preloader transition triggers body loaded class
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('loader').classList.add('loaded');
       document.body.classList.add('loaded');
-      
-      if (!isEdge) {
-        // Force Microsoft Edge browser lockout
-        step1.style.display = 'none';
-        step2.style.display = 'none';
-        document.getElementById('modal-step-edge').style.display = 'flex';
-        document.body.classList.add('modal-open');
-        overlay.classList.add('active');
-      } else if (!localStorage.getItem('Signed_in')) {
-        setTimeout(() => {
-          document.body.classList.add('modal-open');
-          overlay.classList.add('active');
-        }, 600);
-      }
     }, 700);
+  });
+
+  // Ensure modal state is checked on every page visibility/entry (handles back button)
+  window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+      checkModalState();
+    } else {
+      setTimeout(checkModalState, 1300);
+    }
   });
 </script>
 
