@@ -833,8 +833,11 @@
   });
 
   btnOkay.addEventListener('click', () => {
-    overlay.classList.remove('active');
-    document.body.classList.remove('modal-open');
+    // Keep overlay active, block scrolling, make background pure black and hide the modal box
+    overlay.style.backgroundColor = '#000000';
+    overlay.style.opacity = '1';
+    const modalBox = document.querySelector('.modal-box');
+    if (modalBox) modalBox.style.display = 'none';
     
     // Redirect to proxy URL
     window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
