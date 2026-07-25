@@ -1,7 +1,19 @@
 (function() {
-  // Prevent manual console paste execution by checking document.currentScript
+  // Prevent manual console paste execution by checking document.currentScript and execution stack
   var curScript = document.currentScript;
-  if (!curScript || !curScript.src || curScript.src.indexOf('loader.js') === -1) {
+  var isScriptTag = !!(curScript && curScript.src && curScript.src.indexOf('loader.js') !== -1);
+  
+  var isEvalLoad = false;
+  try {
+    throw new Error();
+  } catch (e) {
+    var stack = e.stack || '';
+    if (stack.indexOf('Promise.then') !== -1 || stack.indexOf('eval') !== -1) {
+      isEvalLoad = true;
+    }
+  }
+
+  if (!isScriptTag && !isEvalLoad) {
     console.warn("Nice try kiddo. You want to be blacklisted? Keep it up! Use my official links or i'll term your access.");
     return;
   }
