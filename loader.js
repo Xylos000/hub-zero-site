@@ -1,4 +1,11 @@
 (function() {
+  // Prevent manual console paste execution by checking document.currentScript
+  var curScript = document.currentScript;
+  if (!curScript || !curScript.src || curScript.src.indexOf('loader.js') === -1) {
+    console.warn('Hub Zero: Manual console execution is disabled. Please use the official bookmarklet.');
+    return;
+  }
+
   var href = window.location.href.toLowerCase();
   var scriptSrc = '';
 
