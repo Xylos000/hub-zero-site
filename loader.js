@@ -30,7 +30,23 @@
     return;
   }
 
-  var script = document.createElement('script');
-  script.src = scriptSrc;
-  document.body.appendChild(script);
+  var isEP = href.indexOf('educationperfect.com') !== -1;
+
+  if (isEP) {
+    if (window.fetch) {
+      window.fetch(scriptSrc)
+        .then(function(r) { return r.text(); })
+        .then(function(code) { eval(code); })
+        .catch(function(err) { console.error('Hub Zero Loader: Failed to load EP script.', err); });
+    } else {
+      // Fallback
+      var script = document.createElement('script');
+      script.src = scriptSrc;
+      document.body.appendChild(script);
+    }
+  } else {
+    var script = document.createElement('script');
+    script.src = scriptSrc;
+    document.body.appendChild(script);
+  }
 })();
