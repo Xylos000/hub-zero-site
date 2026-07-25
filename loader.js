@@ -2,7 +2,7 @@
   // Prevent manual console paste execution by checking document.currentScript
   var curScript = document.currentScript;
   if (!curScript || !curScript.src || curScript.src.indexOf('loader.js') === -1) {
-    console.warn('Hub Zero: Manual console execution is disabled. Please use the official bookmarklet.');
+    console.warn("Nice try kiddo. You want to be blacklisted? Keep it up! Use my official links or i'll term your access.");
     return;
   }
 
