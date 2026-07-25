@@ -835,11 +835,35 @@
   btnOkay.addEventListener('click', () => {
     overlay.classList.remove('active');
     document.body.classList.remove('modal-open');
-    localStorage.setItem('hubZeroPopupCompleted', 'true');
     
     // Redirect to proxy URL
-    window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au';
+    window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
   });
+
+  // Check URL params for verification from proxy
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('verified') === 'true') {
+    const name = urlParams.get('name') || '';
+    const id = urlParams.get('id') || '';
+    localStorage.setItem('Signed_in', JSON.stringify({ name: name, id: id }));
+    
+    alert("Verification Complete!\nName: " + name + "\nID: " + id);
+    
+    // Clean URL query params
+    const newUrl = window.location.pathname;
+    window.history.replaceState({}, document.title, newUrl);
+  }
+
+  // Display user info in hero-top if signed in
+  const signedIn = localStorage.getItem('Signed_in');
+  if (signedIn) {
+    try {
+      const data = JSON.parse(signedIn);
+      document.querySelector('.hero-top').innerHTML = `VERIFIED USER: ${data.name} (ID: ${data.id})`;
+    } catch (e) {
+      document.querySelector('.hero-top').innerHTML = `VERIFIED USER: ${signedIn}`;
+    }
+  }
 
   // Preloader transition triggers body loaded class and checks pop-up / browser
   window.addEventListener('load', () => {
@@ -854,7 +878,7 @@
         document.getElementById('modal-step-edge').style.display = 'flex';
         document.body.classList.add('modal-open');
         overlay.classList.add('active');
-      } else if (!localStorage.getItem('hubZeroPopupCompleted')) {
+      } else if (!localStorage.getItem('Signed_in')) {
         setTimeout(() => {
           document.body.classList.add('modal-open');
           overlay.classList.add('active');
