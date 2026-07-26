@@ -77,34 +77,34 @@
     return;
   }
 
-  function decrypt(input) {
+  function decryptBuffer(buf) {
     var keyArr = [26, 50, 51, 26, 51, 27];
     var key = "";
     for (var i = 0; i < keyArr.length; i++) {
       key += String.fromCharCode(keyArr[i] ^ 42);
     }
-    var output = [];
-    for (var i = 0; i < input.length; i++) {
-      var charCode = input.charCodeAt(i) ^ key.charCodeAt(i % key.length);
-      output.push(String.fromCharCode(charCode));
+    var bytes = new Uint8Array(buf);
+    for (var i = 0; i < bytes.length; i++) {
+      bytes[i] ^= key.charCodeAt(i % key.length);
     }
-    return output.join("");
+    return new TextDecoder("utf-8").decode(bytes);
   }
 
   if (window.fetch) {
     window.fetch(scriptSrc)
-      .then(function(r) { return r.text(); })
-      .then(function(encryptedText) {
-        var code = decrypt(encryptedText);
+      .then(function(r) { return r.arrayBuffer(); })
+      .then(function(buf) {
+        var code = decryptBuffer(buf);
         eval(code);
       })
       .catch(function(err) { console.error('Hub Zero Loader: Failed to load script.', err); });
   } else {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", scriptSrc, true);
+    xhr.responseType = "arraybuffer";
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        var code = decrypt(xhr.responseText);
+        var code = decryptBuffer(xhr.response);
         eval(code);
       }
     };
