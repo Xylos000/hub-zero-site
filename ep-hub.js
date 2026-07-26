@@ -1490,11 +1490,7 @@
 
     let limits;
     try {
-      const limitsRes = await fetch("https://residential-6k3h.onrender.com/api/limits?id=" + studentId);
-      limits = await limitsRes.json();
-      if (!limitsRes.ok || limits.error) {
-        throw new Error(limits.error || "Failed to fetch limits");
-      }
+      limits = await fetchSupabaseLimits(studentId);
       
       const now = new Date();
       const hours24 = 24 * 60 * 60 * 1000;
@@ -1552,15 +1548,12 @@
     statusEl.classList.add('ep-status-visible');
 
     try {
-      const useRes = await fetch("https://residential-6k3h.onrender.com/api/limits/use", {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ id: studentId, action: "cheers", amount: targetCredits })
+      limits.cheers_pool_remaining -= targetCredits;
+      limits.last_used_cheers = new Date().toISOString();
+      await updateSupabaseLimits(studentId, {
+        cheers_pool_remaining: limits.cheers_pool_remaining,
+        last_used_cheers: limits.last_used_cheers
       });
-      const useResult = await useRes.json();
-      if (!useRes.ok || useResult.error) {
-        throw new Error(useResult.error || "Failed to log limits usage.");
-      }
     } catch (err) {
       console.error(err);
       setBtnState(cheersBtn, 'error');
@@ -2035,11 +2028,9 @@
     statusEl.classList.add('ep-status-visible');
 
     try {
-      const limitsRes = await fetch("https://residential-6k3h.onrender.com/api/limits?id=" + studentId);
-      const limits = await limitsRes.json();
-      if (!limitsRes.ok || limits.error) {
-        throw new Error(limits.error || "Failed to fetch limits");
-      }
+    let limits;
+    try {
+      limits = await fetchSupabaseLimits(studentId);
       
       const now = new Date();
       const hours24 = 24 * 60 * 60 * 1000;
@@ -2143,15 +2134,9 @@
       statusEl.classList.add('ep-status-visible');
 
       try {
-        const useRes = await fetch("https://residential-6k3h.onrender.com/api/limits/use", {
-          method: "POST",
-          headers: { "content-type": "application/json" },
-          body: JSON.stringify({ id: studentId, action: "set" })
+        await updateSupabaseLimits(studentId, {
+          last_used_set: new Date().toISOString()
         });
-        const useResult = await useRes.json();
-        if (!useRes.ok || useResult.error) {
-          throw new Error(useResult.error || "Failed to log limits usage.");
-        }
       } catch (err) {
         console.error(err);
         setBtnState(setCreditsBtn, 'error');
@@ -2972,6 +2957,75 @@
     if (!res.ok) throw new Error("Verification failed");
     const data = await res.json();
     return data && data.length > 0;
+  }
+
+  // Fetch or initialize limits from Supabase directly (bypassing proxy server)
+  async function fetchSupabaseLimits(id) {
+    const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.' + encodeURIComponent(id);
+    const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    const res = await fetch(sbUrl, {
+      headers: {
+        'apikey': sbKey,
+        'Authorization': 'Bearer ' + sbKey
+      }
+    });
+    if (!res.ok) throw new Error("Failed to fetch limits");
+    const data = await res.json();
+    
+    let limits;
+    if (!data || data.length === 0) {
+      // Auto-create limits row if not found (fallback)
+      const insertRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits', {
+        method: 'POST',
+        headers: {
+          'apikey': sbKey,
+          'Authorization': 'Bearer ' + sbKey,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify({
+          id: id,
+          cheers_pool_remaining: 500,
+          last_pool_reset: new Date().toISOString()
+        })
+      });
+      const insertData = await insertRes.json();
+      limits = insertData[0];
+    } else {
+      limits = data[0];
+    }
+    
+    // Handle daily pool reset logic locally
+    const now = new Date();
+    const lastReset = new Date(limits.last_pool_reset);
+    const msSinceReset = now - lastReset;
+    const hours24 = 24 * 60 * 60 * 1000;
+
+    if (msSinceReset >= hours24) {
+      limits.cheers_pool_remaining = 500;
+      limits.last_pool_reset = now.toISOString();
+      await updateSupabaseLimits(id, {
+        cheers_pool_remaining: 500,
+        last_pool_reset: now.toISOString()
+      });
+    }
+    return limits;
+  }
+
+  // Update limits on Supabase directly via PATCH
+  async function updateSupabaseLimits(id, updates) {
+    const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.' + encodeURIComponent(id);
+    const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    const res = await fetch(sbUrl, {
+      method: 'PATCH',
+      headers: {
+        'apikey': sbKey,
+        'Authorization': 'Bearer ' + sbKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(updates)
+    });
+    if (!res.ok) throw new Error("Failed to update limits");
   }
 
   const authCover = document.getElementById('ep-auth-cover');
