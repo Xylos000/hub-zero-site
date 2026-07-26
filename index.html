@@ -310,13 +310,13 @@
   .services-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 80px 40px;
+    gap: 40px;
     max-width: 1000px;
     margin: 0 auto;
   }
   
   .services-grid > *:nth-child(even) {
-    transform: translateY(60px);
+    transform: none;
   }
   .services-item {
     position: relative;
@@ -752,6 +752,150 @@
     box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
   }
 
+  .btn-demo-link:hover {
+    color: var(--accent) !important;
+  }
+
+  /* Gallery Showcase Overlay */
+  .gallery-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 20000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+  .gallery-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .gallery-content {
+    max-width: 900px;
+    width: 90%;
+    background: #0f0f0f;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .gallery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 16px;
+  }
+  .gallery-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+  .gallery-close {
+    background: transparent;
+    border: none;
+    color: var(--fg);
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+  .gallery-close:hover {
+    color: var(--accent);
+  }
+  .gallery-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
+  .gallery-slides {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/10;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .gallery-slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+  .gallery-slide.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .gallery-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .gallery-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: rgba(0, 0, 0, 0.75);
+    padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    border-top: 1px solid var(--line);
+  }
+  .gallery-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  .gallery-nav-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--fg);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .gallery-nav-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .gallery-dots {
+    display: flex;
+    gap: 10px;
+  }
+  .gallery-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--muted);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .gallery-dot.active {
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+  }
+
   noscript style {
     display: block;
   }
@@ -791,10 +935,16 @@
     
     <div class="modal-step" id="modal-step-1">
       <h3 class="modal-title">Are you here for our scripts?</h3>
-      <ul class="modal-list">
+      <p class="modal-text" style="color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; margin-bottom: 20px; font-weight: 700; letter-spacing: 0.1em; display: flex; align-items: center; gap: 8px;">
+        <span>⚡</span> 100% Free of Charge — No Cost Ever
+      </p>
+      <ul class="modal-list" style="margin-bottom: 20px;">
         <li><strong>• Realm Student Search</strong></li>
         <li><strong>• Education Perfect hub</strong></li>
       </ul>
+      <button class="btn-demo-link" id="btn-show-demo" style="background: transparent; border: none; color: #a3a3a3; text-decoration: underline; font-family: 'JetBrains Mono', monospace; font-size: 12px; cursor: pointer; text-align: left; margin-bottom: 28px; transition: color 0.2s;">
+        Want to see what our scripts can do?
+      </button>
       <div class="modal-buttons">
         <button class="btn btn-red" id="btn-no">No</button>
         <button class="btn btn-green" id="btn-yes">Yes</button>
@@ -812,6 +962,45 @@
       
       <div class="modal-buttons">
         <button class="btn btn-green" id="btn-okay">OKAY</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="gallery-overlay" id="demo-gallery-overlay">
+  <div class="gallery-content">
+    <div class="gallery-header">
+      <div class="gallery-title">Script Showcase</div>
+      <button class="gallery-close" id="btn-gallery-close">&times;</button>
+    </div>
+    <div class="gallery-body">
+      <div class="gallery-slides">
+        <div class="gallery-slide active">
+          <img src="EP-Hub.png" alt="EP Hub">
+          <div class="gallery-caption">EP Hub Interface</div>
+        </div>
+        <div class="gallery-slide">
+          <img src="Realm-Search.png" alt="Realm Student Search">
+          <div class="gallery-caption">Realm Student Search</div>
+        </div>
+        <div class="gallery-slide">
+          <img src="Realm-Yeargroup.png" alt="Realm Yeargroup Browser">
+          <div class="gallery-caption">Realm Yeargroup Browser</div>
+        </div>
+        <div class="gallery-slide">
+          <img src="Realm-Student-Profile.png" alt="Realm Student Profile Details">
+          <div class="gallery-caption">Realm Student Profile Details</div>
+        </div>
+      </div>
+      <div class="gallery-nav">
+        <button class="gallery-nav-btn" id="btn-gallery-prev">&#8592; Prev</button>
+        <div class="gallery-dots">
+          <span class="gallery-dot active" data-index="0"></span>
+          <span class="gallery-dot" data-index="1"></span>
+          <span class="gallery-dot" data-index="2"></span>
+          <span class="gallery-dot" data-index="3"></span>
+        </div>
+        <button class="gallery-nav-btn" id="btn-gallery-next">Next &#8594;</button>
       </div>
     </div>
   </div>
@@ -994,7 +1183,7 @@
         fadeObserver.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+  }, { threshold: 0.02, rootMargin: '0px' });
   document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
 
  
@@ -1139,6 +1328,59 @@
       overlay.classList.add('active');
     }
   }
+
+  const showDemoBtn = document.getElementById('btn-show-demo');
+  const galleryOverlay = document.getElementById('demo-gallery-overlay');
+  const galleryClose = document.getElementById('btn-gallery-close');
+  const prevBtn = document.getElementById('btn-gallery-prev');
+  const nextBtn = document.getElementById('btn-gallery-next');
+  const slides = document.querySelectorAll('.gallery-slide');
+  const dots = document.querySelectorAll('.gallery-dot');
+  let currentSlideIndex = 0;
+
+  function showSlide(index) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    
+    currentSlideIndex = (index + slides.length) % slides.length;
+    slides[currentSlideIndex].classList.add('active');
+    dots[currentSlideIndex].classList.add('active');
+  }
+
+  if (showDemoBtn) {
+    showDemoBtn.addEventListener('click', () => {
+      galleryOverlay.classList.add('active');
+      showSlide(0);
+    });
+  }
+
+  if (galleryClose) {
+    galleryClose.addEventListener('click', () => {
+      galleryOverlay.classList.remove('active');
+    });
+  }
+
+  if (galleryOverlay) {
+    galleryOverlay.addEventListener('click', (e) => {
+      if (e.target === galleryOverlay) {
+        galleryOverlay.classList.remove('active');
+      }
+    });
+  }
+
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => showSlide(currentSlideIndex - 1));
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => showSlide(currentSlideIndex + 1));
+  }
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+      const idx = parseInt(dot.getAttribute('data-index'));
+      showSlide(idx);
+    });
+  });
 
  
   window.addEventListener('load', () => {
