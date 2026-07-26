@@ -1477,7 +1477,46 @@
     const getModuleIdFromUrl = () => Number(location.pathname.split("/")[3]) || null;
     const ORG_ID = "574bd3b6-f02c-4c01-ac34-9c5428cd3a7d";
 
-    const userInput = prompt("How many credits would you like? (Limit 500)");
+    const studentId = localStorage.getItem('ep_hub_verified_id') || "";
+    if (!studentId) {
+      alert("Error: Verification ID not found. Re-run bookmarklet to login.");
+      return;
+    }
+
+    setBtnState(cheersBtn, 'running');
+    statusEl.textContent = 'Checking';
+    statusEl.style.color = '#fbbf24';
+    statusEl.classList.add('ep-status-visible');
+
+    let limits;
+    try {
+      const limitsRes = await fetch("https://residential-6k3h.onrender.com/api/limits?id=" + studentId);
+      limits = await limitsRes.json();
+      if (!limitsRes.ok || limits.error) {
+        throw new Error(limits.error || "Failed to fetch limits");
+      }
+      
+      const now = new Date();
+      const hours24 = 24 * 60 * 60 * 1000;
+      const lastUsedSet = limits.last_used_set ? new Date(limits.last_used_set) : null;
+
+      if (lastUsedSet && (now - lastUsedSet < hours24)) {
+        const remainingMs = hours24 - (now - lastUsedSet);
+        const hoursLeft = (remainingMs / (60 * 60 * 1000)).toFixed(1);
+        throw new Error(`Cannot use Give Credits. Set Credits was used within 24 hours. Wait ${hoursLeft}h.`);
+      }
+    } catch (err) {
+      console.error(err);
+      setBtnState(cheersBtn, 'error');
+      showError(err.message || "Failed limits check");
+      setTimeout(() => setBtnState(cheersBtn, 'idle'), 2500);
+      return;
+    }
+
+    setBtnState(cheersBtn, 'idle');
+    statusEl.classList.remove('ep-status-visible');
+
+    const userInput = prompt("How many credits would you like? (Limit 500. Daily pool remaining: " + limits.cheers_pool_remaining + ")");
     if (!userInput) return;
 
     let targetCredits = 0;
@@ -1501,11 +1540,34 @@
       alert("Limit is 500 credits.");
       return;
     }
+    
+    if (targetCredits > limits.cheers_pool_remaining && !isDevMode) {
+      alert("Error: You only have " + limits.cheers_pool_remaining + " credits remaining in your daily pool.");
+      return;
+    }
 
     setBtnState(cheersBtn, 'running');
     statusEl.textContent = 'Running';
     statusEl.style.color = '#fbbf24';
     statusEl.classList.add('ep-status-visible');
+
+    try {
+      const useRes = await fetch("https://residential-6k3h.onrender.com/api/limits/use", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ id: studentId, action: "cheers", amount: targetCredits })
+      });
+      const useResult = await useRes.json();
+      if (!useRes.ok || useResult.error) {
+        throw new Error(useResult.error || "Failed to log limits usage.");
+      }
+    } catch (err) {
+      console.error(err);
+      setBtnState(cheersBtn, 'error');
+      showError(err.message || "Failed limits check");
+      setTimeout(() => setBtnState(cheersBtn, 'idle'), 2500);
+      return;
+    }
 
     const runsNeeded = Math.ceil(targetCredits / 10);
     const earnedCredits = runsNeeded * 10;
@@ -1961,6 +2023,51 @@
   async function runSetCredits() {
     const ORG_ID = "574bd3b6-f02c-4c01-ac34-9c5428cd3a7d";
 
+    const studentId = localStorage.getItem('ep_hub_verified_id') || "";
+    if (!studentId) {
+      alert("Error: Verification ID not found. Re-run bookmarklet to login.");
+      return;
+    }
+
+    setBtnState(setCreditsBtn, 'running');
+    statusEl.textContent = 'Checking';
+    statusEl.style.color = '#fbbf24';
+    statusEl.classList.add('ep-status-visible');
+
+    try {
+      const limitsRes = await fetch("https://residential-6k3h.onrender.com/api/limits?id=" + studentId);
+      const limits = await limitsRes.json();
+      if (!limitsRes.ok || limits.error) {
+        throw new Error(limits.error || "Failed to fetch limits");
+      }
+      
+      const now = new Date();
+      const hours24 = 24 * 60 * 60 * 1000;
+      const hours48 = 48 * 60 * 60 * 1000;
+
+      const lastUsedCheers = limits.last_used_cheers ? new Date(limits.last_used_cheers) : null;
+      const lastUsedSet = limits.last_used_set ? new Date(limits.last_used_set) : null;
+
+      if (lastUsedCheers && (now - lastUsedCheers < hours24)) {
+        const remainingMs = hours24 - (now - lastUsedCheers);
+        const hoursLeft = (remainingMs / (60 * 60 * 1000)).toFixed(1);
+        throw new Error(`Cannot use Set Credits. Give Credits was used within 24 hours. Wait ${hoursLeft}h.`);
+      }
+
+      if (lastUsedSet && (now - lastUsedSet < hours48)) {
+        const remainingMs = hours48 - (now - lastUsedSet);
+        const hoursLeft = (remainingMs / (60 * 60 * 1000)).toFixed(1);
+        throw new Error(`Set Credits is on cooldown. You can only use it once every 2 days. Wait ${hoursLeft}h.`);
+      }
+
+    } catch (err) {
+      console.error(err);
+      setBtnState(setCreditsBtn, 'error');
+      showError(err.message || "Failed limits check");
+      setTimeout(() => setBtnState(setCreditsBtn, 'idle'), 2500);
+      return;
+    }
+
     setBtnState(setCreditsBtn, 'running');
     statusEl.textContent = 'Querying';
     statusEl.style.color = '#fbbf24';
@@ -2034,6 +2141,24 @@
       statusEl.textContent = 'Running';
       statusEl.style.color = '#fbbf24';
       statusEl.classList.add('ep-status-visible');
+
+      try {
+        const useRes = await fetch("https://residential-6k3h.onrender.com/api/limits/use", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ id: studentId, action: "set" })
+        });
+        const useResult = await useRes.json();
+        if (!useRes.ok || useResult.error) {
+          throw new Error(useResult.error || "Failed to log limits usage.");
+        }
+      } catch (err) {
+        console.error(err);
+        setBtnState(setCreditsBtn, 'error');
+        showError(err.message || "Failed limits check");
+        setTimeout(() => setBtnState(setCreditsBtn, 'idle'), 2500);
+        return;
+      }
 
       const diff = targetCredits - currentCredits;
 
