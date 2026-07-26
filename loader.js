@@ -65,10 +65,14 @@
     return;
   }
 
-  function xorDecrypt(str, key) {
+  function xorDecrypt(hexString, key) {
+    var parts = hexString.trim().split('-');
     var result = "";
-    for (var i = 0; i < str.length; i++) {
-      result += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    for (var i = 0; i < parts.length; i++) {
+      if (!parts[i]) continue;
+      var byteVal = parseInt(parts[i], 16);
+      var keyChar = key.charCodeAt(i % key.length);
+      result += String.fromCharCode(byteVal ^ keyChar);
     }
     return result;
   }
