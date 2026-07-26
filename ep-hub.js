@@ -1491,16 +1491,6 @@
     let limits;
     try {
       limits = await fetchSupabaseLimits(studentId);
-      
-      const now = new Date();
-      const hours24 = 24 * 60 * 60 * 1000;
-      const lastUsedSet = limits.last_used_set ? new Date(limits.last_used_set) : null;
-
-      if (lastUsedSet && (now - lastUsedSet < hours24)) {
-        const remainingMs = hours24 - (now - lastUsedSet);
-        const hoursLeft = (remainingMs / (60 * 60 * 1000)).toFixed(1);
-        throw new Error(`Cannot use Give Credits. Set Credits was used within 24 hours. Wait ${hoursLeft}h.`);
-      }
     } catch (err) {
       console.error(err);
       setBtnState(cheersBtn, 'error');
@@ -1512,7 +1502,7 @@
     setBtnState(cheersBtn, 'idle');
     statusEl.classList.remove('ep-status-visible');
 
-    const userInput = prompt("How many credits would you like? (Limit 500. Daily pool remaining: " + limits.cheers_pool_remaining + ")");
+    const userInput = prompt("How many credits would you like? (Daily pool remaining: " + limits.cheers_pool_remaining + ")");
     if (!userInput) return;
 
     let targetCredits = 0;
@@ -2032,17 +2022,8 @@
       limits = await fetchSupabaseLimits(studentId);
       
       const now = new Date();
-      const hours24 = 24 * 60 * 60 * 1000;
       const hours48 = 48 * 60 * 60 * 1000;
-
-      const lastUsedCheers = limits.last_used_cheers ? new Date(limits.last_used_cheers) : null;
       const lastUsedSet = limits.last_used_set ? new Date(limits.last_used_set) : null;
-
-      if (lastUsedCheers && (now - lastUsedCheers < hours24)) {
-        const remainingMs = hours24 - (now - lastUsedCheers);
-        const hoursLeft = (remainingMs / (60 * 60 * 1000)).toFixed(1);
-        throw new Error(`Cannot use Set Credits. Give Credits was used within 24 hours. Wait ${hoursLeft}h.`);
-      }
 
       if (lastUsedSet && (now - lastUsedSet < hours48)) {
         const remainingMs = hours48 - (now - lastUsedSet);
@@ -2831,31 +2812,48 @@
 
       const legalName = getLegalLeaderboardName(userInput);
 
+      // Fetch global yearly scoreboard (entire school)
       const leaderboardRes = await fetch("https://graphql-gateway.educationperfect.com/graphql/", {
         method: "POST",
         credentials: "include",
-        headers: { "content-type": "application/json" },
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/graphql-response+json, application/graphql+json, application/json, text/event-stream, multipart/mixed"
+        },
         body: JSON.stringify({
           operationName: "Leaderboard",
-          query: `
-            query Leaderboard($organisationId: UUID!, $groupingType: ScoreboardGroupingType!, $timeFrame: ScoreboardTimeFrame!, $startRank: Int, $rowsAbove: Int, $rowsBelow: Int) {
-              globalScoreboards {
-                scoreboardScores(parameters: {
-                  organisationId: $organisationId,
-                  groupingType: $groupingType,
-                  timeFrame: $timeFrame,
-                  startRank: $startRank,
-                  rowsAbove: $rowsAbove,
-                  rowsBelow: $rowsBelow
-                }) {
-                  stats {
-                    userPublicId
-                    name
-                  }
+          query: `query Leaderboard($organisationId: UUID!, $groupingType: ScoreboardGroupingType!, $timeFrame: ScoreboardTimeFrame!, $startRank: Int, $rowsAbove: Int, $rowsBelow: Int) {
+            globalScoreboards {
+              scoreboardScores(parameters: {
+                organisationId: $organisationId,
+                groupingType: $groupingType,
+                timeFrame: $timeFrame,
+                startRank: $startRank,
+                rowsAbove: $rowsAbove,
+                rowsBelow: $rowsBelow
+              }) {
+                stats {
+                  userPublicId
+                  rank
+                  name
+                  school
+                  country
+                  online
+                  userIDHash
+                  avatarUrl
+                  score
+                  __typename
                 }
+                totalRows
+                currentScore
+                currentRanking
+                overallScore
+                success
+                __typename
               }
+              __typename
             }
-          `,
+          }`,
           variables: {
             organisationId: ORG_ID,
             groupingType: "SCHOOL",
@@ -2870,26 +2868,115 @@
       const leaderboardData = await leaderboardRes.json();
       const stats = leaderboardData?.data?.globalScoreboards?.scoreboardScores?.stats || [];
 
-      const recipient = stats.find(s => {
+      // Find all matches in stats
+      const target = legalName.trim().toLowerCase();
+      const matches = stats.filter(s => {
         const normalizedS = s.name.trim().toLowerCase();
-        const target = legalName.trim().toLowerCase();
-        return normalizedS === target || normalizedS.includes(target);
+        return normalizedS === target || normalizedS.startsWith(target);
       });
 
       setBtnState(sendCheerBtn, 'idle');
       statusEl.classList.remove('ep-status-visible');
 
-      if (!recipient) {
+      if (matches.length === 0) {
         alert(`Student "${userInput}" (normalized to "${legalName}") not found on leaderboard.`);
         return;
       }
 
-      openStickerSelector(recipient.name, recipient.userPublicId, () => {
-        setBtnState(sendCheerBtn, 'done');
-        showDone();
-        setTimeout(() => setBtnState(sendCheerBtn, 'idle'), 1200);
-      });
+      if (matches.length > 1) {
+        alert("Multiple names found...choose the right one from the leaderboard");
+      }
 
+      // Helper functions for finding and loading
+      const findRowInDOM = (name, rank) => {
+        const rows = Array.from(document.querySelectorAll('tr[role="row"]'));
+        return rows.find(row => {
+          const nameEl = row.querySelector('.font-bold');
+          const nameMatches = nameEl && nameEl.textContent.trim().toLowerCase() === name.toLowerCase();
+          
+          const cells = Array.from(row.querySelectorAll('td'));
+          const rankMatches = cells.some(td => td.textContent.trim() === String(rank));
+          
+          return nameMatches && rankMatches;
+        });
+      };
+
+      const loadAndFindRow = async (name, rank) => {
+        for (let attempt = 0; attempt < 100; attempt++) {
+          const row = findRowInDOM(name, rank);
+          if (row) return row;
+
+          const showMoreBtn = Array.from(document.querySelectorAll('button')).find(btn => btn.textContent.trim() === 'Show more');
+          if (!showMoreBtn) break;
+
+          showMoreBtn.click();
+          await new Promise(r => setTimeout(r, 450));
+        }
+        return null;
+      };
+
+      // Iterate through each match
+      for (let i = 0; i < matches.length; i++) {
+        const match = matches[i];
+        
+        statusEl.textContent = `Finding ${match.name}...`;
+        statusEl.style.color = '#fbbf24';
+        statusEl.classList.add('ep-status-visible');
+
+        const rowEl = await loadAndFindRow(match.name, match.rank);
+        
+        statusEl.classList.remove('ep-status-visible');
+
+        if (!rowEl) {
+          console.warn(`Could not find row in DOM for ${match.name} (Rank: ${match.rank})`);
+          continue;
+        }
+
+        // Highlight row
+        rowEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        rowEl.style.outline = '3px solid #3b82f6';
+
+        // Draw confirmation popup on the right
+        const pop = document.createElement('div');
+        pop.style.position = 'fixed';
+        pop.style.right = '40px';
+        pop.style.top = '50%';
+        pop.style.transform = 'translateY(-50%)';
+        pop.style.background = '#0c111d';
+        pop.style.border = '1px solid #3b82f6';
+        pop.style.padding = '20px';
+        pop.style.borderRadius = '8px';
+        pop.style.zIndex = '2147483647';
+        pop.style.color = '#cbd5e1';
+        pop.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
+        pop.style.fontFamily = 'Inter, sans-serif';
+        pop.innerHTML = `
+          <div style="font-weight: 700; margin-bottom: 8px; font-size: 14px;">This them?</div>
+          <div style="font-size: 12px; margin-bottom: 16px; color: #94a3b8;">${match.name} (Rank: ${match.rank}, Score: ${match.score})</div>
+          <div style="display: flex; gap: 10px;">
+            <button id="ep-confirm-yes" style="flex: 1; background: #22c55e; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px;">Yes</button>
+            <button id="ep-confirm-no" style="flex: 1; background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px;">No</button>
+          </div>
+        `;
+        document.body.appendChild(pop);
+
+        const response = await new Promise(resolve => {
+          pop.querySelector('#ep-confirm-yes').onclick = () => resolve(true);
+          pop.querySelector('#ep-confirm-no').onclick = () => resolve(false);
+        });
+
+        rowEl.style.outline = '';
+        pop.remove();
+
+        if (response) {
+          setBtnState(sendCheerBtn, 'done');
+          showDone();
+          setTimeout(() => setBtnState(sendCheerBtn, 'idle'), 1200);
+          return;
+        }
+      }
+
+      alert("No more matching students found on the leaderboard.");
     } catch (e) {
       console.error(e);
       setBtnState(sendCheerBtn, 'error');
