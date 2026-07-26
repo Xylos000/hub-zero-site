@@ -30,7 +30,7 @@
   }
   ::selection { background: var(--accent); color: var(--bg); }
 
-  /* Loader styling */
+  
   .loader {
     position: fixed;
     inset: 0;
@@ -83,7 +83,7 @@
     50% { opacity: 1; }
   }
 
-  /* Scroll progress */
+  
   .progress {
     position: fixed;
     top: 0; left: 0;
@@ -94,7 +94,7 @@
     transition: width 0.05s linear;
   }
 
-  /* Nav */
+  
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -156,7 +156,7 @@
   }
   .nav-meta a:hover::after { width: 100%; }
 
-  /* Hero */
+  
   .hero {
     min-height: 100vh;
     padding: 140px 40px 60px;
@@ -178,7 +178,7 @@
     color: var(--muted);
   }
 
-  /* hero-side styles removed */
+  
 
   .hero-title-wrap { margin: 30px 0; position: relative; }
   .hero-title {
@@ -209,7 +209,7 @@
     color: var(--accent);
   }
 
-  /* Hero Arrow Indicator */
+  
   .hero-arrow {
     position: absolute;
     bottom: 60px;
@@ -228,7 +228,7 @@
     50% { transform: translateY(15px); }
   }
 
-  /* Marquee */
+  
   .marquee {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
@@ -266,7 +266,7 @@
   }
   @keyframes marquee { to { transform: translateX(-50%); } }
 
-  /* Services */
+  
   .services {
     padding: 140px 40px 220px;
     border-bottom: 1px solid var(--line);
@@ -314,7 +314,7 @@
     max-width: 1000px;
     margin: 0 auto;
   }
-  /* Stagger columns to create a high-end architectural gallery arrangement */
+  
   .services-grid > *:nth-child(even) {
     transform: translateY(60px);
   }
@@ -388,7 +388,7 @@
     border-color: var(--accent);
   }
 
-  /* Footer Redesign */
+  
   footer {
     padding: 120px 40px 40px;
     position: relative;
@@ -430,7 +430,7 @@
     text-transform: uppercase;
   }
 
-  /* Reveal utility */
+  
   .fade-up {
     opacity: 0;
     transform: translateY(50px);
@@ -442,14 +442,14 @@
   .fade-up.d2 { transition-delay: 0.2s; }
   .fade-up.d3 { transition-delay: 0.3s; }
 
-  /* Pop-up modal overlay & styling */
+  
   body.modal-open {
     overflow: hidden;
   }
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: #000000; /* Solid black background overlay at all times */
+    background: #000000; 
     z-index: 10000;
     display: flex;
     justify-content: center;
@@ -463,7 +463,7 @@
     pointer-events: auto;
   }
   .modal-box {
-    background: var(--card); /* Cohesive card background matching theme */
+    background: var(--card); 
     border: 1px solid var(--line);
     padding: 50px;
     max-width: 600px;
@@ -486,7 +486,7 @@
     line-height: 1.2;
     letter-spacing: -0.02em;
     margin-bottom: 28px;
-    color: #ffffff; /* Pure white for maximum text legibility */
+    color: #ffffff; 
     text-transform: uppercase;
   }
   .modal-title.highlight {
@@ -506,10 +506,10 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
     line-height: 1.8;
-    color: #a3a3a3; /* High contrast gray for secondary list text */
+    color: #a3a3a3; 
   }
   .modal-list li strong {
-    color: #ffffff; /* High contrast white for bold items */
+    color: #ffffff; 
   }
   .modal-list li strong.highlight {
     color: var(--accent);
@@ -517,7 +517,7 @@
   .modal-text {
     font-size: 16px;
     line-height: 1.7;
-    color: #e5e5e5; /* Lighter white for optimal reading comfort */
+    color: #e5e5e5; 
     margin-bottom: 24px;
   }
   .modal-info-box {
@@ -612,7 +612,7 @@
     box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
   }
 
-  /* Mobile */
+  
   @media (max-width: 900px) {
     nav { padding: 18px 20px; }
     .nav-meta { gap: 14px; font-size: 10px; }
@@ -636,7 +636,7 @@
     }
   }
 
-  /* Welcome UI & Actions in hero-top */
+  
   .hero-top-welcome {
     font-size: 11px;
     font-weight: 700;
@@ -677,7 +677,7 @@
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
   }
 
-  /* Header Get Script Button */
+  
   .nav-btn-accent {
     background: var(--accent);
     color: var(--bg) !important;
@@ -694,7 +694,7 @@
     display: none !important;
   }
 
-  /* Scripts Loader Section */
+  
   .scripts-loader {
     padding: 100px 40px;
     border-bottom: 1px solid var(--line);
@@ -765,7 +765,7 @@
 </head>
 <body>
 
-<!-- Preloader -->
+
 <div class="loader" id="loader">
   <div class="loader-inner">
     <div class="loader-line"></div>
@@ -775,10 +775,10 @@
 
 <div class="progress" id="progress"></div>
 
-<!-- Modal pop-up verification -->
+
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-box">
-    <!-- Step: Edge Required -->
+    
     <div class="modal-step" id="modal-step-edge" style="display: none;">
       <h3 class="modal-title highlight-red">Edge Required</h3>
       <p class="modal-text">This platform can only be accessed using <strong>Microsoft Edge</strong> to ensure script compatibility.</p>
@@ -788,7 +788,7 @@
       </div>
     </div>
 
-    <!-- Step 1 -->
+    
     <div class="modal-step" id="modal-step-1">
       <h3 class="modal-title">Are you here for our scripts?</h3>
       <ul class="modal-list">
@@ -801,7 +801,7 @@
       </div>
     </div>
     
-    <!-- Step 2 -->
+    
     <div class="modal-step" id="modal-step-2" style="display: none;">
       <h3 class="modal-title highlight">Redirecting</h3>
       <div class="modal-info-box">
@@ -818,7 +818,7 @@
 </div>
 
 <nav>
-  <div class="nav-logo">HUB ZERO <span class="nav-sub">— Scroll down to access script + view content</span></div>
+  <div class="nav-logo">HUB ZERO</div>
   <div class="nav-meta">
     <a href="#services">Services</a>
     <a href="#scripts-loader" class="nav-btn-accent">Get the script</a>
@@ -835,7 +835,6 @@
     </h1>
   </div>
   
-  <!-- Moving Green Arrow pointing down -->
   <div class="hero-arrow fade-up d2">
     <svg width="32" height="64" viewBox="0 0 24 48" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M12 0V44M12 44L2 34M12 44L22 34" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -852,14 +851,9 @@
   </div>
 </div>
 
-<!-- Services -->
 <section class="services" id="services">
   <div class="services-header">
     <h2 class="services-title fade-up"><em>Viewing</em>.</h2>
-    <div class="services-tag fade-up d1">
-      Overview
-      <strong>[ 04 / 04 SHOWN ]</strong>
-    </div>
   </div>
   
   <div class="services-grid">
@@ -894,7 +888,7 @@
   </div>
 </section>
 
-<!-- Scripts Loader Section -->
+
 <section class="scripts-loader" id="scripts-loader">
   <div class="scripts-loader-header">
     <h2 class="services-title fade-up"><em>Scripts</em> Loader.</h2>
@@ -905,7 +899,7 @@
   </div>
 </section>
 
-<!-- Footer -->
+
 <footer>
   <h2 class="footer-logo fade-up"><span>HUB</span> <em>ZERO</em>.</h2>
   <div class="footer-bottom fade-up d1">
@@ -915,7 +909,7 @@
 </footer>
 
 <script>
-  // Session validation check against Supabase on load
+ 
   (async function() {
     const signedIn = localStorage.getItem('Signed_in');
     if (signedIn) {
@@ -925,7 +919,7 @@
         if (id) {
           const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
           
-          // 1. Check blacklist first
+         
           const blacklistRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), {
             headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
           });
@@ -939,7 +933,7 @@
             }
           }
 
-          // 2. Check if student still exists
+         
           const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id), {
             headers: {
               'apikey': sbKey,
@@ -961,7 +955,7 @@
     }
   })();
 
-  // Copy code handler for Scripts Loader box
+ 
   const copyBtn = document.getElementById('btn-copy-loader');
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
@@ -983,7 +977,7 @@
     });
   }
 
-  // Scroll progress bar
+ 
   const progress = document.getElementById('progress');
   function updateProgress() {
     const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
@@ -992,7 +986,7 @@
   window.addEventListener('scroll', updateProgress, { passive: true });
   updateProgress();
 
-  // Fade-up reveal observer
+ 
   const fadeObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -1003,10 +997,10 @@
   }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
 
-  // Browser Detection
+ 
   const isEdge = /Edg/i.test(navigator.userAgent);
 
-  // Modal Elements
+ 
   const overlay = document.getElementById('modal-overlay');
   const step1 = document.getElementById('modal-step-1');
   const step2 = document.getElementById('modal-step-2');
@@ -1024,17 +1018,17 @@
   });
 
   btnOkay.addEventListener('click', () => {
-    // Keep overlay active, block scrolling, make background pure black and hide the modal box
+   
     overlay.style.backgroundColor = '#000000';
     overlay.style.opacity = '1';
     const modalBox = document.querySelector('.modal-box');
     if (modalBox) modalBox.style.display = 'none';
     
-    // Redirect to proxy URL
+   
     window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
   });
 
-  // Check URL params for verification from proxy
+ 
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verified') === 'true') {
     const name = urlParams.get('name') || '';
@@ -1044,7 +1038,7 @@
       try {
         const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
         
-        // 1. Check if ID is blacklisted first
+       
         const blacklistRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), {
           headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
         });
@@ -1052,17 +1046,17 @@
           const blacklistRecords = await blacklistRes.json();
           if (blacklistRecords && blacklistRecords.length > 0) {
             alert("Access Denied: You are blacklisted. Reason: " + blacklistRecords[0].reason);
-            // Clean URL query params and abort
+           
             const newUrl = window.location.pathname;
             window.history.replaceState({}, document.title, newUrl);
             return;
           }
         }
 
-        // 2. Save session if not blacklisted
+       
         localStorage.setItem('Signed_in', JSON.stringify({ name: name, id: id }));
 
-        // 3. Initialize student limits table
+       
         const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits';
         const checkRes = await fetch(sbUrl + '?id=eq.' + encodeURIComponent(id), {
           headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
@@ -1088,7 +1082,7 @@
         
         alert("Verified ✔");
         
-        // Clean URL query params
+       
         const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
         updateHeroTop();
@@ -1099,7 +1093,7 @@
     })();
   }
 
-  // Display user info in hero-top if signed in
+ 
   function updateHeroTop() {
     const signedIn = localStorage.getItem('Signed_in');
     const heroTop = document.querySelector('.hero-top');
@@ -1146,7 +1140,7 @@
     }
   }
 
-  // Preloader transition triggers body loaded class
+ 
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('loader').classList.add('loaded');
@@ -1154,7 +1148,7 @@
     }, 700);
   });
 
-  // Ensure modal state is checked on every page visibility/entry (handles back button)
+ 
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
       checkModalState();

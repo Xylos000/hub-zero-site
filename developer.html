@@ -31,7 +31,7 @@
       display: flex;
       flex-direction: column;
     }
-    /* Auth Page */
+    
     .login-wrapper {
       margin: auto;
       max-width: 420px;
@@ -96,7 +96,7 @@
       font-weight: 500;
     }
 
-    /* Main Panel Dashboard */
+    
     .dashboard {
       display: none;
       flex-direction: column;
@@ -159,7 +159,7 @@
       color: var(--fg) !important;
     }
 
-    /* Content Layout */
+    
     .table-container {
       background: var(--card);
       border: 1px solid var(--line);
@@ -201,7 +201,7 @@
       background: var(--card-hover);
     }
 
-    /* Actions UI Elements */
+    
     .btn-action {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 11.5px;
@@ -278,7 +278,7 @@
       border: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Modal Form Styling */
+    
     .edit-modal {
       position: fixed;
       inset: 0;
@@ -383,7 +383,7 @@
 </head>
 <body>
 
-  <!-- Password Authentication Panel -->
+  
   <div class="login-wrapper" id="login-container">
     <div class="login-logo">Hub Zero <span>Console</span></div>
     <input type="password" class="login-input" id="password-input" placeholder="••••••" autofocus />
@@ -391,7 +391,7 @@
     <div class="login-error" id="login-error"></div>
   </div>
 
-  <!-- Main Console Dashboard -->
+  
   <div class="dashboard" id="dashboard">
     <div class="dashboard-header">
       <div class="dashboard-title">Developer <span>Console</span></div>
@@ -403,7 +403,7 @@
       </div>
     </div>
 
-    <!-- Tab Content: Users -->
+    
     <div class="table-container active" id="tab-users">
       <table>
         <thead>
@@ -417,12 +417,12 @@
           </tr>
         </thead>
         <tbody id="users-list">
-          <!-- Populated dynamically -->
+          
         </tbody>
       </table>
     </div>
 
-    <!-- Tab Content: Blacklist -->
+    
     <div class="table-container" id="tab-blacklist">
       <table>
         <thead>
@@ -435,12 +435,12 @@
           </tr>
         </thead>
         <tbody id="blacklist-list">
-          <!-- Populated dynamically -->
+          
         </tbody>
       </table>
     </div>
 
-    <!-- Tab Content: Violations -->
+    
     <div class="table-container" id="tab-violations">
       <table>
         <thead>
@@ -453,19 +453,19 @@
           </tr>
         </thead>
         <tbody id="violations-list">
-          <!-- Populated dynamically -->
+          
         </tbody>
       </table>
     </div>
   </div>
 
-  <!-- Edit Credit Pool Modal -->
+  
   <div class="edit-modal" id="edit-pool-modal">
     <div class="modal-content">
       <div class="modal-title">Edit Cheers Credit Pool</div>
       <div class="form-group">
-        <label class="form-label" for="edit-pool-input">Cheers Pool Remaining (Max 500)</label>
-        <input type="number" class="form-input" id="edit-pool-input" min="0" max="500">
+        <label class="form-label" for="edit-pool-input">Cheers Pool Remaining</label>
+        <input type="number" class="form-input" id="edit-pool-input" min="0">
       </div>
       <div class="modal-actions">
         <button class="btn-modal btn-modal-cancel" id="btn-edit-pool-cancel">Cancel</button>
@@ -474,7 +474,7 @@
     </div>
   </div>
 
-  <!-- Blacklist Reason Modal -->
+  
   <div class="edit-modal" id="blacklist-modal">
     <div class="modal-content">
       <div class="modal-title">Blacklist Student</div>
@@ -501,7 +501,7 @@
     let selectedUserId = null;
     let selectedUserName = null;
 
-    // Hashing helper
+   
     async function sha256(str) {
       const buffer = new TextEncoder().encode(str);
       const hash = await crypto.subtle.digest('SHA-256', buffer);
@@ -514,7 +514,7 @@
     const loginBtn = document.getElementById('login-btn');
     const loginError = document.getElementById('login-error');
 
-    // Modal elements
+   
     const editPoolModal = document.getElementById('edit-pool-modal');
     const editPoolInput = document.getElementById('edit-pool-input');
     const blacklistModal = document.getElementById('blacklist-modal');
@@ -546,7 +546,7 @@
       loadData();
     }
 
-    // Tabs toggle
+   
     const tabs = document.querySelectorAll('.tab-btn[data-tab]');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -577,7 +577,7 @@
         const violations = await violationsRes.json();
         const blacklisted = await blacklistRes.json();
 
-        // 1. Populate users table
+       
         const usersList = document.getElementById('users-list');
         usersList.innerHTML = '';
         users.forEach(u => {
@@ -598,7 +598,7 @@
           usersList.appendChild(row);
         });
 
-        // 2. Populate blacklist table
+       
         const blacklistList = document.getElementById('blacklist-list');
         blacklistList.innerHTML = '';
         blacklisted.forEach(b => {
@@ -613,7 +613,7 @@
           blacklistList.appendChild(row);
         });
 
-        // 3. Populate violations table
+       
         const violationsList = document.getElementById('violations-list');
         violationsList.innerHTML = '';
         violations.forEach(v => {
@@ -633,7 +633,7 @@
       }
     }
 
-    // Modal Control: Edit Credits
+   
     function openEditPoolModal(id, currentVal) {
       selectedUserId = id;
       editPoolInput.value = currentVal;
@@ -646,8 +646,8 @@
 
     document.getElementById('btn-edit-pool-save').onclick = async () => {
       const newVal = parseInt(editPoolInput.value);
-      if (isNaN(newVal) || newVal < 0 || newVal > 500) {
-        alert("Please enter a value between 0 and 500");
+      if (isNaN(newVal) || newVal < 0) {
+        alert("Please enter a valid positive number");
         return;
       }
       try {
@@ -665,7 +665,7 @@
       }
     };
 
-    // Clear Set Credits Cooldown
+   
     async function clearCooldown(id) {
       if (!confirm("Clear the Set Credits 48h cooldown for this user?")) return;
       try {
@@ -682,7 +682,7 @@
       }
     }
 
-    // Modal Control: Blacklist
+   
     function openBlacklistModal(id, name) {
       selectedUserId = id;
       selectedUserName = name;
@@ -697,7 +697,7 @@
     document.getElementById('btn-blacklist-save').onclick = async () => {
       const reason = blacklistReasonInput.value.trim() || 'No reason provided';
       try {
-        // 1. Insert into blacklisted_students table
+       
         const insertRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students', {
           method: 'POST',
           headers: sbHeaders,
@@ -710,7 +710,7 @@
         });
 
         if (insertRes.ok) {
-          // 2. Delete from verified_students & student_usage_limits
+         
           await Promise.all([
             fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.${selectedUserId}`, { method: 'DELETE', headers: sbHeaders }),
             fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${selectedUserId}`, { method: 'DELETE', headers: sbHeaders })
@@ -724,7 +724,7 @@
       }
     };
 
-    // Remove from blacklist (Whitelist)
+   
     async function whitelistUser(id) {
       if (!confirm(`Remove student ${id} from blacklist?`)) return;
       try {

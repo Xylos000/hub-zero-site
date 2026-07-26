@@ -3095,8 +3095,25 @@
 
   // --- Auth verification logic ---
   async function checkSupabaseAccess(id) {
-    const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id);
     const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    
+    // 1. Check blacklist first
+    const blUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id);
+    const blRes = await fetch(blUrl, {
+      headers: {
+        'apikey': sbKey,
+        'Authorization': 'Bearer ' + sbKey
+      }
+    });
+    if (blRes.ok) {
+      const blData = await blRes.json();
+      if (blData && blData.length > 0) {
+        throw new Error("Blacklisted: " + blData[0].reason);
+      }
+    }
+
+    // 2. Check verified_students
+    const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id);
     const res = await fetch(sbUrl, {
       headers: {
         'apikey': sbKey,
@@ -3196,6 +3213,9 @@
       }
     }).catch(err => {
       console.error("Auth check failed:", err);
+      localStorage.removeItem('ep_hub_verified_id');
+      authCover.style.display = 'flex';
+      authError.textContent = err.message || "Your access has expired or was removed. Go to hub-zero.site to verify.";
     });
   }
 
