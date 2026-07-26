@@ -2988,6 +2988,9 @@
           last_pool_reset: new Date().toISOString()
         })
       });
+      if (!insertRes.ok) {
+        throw new Error("Supabase returned error " + insertRes.status + " trying to create your limits profile. Please make sure your Supabase RLS policies are set up correctly.");
+      }
       const insertData = await insertRes.json();
       limits = insertData[0];
     } else {
