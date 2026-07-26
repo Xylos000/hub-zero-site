@@ -4,105 +4,125 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hub Zero — Developer Console</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
   <style>
     :root {
-      --bg: #05080f;
-      --card: #0c111d;
-      --line: #1e293b;
-      --accent: #d4ff3a;
-      --fg: #f1f5f9;
+      --bg: #090b11;
+      --card: #111420;
+      --card-hover: #161a29;
+      --line: rgba(255, 255, 255, 0.08);
+      --accent: #22c55e;
+      --accent-glow: rgba(34, 197, 94, 0.35);
+      --purple: #a855f7;
+      --purple-glow: rgba(168, 85, 247, 0.35);
+      --fg: #f8fafc;
       --muted: #64748b;
       --error: #ef4444;
+      --error-glow: rgba(239, 68, 68, 0.35);
+      --blue: #3b82f6;
     }
     body {
       background-color: var(--bg);
       color: var(--fg);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       margin: 0;
       padding: 0;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
-    /* Password Screen */
-    .login-container {
+    /* Auth Page */
+    .login-wrapper {
       margin: auto;
-      max-width: 400px;
+      max-width: 420px;
       width: 90%;
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 40px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      border-radius: 16px;
+      padding: 48px;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.7);
       text-align: center;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
-    .login-title {
-      font-size: 20px;
+    .login-logo {
+      font-size: 26px;
       font-weight: 800;
-      letter-spacing: 0.05em;
+      letter-spacing: -0.03em;
       text-transform: uppercase;
       color: var(--fg);
     }
+    .login-logo span {
+      color: var(--purple);
+    }
     .login-input {
       font-family: 'JetBrains Mono', monospace;
-      background: #080c14;
+      background: rgba(0, 0, 0, 0.3);
       border: 1px solid var(--line);
       color: var(--fg);
-      padding: 12px;
-      border-radius: 8px;
+      padding: 14px;
+      border-radius: 10px;
       text-align: center;
-      font-size: 16px;
+      font-size: 18px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: all 0.2s;
     }
     .login-input:focus {
-      border-color: var(--accent);
+      border-color: var(--purple);
+      box-shadow: 0 0 15px var(--purple-glow);
     }
     .login-btn {
-      font-family: 'JetBrains Mono', monospace;
-      background: var(--accent);
-      color: var(--bg);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--purple);
+      color: #ffffff;
       border: none;
-      padding: 12px;
-      border-radius: 8px;
+      padding: 14px;
+      border-radius: 10px;
       font-weight: 700;
       cursor: pointer;
-      font-size: 14px;
-      transition: transform 0.2s, opacity 0.2s;
+      font-size: 15px;
+      transition: all 0.2s;
     }
     .login-btn:hover {
-      opacity: 0.9;
+      opacity: 0.95;
+      box-shadow: 0 0 20px var(--purple-glow);
+      transform: translateY(-1px);
     }
     .login-error {
       color: var(--error);
       font-size: 13px;
       min-height: 20px;
+      font-weight: 500;
     }
 
-    /* Dashboard */
+    /* Main Panel Dashboard */
     .dashboard {
       display: none;
       flex-direction: column;
       flex: 1;
-      padding: 40px;
+      padding: 50px 60px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      box-sizing: border-box;
     }
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       border-bottom: 1px solid var(--line);
-      padding-bottom: 20px;
-      margin-bottom: 30px;
+      padding-bottom: 24px;
+      margin-bottom: 36px;
     }
     .dashboard-title {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: 800;
-      letter-spacing: -0.02em;
+      letter-spacing: -0.03em;
       text-transform: uppercase;
+    }
+    .dashboard-title span {
+      color: var(--purple);
     }
     .dashboard-tabs {
       display: flex;
@@ -112,32 +132,41 @@
       background: transparent;
       border: 1px solid var(--line);
       color: var(--muted);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      padding: 8px 16px;
-      border-radius: 6px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s;
     }
+    .tab-btn:hover {
+      color: var(--fg);
+      background: rgba(255,255,255,0.02);
+    }
     .tab-btn.active {
-      border-color: var(--accent);
-      color: var(--accent);
-      background: rgba(212,255,58,0.05);
+      border-color: var(--purple);
+      color: #ffffff;
+      background: var(--purple);
+      box-shadow: 0 0 15px var(--purple-glow);
     }
     .btn-logout {
       border-color: var(--error);
       color: var(--error);
     }
     .btn-logout:hover {
-      background: rgba(239,68,68,0.05);
+      background: rgba(239,68,68,0.08) !important;
+      color: var(--fg) !important;
     }
 
+    /* Content Layout */
     .table-container {
       background: var(--card);
       border: 1px solid var(--line);
-      border-radius: 12px;
+      border-radius: 16px;
       overflow: hidden;
       display: none;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.3);
     }
     .table-container.active {
       display: block;
@@ -146,66 +175,217 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 14px;
     }
     th, td {
-      padding: 16px 20px;
+      padding: 18px 24px;
       border-bottom: 1px solid var(--line);
+      vertical-align: middle;
     }
     th {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 11px;
       text-transform: uppercase;
       color: var(--muted);
       font-weight: 700;
-      letter-spacing: 0.05em;
-      background: rgba(0,0,0,0.2);
+      letter-spacing: 0.08em;
+      background: rgba(0,0,0,0.15);
     }
     td {
+      font-size: 14px;
       color: #cbd5e1;
     }
     tr:last-child td {
       border-bottom: none;
     }
-    .btn-delete {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      color: var(--error);
-      padding: 6px 12px;
-      border-radius: 4px;
+    tr:hover td {
+      background: var(--card-hover);
+    }
+
+    /* Actions UI Elements */
+    .btn-action {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 11.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 8px 14px;
+      border-radius: 6px;
       cursor: pointer;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
+      border: 1px solid transparent;
       transition: all 0.2s;
+      margin-right: 6px;
     }
-    .btn-delete:hover {
+    .btn-edit-pool {
+      background: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.25);
+      color: #3b82f6;
+    }
+    .btn-edit-pool:hover {
+      background: #3b82f6;
+      color: #ffffff;
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
+    }
+    .btn-clear-cooldown {
+      background: rgba(168, 85, 247, 0.1);
+      border-color: rgba(168, 85, 247, 0.25);
+      color: var(--purple);
+    }
+    .btn-clear-cooldown:hover {
+      background: var(--purple);
+      color: #ffffff;
+      box-shadow: 0 0 10px var(--purple-glow);
+    }
+    .btn-blacklist {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.25);
+      color: var(--error);
+    }
+    .btn-blacklist:hover {
       background: var(--error);
-      color: white;
+      color: #ffffff;
+      box-shadow: 0 0 10px var(--error-glow);
     }
+    .btn-whitelist {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.25);
+      color: var(--accent);
+    }
+    .btn-whitelist:hover {
+      background: var(--accent);
+      color: var(--bg);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
     .timestamp {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      color: var(--muted);
+      font-size: 12.5px;
+      color: #94a3b8;
     }
     .badge {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 11px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 600;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 700;
     }
     .badge-pool {
-      background: rgba(212, 255, 58, 0.1);
-      color: var(--accent);
-      border: 1px solid rgba(212, 255, 58, 0.2);
+      background: rgba(34, 197, 94, 0.1);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+    .badge-id {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* Modal Form Styling */
+    .edit-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 10000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .edit-modal.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-content {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 36px;
+      max-width: 440px;
+      width: 90%;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .form-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+    .form-input {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--line);
+      color: var(--fg);
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+    .form-input:focus {
+      border-color: var(--purple);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+    .btn-modal {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .btn-modal-cancel {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--fg);
+    }
+    .btn-modal-cancel:hover {
+      background: rgba(255,255,255,0.03);
+    }
+    .btn-modal-save {
+      background: var(--purple);
+      color: white;
+    }
+    .btn-modal-save:hover {
+      box-shadow: 0 0 15px var(--purple-glow);
+      opacity: 0.95;
+    }
+    .btn-modal-red {
+      background: var(--error);
+      color: white;
+    }
+    .btn-modal-red:hover {
+      box-shadow: 0 0 15px var(--error-glow);
+      opacity: 0.95;
     }
   </style>
 </head>
 <body>
 
   <!-- Password Authentication Panel -->
-  <div class="login-container" id="login-container">
-    <div class="login-title">Developer Authentication</div>
+  <div class="login-wrapper" id="login-container">
+    <div class="login-logo">Hub Zero <span>Console</span></div>
     <input type="password" class="login-input" id="password-input" placeholder="••••••" autofocus />
     <button class="login-btn" id="login-btn">Authenticate</button>
     <div class="login-error" id="login-error"></div>
@@ -214,9 +394,10 @@
   <!-- Main Console Dashboard -->
   <div class="dashboard" id="dashboard">
     <div class="dashboard-header">
-      <div class="dashboard-title">Developer Console</div>
+      <div class="dashboard-title">Developer <span>Console</span></div>
       <div class="dashboard-tabs">
         <button class="tab-btn active" data-tab="users">Registered Students</button>
+        <button class="tab-btn" data-tab="blacklist">Blacklist</button>
         <button class="tab-btn" data-tab="violations">Console Violations</button>
         <button class="tab-btn btn-logout" id="logout-btn">Exit</button>
       </div>
@@ -230,12 +411,30 @@
             <th>Student Name</th>
             <th>ID</th>
             <th>Remaining Cheers Pool</th>
-            <th>Last Cheers</th>
+            <th>Last Cheers Action</th>
             <th>Last Set Credits</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody id="users-list">
+          <!-- Populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab Content: Blacklist -->
+    <div class="table-container" id="tab-blacklist">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Reason for Blacklist</th>
+            <th>Blacklisted Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="blacklist-list">
           <!-- Populated dynamically -->
         </tbody>
       </table>
@@ -260,6 +459,36 @@
     </div>
   </div>
 
+  <!-- Edit Credit Pool Modal -->
+  <div class="edit-modal" id="edit-pool-modal">
+    <div class="modal-content">
+      <div class="modal-title">Edit Cheers Credit Pool</div>
+      <div class="form-group">
+        <label class="form-label" for="edit-pool-input">Cheers Pool Remaining (Max 500)</label>
+        <input type="number" class="form-input" id="edit-pool-input" min="0" max="500">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-edit-pool-cancel">Cancel</button>
+        <button class="btn-modal btn-modal-save" id="btn-edit-pool-save">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Blacklist Reason Modal -->
+  <div class="edit-modal" id="blacklist-modal">
+    <div class="modal-content">
+      <div class="modal-title">Blacklist Student</div>
+      <div class="form-group">
+        <label class="form-label" for="blacklist-reason-input">Reason for blacklisting</label>
+        <input type="text" class="form-input" id="blacklist-reason-input" placeholder="e.g. Injected malicious code via console">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-blacklist-cancel">Cancel</button>
+        <button class="btn-modal btn-modal-red" id="btn-blacklist-save">Blacklist & Remove</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     const HASH_TARGET = '11122b5a51b0e394f6a8d7fafef9180057bf2640ece183ecdb51e26efd5b1448';
     const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
@@ -269,7 +498,10 @@
       'Content-Type': 'application/json'
     };
 
-    // SHA-256 Hashing helper using WebCrypto
+    let selectedUserId = null;
+    let selectedUserName = null;
+
+    // Hashing helper
     async function sha256(str) {
       const buffer = new TextEncoder().encode(str);
       const hash = await crypto.subtle.digest('SHA-256', buffer);
@@ -281,6 +513,12 @@
     const passInput = document.getElementById('password-input');
     const loginBtn = document.getElementById('login-btn');
     const loginError = document.getElementById('login-error');
+
+    // Modal elements
+    const editPoolModal = document.getElementById('edit-pool-modal');
+    const editPoolInput = document.getElementById('edit-pool-input');
+    const blacklistModal = document.getElementById('blacklist-modal');
+    const blacklistReasonInput = document.getElementById('blacklist-reason-input');
 
     async function handleAuth() {
       const hash = await sha256(passInput.value);
@@ -308,7 +546,7 @@
       loadData();
     }
 
-    // Tabs logic
+    // Tabs toggle
     const tabs = document.querySelectorAll('.tab-btn[data-tab]');
     tabs.forEach(tab => {
       tab.addEventListener('click', () => {
@@ -327,46 +565,65 @@
 
     async function loadData() {
       try {
-        // Fetch verified students and limits concurrently
-        const [usersRes, limitsRes, violationsRes] = await Promise.all([
+        const [usersRes, limitsRes, violationsRes, blacklistRes] = await Promise.all([
           fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students', { headers: sbHeaders }),
           fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits', { headers: sbHeaders }),
-          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/console_violations?order=violated_at.desc', { headers: sbHeaders })
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/console_violations?order=violated_at.desc', { headers: sbHeaders }),
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?order=blacklisted_at.desc', { headers: sbHeaders })
         ]);
 
         const users = await usersRes.json();
         const limits = await limitsRes.json();
         const violations = await violationsRes.json();
+        const blacklisted = await blacklistRes.json();
 
-        // Populate users table
+        // 1. Populate users table
         const usersList = document.getElementById('users-list');
         usersList.innerHTML = '';
-        
         users.forEach(u => {
           const limit = limits.find(l => l.id === u.id) || {};
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td><strong>${u.name || 'Unknown'}</strong></td>
-            <td><code style="font-family: 'JetBrains Mono', monospace;">${u.id}</code></td>
-            <td><span class="badge badge-pool">${limit.cheers_pool_remaining !== undefined ? limit.cheers_pool_remaining : '—'}</span></td>
+            <td><strong style="color: #ffffff; font-size: 15px;">${u.name || 'Unknown'}</strong></td>
+            <td><span class="badge badge-id">${u.id}</span></td>
+            <td><span class="badge badge-pool">${limit.cheers_pool_remaining !== undefined ? limit.cheers_pool_remaining + ' cr' : '—'}</span></td>
             <td class="timestamp">${limit.last_used_cheers ? new Date(limit.last_used_cheers).toLocaleString() : 'Never'}</td>
             <td class="timestamp">${limit.last_used_set ? new Date(limit.last_used_set).toLocaleString() : 'Never'}</td>
-            <td><button class="btn-delete" onclick="deleteUser('${u.id}')">Delete</button></td>
+            <td>
+              <button class="btn-action btn-edit-pool" onclick="openEditPoolModal('${u.id}', ${limit.cheers_pool_remaining || 500})">Edit Pool</button>
+              <button class="btn-action btn-clear-cooldown" onclick="clearCooldown('${u.id}')">Clear Cooldown</button>
+              <button class="btn-action btn-blacklist" onclick="openBlacklistModal('${u.id}', '${u.name}')">Blacklist</button>
+            </td>
           `;
           usersList.appendChild(row);
         });
 
-        // Populate violations table
+        // 2. Populate blacklist table
+        const blacklistList = document.getElementById('blacklist-list');
+        blacklistList.innerHTML = '';
+        blacklisted.forEach(b => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong style="color: #ffffff;">${b.name || 'Unknown'}</strong></td>
+            <td><span class="badge badge-id">${b.id}</span></td>
+            <td style="color: #f87171; font-weight: 500;">${b.reason || 'None provided'}</td>
+            <td class="timestamp">${new Date(b.blacklisted_at).toLocaleString()}</td>
+            <td><button class="btn-action btn-whitelist" onclick="whitelistUser('${b.id}')">Whitelist</button></td>
+          `;
+          blacklistList.appendChild(row);
+        });
+
+        // 3. Populate violations table
         const violationsList = document.getElementById('violations-list');
         violationsList.innerHTML = '';
         violations.forEach(v => {
           const row = document.createElement('tr');
           row.innerHTML = `
             <td><strong>${v.student_name || 'Unknown'}</strong></td>
-            <td><code style="font-family: 'JetBrains Mono', monospace;">${v.student_id || '—'}</code></td>
-            <td style="font-size: 12px; color: #a3a3a3;"><code>${v.url || '—'}</code></td>
+            <td><span class="badge badge-id">${v.student_id || '—'}</span></td>
+            <td style="font-size: 12.5px; color: #94a3b8;"><code style="background: rgba(0,0,0,0.15); padding: 4px 8px; border-radius: 4px;">${v.url || '—'}</code></td>
             <td class="timestamp">${new Date(v.violated_at).toLocaleString()}</td>
-            <td><button class="btn-delete" onclick="deleteViolation('${v.id}')">Clear</button></td>
+            <td><button class="btn-action btn-blacklist" onclick="deleteViolation('${v.id}')">Clear Log</button></td>
           `;
           violationsList.appendChild(row);
         });
@@ -376,14 +633,108 @@
       }
     }
 
-    async function deleteUser(id) {
-      if (!confirm(`Are you sure you want to delete student ${id}? This deletes them from all tables and revokes access.`)) return;
+    // Modal Control: Edit Credits
+    function openEditPoolModal(id, currentVal) {
+      selectedUserId = id;
+      editPoolInput.value = currentVal;
+      editPoolModal.classList.add('active');
+    }
+
+    document.getElementById('btn-edit-pool-cancel').onclick = () => {
+      editPoolModal.classList.remove('active');
+    };
+
+    document.getElementById('btn-edit-pool-save').onclick = async () => {
+      const newVal = parseInt(editPoolInput.value);
+      if (isNaN(newVal) || newVal < 0 || newVal > 500) {
+        alert("Please enter a value between 0 and 500");
+        return;
+      }
       try {
-        await Promise.all([
-          fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.${id}`, { method: 'DELETE', headers: sbHeaders }),
-          fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${id}`, { method: 'DELETE', headers: sbHeaders })
-        ]);
-        loadData();
+        const updateRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${selectedUserId}`, {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({ cheers_pool_remaining: newVal })
+        });
+        if (updateRes.ok) {
+          editPoolModal.classList.remove('active');
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    // Clear Set Credits Cooldown
+    async function clearCooldown(id) {
+      if (!confirm("Clear the Set Credits 48h cooldown for this user?")) return;
+      try {
+        const updateRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${id}`, {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({ last_used_set: null })
+        });
+        if (updateRes.ok) {
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    // Modal Control: Blacklist
+    function openBlacklistModal(id, name) {
+      selectedUserId = id;
+      selectedUserName = name;
+      blacklistReasonInput.value = '';
+      blacklistModal.classList.add('active');
+    }
+
+    document.getElementById('btn-blacklist-cancel').onclick = () => {
+      blacklistModal.classList.remove('active');
+    };
+
+    document.getElementById('btn-blacklist-save').onclick = async () => {
+      const reason = blacklistReasonInput.value.trim() || 'No reason provided';
+      try {
+        // 1. Insert into blacklisted_students table
+        const insertRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students', {
+          method: 'POST',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            id: selectedUserId,
+            name: selectedUserName,
+            reason: reason,
+            blacklisted_at: new Date().toISOString()
+          })
+        });
+
+        if (insertRes.ok) {
+          // 2. Delete from verified_students & student_usage_limits
+          await Promise.all([
+            fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.${selectedUserId}`, { method: 'DELETE', headers: sbHeaders }),
+            fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${selectedUserId}`, { method: 'DELETE', headers: sbHeaders })
+          ]);
+          
+          blacklistModal.classList.remove('active');
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    // Remove from blacklist (Whitelist)
+    async function whitelistUser(id) {
+      if (!confirm(`Remove student ${id} from blacklist?`)) return;
+      try {
+        const deleteRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.${id}`, {
+          method: 'DELETE',
+          headers: sbHeaders
+        });
+        if (deleteRes.ok) {
+          loadData();
+        }
       } catch (err) {
         console.error(err);
       }
