@@ -5,6 +5,43 @@ javascript:(async function(){
     return;
   }
 
+  // Get externalId and clean it
+  let studentId = '';
+  if (window.schoolboxUser && window.schoolboxUser.externalId) {
+    studentId = String(window.schoolboxUser.externalId).replace(/['"]/g, "").trim();
+  }
+
+  if (!studentId) {
+    alert("Error! Could not find your student ID. Please make sure you are logged in on the realm portal.");
+    return;
+  }
+
+  // Verify against Supabase
+  try {
+    const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(studentId);
+    const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    const response = await fetch(sbUrl, {
+      headers: {
+        'apikey': sbKey,
+        'Authorization': 'Bearer ' + sbKey
+      }
+    });
+    
+    if (!response.ok) {
+      throw new Error("Supabase request failed: " + response.statusText);
+    }
+    
+    const data = await response.json();
+    if (!data || data.length === 0) {
+      alert("Error! Your ID is not whitelisted. Go to Hub-Zero.site and complete the realm link to verify your ID");
+      return;
+    }
+  } catch (error) {
+    console.error("Supabase verification error:", error);
+    alert("Error checking access status! Please try again later or contact support.");
+    return;
+  }
+
   const GITHUB_URL='https://raw.githubusercontent.com/Xylos000/Data/refs/heads/main/realm_students.txt';
   const DROPBOX_CONFIG={
     refreshToken:'TswY5VPKPZIAAAAAAAAAAexX6b7MNjI2vs73jevAw8ISqzSDtfz2Xand1JTjF4jP',

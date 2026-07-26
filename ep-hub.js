@@ -855,6 +855,95 @@
       font-size: 9px;
       color: #ef4444;
     }
+
+    /* Auth Cover styling */
+    .ep-auth-cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #080c14;
+      z-index: 100000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      font-family: 'Inter', sans-serif;
+    }
+    .ep-auth-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #f1f5f9;
+      margin-bottom: 8px;
+      letter-spacing: 0.02em;
+    }
+    .ep-auth-info {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 20px;
+      max-width: 320px;
+      line-height: 1.5;
+      text-align: center;
+    }
+    .ep-auth-input-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ep-auth-input {
+      width: 100%;
+      background: #0c111d;
+      border: 1px solid #1e293b;
+      color: #f1f5f9;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+      text-align: center;
+      letter-spacing: 0.05em;
+      transition: border-color 0.2s;
+    }
+    .ep-auth-input:focus {
+      border-color: #3b82f6;
+    }
+    .ep-auth-btn {
+      width: 100%;
+      background: #3b82f6;
+      border: none;
+      color: #ffffff;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .ep-auth-btn:hover {
+      background: #2563eb;
+    }
+    .ep-auth-btn:disabled {
+      background: #1e293b;
+      color: #475569;
+      cursor: not-allowed;
+    }
+    .ep-auth-error {
+      font-size: 12px;
+      color: #f87171;
+      min-height: 18px;
+      margin-top: 8px;
+      font-weight: 500;
+      line-height: 1.4;
+      max-width: 280px;
+      text-align: center;
+    }
   `;
   document.head.appendChild(style);
 
@@ -862,6 +951,15 @@
   hub.id = 'ep-hub';
   hub.innerHTML = `
     <div class="ep-border-bg2"></div>
+    <div class="ep-auth-cover" id="ep-auth-cover">
+      <div class="ep-auth-title">Access - Enter your student ID</div>
+      <div class="ep-auth-info">Go to your realm profile and enter the 6 digit student ID</div>
+      <div class="ep-auth-input-wrapper">
+        <input type="text" class="ep-auth-input" id="ep-auth-input" placeholder="000000" maxlength="8" />
+        <button class="ep-auth-btn" id="ep-auth-btn">Verify Access</button>
+        <div class="ep-auth-error" id="ep-auth-error"></div>
+      </div>
+    </div>
     <div class="ep-header" id="ep-drag">
       <div class="ep-title">
         EP Script Hub
@@ -2735,4 +2833,67 @@
   adjustTimeBtn.addEventListener('click', runAdjustTime);
   removeTimerBtn.addEventListener('click', runRemoveTimer);
   reverseTimerBtn.addEventListener('click', toggleReverseTimer);
+
+  // --- Auth verification logic ---
+  async function checkSupabaseAccess(id) {
+    const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id);
+    const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    const res = await fetch(sbUrl, {
+      headers: {
+        'apikey': sbKey,
+        'Authorization': 'Bearer ' + sbKey
+      }
+    });
+    if (!res.ok) throw new Error("Verification failed");
+    const data = await res.json();
+    return data && data.length > 0;
+  }
+
+  const authCover = document.getElementById('ep-auth-cover');
+  const authInput = document.getElementById('ep-auth-input');
+  const authBtn = document.getElementById('ep-auth-btn');
+  const authError = document.getElementById('ep-auth-error');
+
+  const savedId = localStorage.getItem('ep_hub_verified_id');
+  if (savedId) {
+    authCover.style.display = 'none';
+    checkSupabaseAccess(savedId).then(isVerified => {
+      if (!isVerified) {
+        localStorage.removeItem('ep_hub_verified_id');
+        authCover.style.display = 'flex';
+        authError.textContent = "Your access has expired or was removed. Go to hub-zero.site to verify.";
+      }
+    }).catch(err => {
+      console.error("Auth check failed:", err);
+    });
+  }
+
+  authBtn.addEventListener('click', async () => {
+    const enteredId = authInput.value.replace(/['"]/g, "").trim();
+    if (!enteredId) {
+      authError.textContent = "Please enter an ID.";
+      return;
+    }
+    
+    authInput.disabled = true;
+    authBtn.disabled = true;
+    authBtn.textContent = "Verifying...";
+    authError.textContent = "";
+
+    try {
+      const isVerified = await checkSupabaseAccess(enteredId);
+      if (isVerified) {
+        localStorage.setItem('ep_hub_verified_id', enteredId);
+        authCover.style.display = 'none';
+      } else {
+        authError.textContent = "You do not yet have access! Go to hub-zero.site to link your realm!";
+      }
+    } catch (e) {
+      authError.textContent = "Connection error. Please try again.";
+    } finally {
+      authInput.disabled = false;
+      authBtn.disabled = false;
+      authBtn.textContent = "Verify Access";
+    }
+  });
 })();
