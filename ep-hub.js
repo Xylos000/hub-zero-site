@@ -73,6 +73,7 @@
       transform: translateZ(0);
       backface-visibility: hidden;
       animation: ep-container-pulse 8s infinite ease-in-out;
+      pointer-events: auto !important; /* Force clicks to always register on the EP Hub */
     }
 
     /* Dual Layer Rotating Border Systems */
@@ -648,7 +649,7 @@
     /* Modal Overlay Panel */
     .ep-modal-overlay {
       position: absolute;
-      top: 0;
+      top: 40px; /* Offset below drag header to keep it draggable */
       left: 0;
       right: 0;
       bottom: 0;
@@ -859,7 +860,7 @@
     /* Auth Cover styling */
     .ep-auth-cover {
       position: absolute;
-      top: 0;
+      top: 40px; /* Offset below drag header to keep it draggable */
       left: 0;
       right: 0;
       bottom: 0;
@@ -990,7 +991,8 @@
         <!-- Classic Tab -->
         <div class="ep-pane ep-active" id="pane-classic">
           <div class="ep-note" style="color: #60a5fa; border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.05); font-weight: 500;">
-            Complete task works, just might need a reload to actually SEE it worked fr
+            Always updated! More coming soon!<br/>
+            <span style="font-size: 10px; color: #94a3b8; font-weight: 400; margin-top: 4px; display: block;">Giving credits have daily limits...</span>
           </div>
           <div class="ep-section-label">Classic Tools</div>
           <div class="ep-buttons">
@@ -1050,7 +1052,7 @@
                   <line x1="19" y1="5" x2="19" y2="19"></line>
                 </svg>
               </div>
-              <span class="ep-btn-label">Auto Continue</span>
+              <span class="ep-btn-label">Auto Info Slides</span>
             </button>
           </div>
         </div>
@@ -2875,9 +2877,30 @@
         return;
       }
 
-      if (matches.length > 1) {
-        alert("Multiple names found...choose the right one from the leaderboard");
+      // If only ONE result is found, directly open sticker selector (old method)
+      if (matches.length === 1) {
+        setBtnState(sendCheerBtn, 'idle');
+        statusEl.classList.remove('ep-status-visible');
+        const recipient = matches[0];
+        openStickerSelector(recipient.name, recipient.userPublicId, () => {
+          setBtnState(sendCheerBtn, 'done');
+          showDone();
+          setTimeout(() => setBtnState(sendCheerBtn, 'idle'), 1200);
+        });
+        return;
       }
+
+      // If multiple matches are found, check we are on the leaderboard page
+      const path = window.location.pathname.toLowerCase();
+      const isLeaderboardPage = path.includes("/learning/leaderboard") || path.includes("/leaderboard");
+      if (!isLeaderboardPage) {
+        alert("Please go to the leaderboard page");
+        setBtnState(sendCheerBtn, 'idle');
+        statusEl.classList.remove('ep-status-visible');
+        return;
+      }
+
+      alert("Multiple names found...choose the right one from the leaderboard");
 
       function findRowByRank(rank) {
         const rows = document.querySelectorAll('tr[role="row"], tr');
@@ -3030,7 +3053,7 @@
   function toggleAutoContinue() {
     const isToggled = autoContinueBtn.classList.toggle('ep-toggled');
     if (isToggled) {
-      statusEl.textContent = 'Auto Continue On';
+      statusEl.textContent = 'Auto Info Slides On';
       statusEl.style.color = '#22c55e';
       statusEl.classList.add('ep-status-visible');
       setTimeout(() => statusEl.classList.remove('ep-status-visible'), 1200);
@@ -3042,12 +3065,12 @@
           if (btn) {
             btn.scrollIntoView({ block: "center" });
             btn.click();
-            console.log("✅ Auto Continue: clicked");
+            console.log("✅ Auto Info Slides: clicked");
           }
         }
       }, 500);
     } else {
-      statusEl.textContent = 'Auto Continue Off';
+      statusEl.textContent = 'Auto Info Slides Off';
       statusEl.style.color = '#cbd5e1';
       statusEl.classList.add('ep-status-visible');
       setTimeout(() => statusEl.classList.remove('ep-status-visible'), 1200);
