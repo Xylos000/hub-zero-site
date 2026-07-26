@@ -677,6 +677,81 @@
     box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
   }
 
+  /* Header Get Script Button */
+  .nav-btn-accent {
+    background: var(--accent);
+    color: var(--bg) !important;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+  }
+  .nav-btn-accent:hover {
+    box-shadow: 0 0 10px rgba(212, 255, 58, 0.5);
+    background: #e1ff5a;
+  }
+  .nav-btn-accent::after {
+    display: none !important;
+  }
+
+  /* Scripts Loader Section */
+  .scripts-loader {
+    padding: 100px 40px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+  }
+  .scripts-loader-header {
+    margin-bottom: 40px;
+    text-align: center;
+  }
+  .loader-box-container {
+    display: flex;
+    gap: 16px;
+    max-width: 700px;
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-sizing: border-box;
+  }
+  .loader-box-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--fg);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    width: 100%;
+  }
+  .loader-box-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    color: var(--bg);
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .loader-box-btn:hover {
+    background: transparent;
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
+  }
+
   noscript style {
     display: block;
   }
@@ -746,6 +821,7 @@
   <div class="nav-logo">HUB ZERO <span class="nav-sub">— Scroll down to access script + view content</span></div>
   <div class="nav-meta">
     <a href="#services">Services</a>
+    <a href="#scripts-loader" class="nav-btn-accent">Get the script</a>
   </div>
 </nav>
 
@@ -818,6 +894,17 @@
   </div>
 </section>
 
+<!-- Scripts Loader Section -->
+<section class="scripts-loader" id="scripts-loader">
+  <div class="scripts-loader-header">
+    <h2 class="services-title fade-up"><em>Scripts</em> Loader.</h2>
+  </div>
+  <div class="loader-box-container fade-up d1">
+    <input type="text" class="loader-box-input" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
+    <button class="loader-box-btn" id="btn-copy-loader">Copy Code</button>
+  </div>
+</section>
+
 <!-- Footer -->
 <footer>
   <h2 class="footer-logo fade-up"><span>HUB</span> <em>ZERO</em>.</h2>
@@ -828,6 +915,60 @@
 </footer>
 
 <script>
+  // Session validation check against Supabase on load
+  (async function() {
+    const signedIn = localStorage.getItem('Signed_in');
+    if (signedIn) {
+      try {
+        const data = JSON.parse(signedIn);
+        const id = data.id;
+        if (id) {
+          const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id);
+          const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+          
+          const res = await fetch(sbUrl, {
+            headers: {
+              'apikey': sbKey,
+              'Authorization': 'Bearer ' + sbKey
+            }
+          });
+          if (res.ok) {
+            const records = await res.json();
+            if (!records || records.length === 0) {
+              localStorage.removeItem('Signed_in');
+              alert("Account error. Please log in again");
+              window.location.reload();
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Session verification error:", e);
+      }
+    }
+  })();
+
+  // Copy code handler for Scripts Loader box
+  const copyBtn = document.getElementById('btn-copy-loader');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const input = document.querySelector('.loader-box-input');
+      input.select();
+      document.execCommand('copy');
+      
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      copyBtn.style.background = '#22c55e';
+      copyBtn.style.borderColor = '#22c55e';
+      copyBtn.style.color = '#ffffff';
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+        copyBtn.style.background = '';
+        copyBtn.style.borderColor = '';
+        copyBtn.style.color = '';
+      }, 1500);
+    });
+  }
+
   // Scroll progress bar
   const progress = document.getElementById('progress');
   function updateProgress() {
