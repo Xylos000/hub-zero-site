@@ -449,7 +449,7 @@
   .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(8, 8, 8, 0.98); /* Solid dark background overlay to completely eliminate GPU blur rendering lag */
+    background: #000000; /* Solid black background overlay at all times */
     z-index: 10000;
     display: flex;
     justify-content: center;
@@ -636,6 +636,47 @@
     }
   }
 
+  /* Welcome UI & Actions in hero-top */
+  .hero-top-welcome {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    align-self: center;
+  }
+  .hero-top-actions {
+    display: flex;
+    gap: 12px;
+  }
+  .hero-top-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .hero-top-btn.btn-relink {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .hero-top-btn.btn-relink:hover {
+    background: var(--accent);
+    color: var(--bg);
+    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
+  }
+  .hero-top-btn.btn-logout:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  }
+
   noscript style {
     display: block;
   }
@@ -674,11 +715,10 @@
 
     <!-- Step 1 -->
     <div class="modal-step" id="modal-step-1">
-      <h3 class="modal-title">Access Scripts?</h3>
+      <h3 class="modal-title">Are you here for our scripts?</h3>
       <ul class="modal-list">
-        <li><strong>• Education Perfect Script Menu</strong></li>
-        <li><strong>• Realm Student Search + Photo Download</strong></li>
-        <li><strong class="highlight">• Constantly updated</strong></li>
+        <li><strong>• Realm Student Search</strong></li>
+        <li><strong>• Education Perfect hub</strong></li>
       </ul>
       <div class="modal-buttons">
         <button class="btn btn-red" id="btn-no">No</button>
@@ -691,14 +731,10 @@
       <h3 class="modal-title highlight">Redirecting</h3>
       <div class="modal-info-box">
         <span class="modal-info-box-title">Log in with Realm</span>
-        <p class="modal-text">You will now log in through realm to create your account and verify your not some random person from the internet..Don't worry, its all undetected</p>
+        <p class="modal-text">Great! You will now need to login to add your name to the system :). Note: If you are NOT from St patricks college shorncliffe you will NOT have access to our scripts or this site. P.S teacher accounts do NOT work</p>
       </div>
-      <p class="modal-text warning">YOU CANNOT LOG IN AS A TEACHER</p>
-      <p class="modal-text info">Official domains: <a href="/domains/" class="modal-link">hub-zero.site/domains</a></p>
+      <p class="modal-text warning">Read above before going to realm sign on</p>
       
-      <div class="modal-footer-warning">
-        Read the above before clicking OKAY
-      </div>
       <div class="modal-buttons">
         <button class="btn btn-green" id="btn-okay">OKAY</button>
       </div>
@@ -887,23 +923,45 @@
       }
     })();
 
-    alert("Verification Complete!\nName: " + name + "\nID: " + id);
+    alert("Verified ✔");
     
     // Clean URL query params
     const newUrl = window.location.pathname;
     window.history.replaceState({}, document.title, newUrl);
+    updateHeroTop();
   }
 
   // Display user info in hero-top if signed in
-  const signedIn = localStorage.getItem('Signed_in');
-  if (signedIn) {
-    try {
-      const data = JSON.parse(signedIn);
-      document.querySelector('.hero-top').innerHTML = `VERIFIED USER: ${data.name} (ID: ${data.id})`;
-    } catch (e) {
-      document.querySelector('.hero-top').innerHTML = `VERIFIED USER: ${signedIn}`;
+  function updateHeroTop() {
+    const signedIn = localStorage.getItem('Signed_in');
+    const heroTop = document.querySelector('.hero-top');
+    if (signedIn) {
+      try {
+        const data = JSON.parse(signedIn);
+        heroTop.innerHTML = `
+          <div class="hero-top-welcome">Welcome ${data.name}</div>
+          <div class="hero-top-actions">
+            <button class="hero-top-btn btn-relink" id="btn-relink-realm">Relink Realm</button>
+            <button class="hero-top-btn btn-logout" id="btn-logout">Logout</button>
+          </div>
+        `;
+        
+        document.getElementById('btn-relink-realm').addEventListener('click', () => {
+          window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+        });
+        
+        document.getElementById('btn-logout').addEventListener('click', () => {
+          localStorage.removeItem('Signed_in');
+          window.location.reload();
+        });
+      } catch (e) {
+        heroTop.innerHTML = `Welcome User`;
+      }
+    } else {
+      heroTop.innerHTML = '';
     }
   }
+  updateHeroTop();
 
   function checkModalState() {
     if (!isEdge) {

@@ -2027,7 +2027,6 @@
     statusEl.style.color = '#fbbf24';
     statusEl.classList.add('ep-status-visible');
 
-    try {
     let limits;
     try {
       limits = await fetchSupabaseLimits(studentId);
@@ -2813,7 +2812,7 @@
   async function runSendCheer() {
     const ORG_ID = "574bd3b6-f02c-4c01-ac34-9c5428cd3a7d";
     
-    const userInput = prompt("Enter recipient's full name (e.g. Zeke George or I Gede Donaldson):");
+    const userInput = prompt("Enter students first name and first letter of last");
     if (!userInput) return;
 
     setBtnState(sendCheerBtn, 'running');
