@@ -2812,7 +2812,6 @@
 
       const legalName = getLegalLeaderboardName(userInput);
 
-      // Fetch global yearly scoreboard (entire school)
       const leaderboardRes = await fetch("https://graphql-gateway.educationperfect.com/graphql/", {
         method: "POST",
         credentials: "include",
@@ -2824,14 +2823,9 @@
           operationName: "Leaderboard",
           query: `query Leaderboard($organisationId: UUID!, $groupingType: ScoreboardGroupingType!, $timeFrame: ScoreboardTimeFrame!, $startRank: Int, $rowsAbove: Int, $rowsBelow: Int) {
             globalScoreboards {
-              scoreboardScores(parameters: {
-                organisationId: $organisationId,
-                groupingType: $groupingType,
-                timeFrame: $timeFrame,
-                startRank: $startRank,
-                rowsAbove: $rowsAbove,
-                rowsBelow: $rowsBelow
-              }) {
+              scoreboardScores(
+                parameters: {organisationId: $organisationId, groupingType: $groupingType, timeFrame: $timeFrame, startRank: $startRank, rowsAbove: $rowsAbove, rowsBelow: $rowsBelow}
+              ) {
                 stats {
                   userPublicId
                   rank
@@ -2855,12 +2849,12 @@
             }
           }`,
           variables: {
-            organisationId: ORG_ID,
             groupingType: "SCHOOL",
-            timeFrame: "YEARLY",
-            startRank: 0,
+            organisationId: ORG_ID,
             rowsAbove: 0,
-            rowsBelow: 9999
+            rowsBelow: 9999,
+            startRank: 0,
+            timeFrame: "YEARLY"
           }
         })
       });
@@ -2868,18 +2862,16 @@
       const leaderboardData = await leaderboardRes.json();
       const stats = leaderboardData?.data?.globalScoreboards?.scoreboardScores?.stats || [];
 
-      // Find all matches in stats
       const target = legalName.trim().toLowerCase();
       const matches = stats.filter(s => {
-        const normalizedS = s.name.trim().toLowerCase();
-        return normalizedS === target || normalizedS.startsWith(target);
+        const name = s.name.trim().toLowerCase();
+        return name === target || name.includes(target);
       });
-
-      setBtnState(sendCheerBtn, 'idle');
-      statusEl.classList.remove('ep-status-visible');
 
       if (matches.length === 0) {
         alert(`Student "${userInput}" (normalized to "${legalName}") not found on leaderboard.`);
+        setBtnState(sendCheerBtn, 'idle');
+        statusEl.classList.remove('ep-status-visible');
         return;
       }
 
@@ -2887,96 +2879,144 @@
         alert("Multiple names found...choose the right one from the leaderboard");
       }
 
-      // Helper functions for finding and loading
-      const findRowInDOM = (name, rank) => {
-        const rows = Array.from(document.querySelectorAll('tr[role="row"]'));
-        return rows.find(row => {
-          const nameEl = row.querySelector('.font-bold');
-          const nameMatches = nameEl && nameEl.textContent.trim().toLowerCase() === name.toLowerCase();
-          
-          const cells = Array.from(row.querySelectorAll('td'));
-          const rankMatches = cells.some(td => td.textContent.trim() === String(rank));
-          
-          return nameMatches && rankMatches;
-        });
-      };
-
-      const loadAndFindRow = async (name, rank) => {
-        for (let attempt = 0; attempt < 100; attempt++) {
-          const row = findRowInDOM(name, rank);
-          if (row) return row;
-
-          const showMoreBtn = Array.from(document.querySelectorAll('button')).find(btn => btn.textContent.trim() === 'Show more');
-          if (!showMoreBtn) break;
-
-          showMoreBtn.click();
-          await new Promise(r => setTimeout(r, 450));
+      function findRowByRank(rank) {
+        const rows = document.querySelectorAll('tr[role="row"], tr');
+        for (const row of rows) {
+          const cells = row.querySelectorAll('td');
+          if (cells.length > 0) {
+            const rankText = cells[0].textContent.trim();
+            if (rankText === String(rank)) {
+              return row;
+            }
+          }
         }
         return null;
-      };
+      }
 
-      // Iterate through each match
-      for (let i = 0; i < matches.length; i++) {
-        const match = matches[i];
+      async function scrollToRank(rank) {
+        const maxAttempts = 120;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+          const row = findRowByRank(rank);
+          if (row) {
+            row.scrollIntoView({ block: 'center' });
+            return row;
+          }
+          const showMoreBtn = Array.from(document.querySelectorAll('button')).find(
+            btn => btn.textContent.trim().toLowerCase() === 'show-more' || 
+                   btn.textContent.trim().toLowerCase() === 'show more'
+          );
+          if (!showMoreBtn) {
+            await new Promise(r => setTimeout(r, 500));
+            const recheckBtn = Array.from(document.querySelectorAll('button')).find(
+              btn => btn.textContent.trim().toLowerCase() === 'show-more' || 
+                     btn.textContent.trim().toLowerCase() === 'show more'
+            );
+            if (!recheckBtn) break;
+            recheckBtn.click();
+          } else {
+            showMoreBtn.click();
+          }
+          await new Promise(r => setTimeout(r, 600));
+        }
+        return null;
+      }
+
+      function showConfirmPopup(name, rank, onYes, onNo) {
+        const old = document.getElementById('ep-confirm-popup');
+        if (old) old.remove();
+
+        const popup = document.createElement('div');
+        popup.id = 'ep-confirm-popup';
+        popup.style.cssText = `
+          position: fixed;
+          top: 50%;
+          right: 24px;
+          transform: translateY(-50%);
+          width: 280px;
+          background: #0f172a;
+          border: 2px solid #d4ff3a;
+          border-radius: 12px;
+          box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+          padding: 24px;
+          z-index: 9999999;
+          font-family: system-ui, -apple-system, sans-serif;
+          color: #f1f5f9;
+          box-sizing: border-box;
+          text-align: center;
+        `;
+        popup.innerHTML = `
+          <div style="font-size: 16px; font-weight: 700; margin-bottom: 8px;">This them?</div>
+          <div style="font-size: 14px; color: #94a3b8; margin-bottom: 20px; line-height: 1.4;">
+            <span style="color: #d4ff3a; font-weight: 800; font-size: 15px;">${name}</span><br/>
+            Rank #${rank}
+          </div>
+          <div style="display: flex; gap: 12px; justify-content: center;">
+            <button id="ep-confirm-no" style="flex: 1; background: #334155; border: none; color: #f1f5f9; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">No</button>
+            <button id="ep-confirm-yes" style="flex: 1; background: #d4ff3a; border: none; color: #0f172a; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em;">Yes</button>
+          </div>
+        `;
+        document.body.appendChild(popup);
+
+        document.getElementById('ep-confirm-yes').onclick = () => {
+          popup.remove();
+          onYes();
+        };
+        document.getElementById('ep-confirm-no').onclick = () => {
+          popup.remove();
+          onNo();
+        };
+      }
+
+      let matchIndex = 0;
+      async function findAndConfirmNext() {
+        if (matchIndex >= matches.length) {
+          alert("No more matches found on the leaderboard.");
+          setBtnState(sendCheerBtn, 'idle');
+          statusEl.classList.remove('ep-status-visible');
+          return;
+        }
+
+        const candidate = matches[matchIndex];
         
-        statusEl.textContent = `Finding ${match.name}...`;
+        setBtnState(sendCheerBtn, 'running');
+        statusEl.textContent = `Finding #${candidate.rank}...`;
         statusEl.style.color = '#fbbf24';
         statusEl.classList.add('ep-status-visible');
 
-        const rowEl = await loadAndFindRow(match.name, match.rank);
+        const row = await scrollToRank(candidate.rank);
         
+        setBtnState(sendCheerBtn, 'idle');
         statusEl.classList.remove('ep-status-visible');
 
-        if (!rowEl) {
-          console.warn(`Could not find row in DOM for ${match.name} (Rank: ${match.rank})`);
-          continue;
-        }
-
-        // Highlight row
-        rowEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
-        rowEl.style.outline = '3px solid #3b82f6';
-
-        // Draw confirmation popup on the right
-        const pop = document.createElement('div');
-        pop.style.position = 'fixed';
-        pop.style.right = '40px';
-        pop.style.top = '50%';
-        pop.style.transform = 'translateY(-50%)';
-        pop.style.background = '#0c111d';
-        pop.style.border = '1px solid #3b82f6';
-        pop.style.padding = '20px';
-        pop.style.borderRadius = '8px';
-        pop.style.zIndex = '2147483647';
-        pop.style.color = '#cbd5e1';
-        pop.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
-        pop.style.fontFamily = 'Inter, sans-serif';
-        pop.innerHTML = `
-          <div style="font-weight: 700; margin-bottom: 8px; font-size: 14px;">This them?</div>
-          <div style="font-size: 12px; margin-bottom: 16px; color: #94a3b8;">${match.name} (Rank: ${match.rank}, Score: ${match.score})</div>
-          <div style="display: flex; gap: 10px;">
-            <button id="ep-confirm-yes" style="flex: 1; background: #22c55e; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px;">Yes</button>
-            <button id="ep-confirm-no" style="flex: 1; background: #ef4444; border: none; color: white; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 12px;">No</button>
-          </div>
-        `;
-        document.body.appendChild(pop);
-
-        const response = await new Promise(resolve => {
-          pop.querySelector('#ep-confirm-yes').onclick = () => resolve(true);
-          pop.querySelector('#ep-confirm-no').onclick = () => resolve(false);
-        });
-
-        rowEl.style.outline = '';
-        pop.remove();
-
-        if (response) {
-          setBtnState(sendCheerBtn, 'done');
-          showDone();
-          setTimeout(() => setBtnState(sendCheerBtn, 'idle'), 1200);
+        if (!row) {
+          alert(`Could not find row for Rank #${candidate.rank} on the page.`);
+          matchIndex++;
+          findAndConfirmNext();
           return;
         }
+
+        row.style.outline = '3px solid #d4ff3a';
+        row.style.outlineOffset = '-3px';
+
+        showConfirmPopup(candidate.name, candidate.rank,
+          () => {
+            row.style.outline = '';
+            openStickerSelector(candidate.name, candidate.userPublicId, () => {
+              setBtnState(sendCheerBtn, 'done');
+              showDone();
+              setTimeout(() => setBtnState(sendCheerBtn, 'idle'), 1200);
+            });
+          },
+          () => {
+            row.style.outline = '';
+            matchIndex++;
+            findAndConfirmNext();
+          }
+        );
       }
 
-      alert("No more matching students found on the leaderboard.");
+      findAndConfirmNext();
+
     } catch (e) {
       console.error(e);
       setBtnState(sendCheerBtn, 'error');
