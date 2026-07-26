@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub Zero — Developer Console</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap">
+  <style>
+    :root {
+      --bg: #05080f;
+      --card: #0c111d;
+      --line: #1e293b;
+      --accent: #d4ff3a;
+      --fg: #f1f5f9;
+      --muted: #64748b;
+      --error: #ef4444;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    /* Password Screen */
+    .login-container {
+      margin: auto;
+      max-width: 400px;
+      width: 90%;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .login-title {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+    .login-input {
+      font-family: 'JetBrains Mono', monospace;
+      background: #080c14;
+      border: 1px solid var(--line);
+      color: var(--fg);
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .login-input:focus {
+      border-color: var(--accent);
+    }
+    .login-btn {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--accent);
+      color: var(--bg);
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    .login-btn:hover {
+      opacity: 0.9;
+    }
+    .login-error {
+      color: var(--error);
+      font-size: 13px;
+      min-height: 20px;
+    }
+
+    /* Dashboard */
+    .dashboard {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      padding: 40px;
+    }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .dashboard-title {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .dashboard-tabs {
+      display: flex;
+      gap: 12px;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(212,255,58,0.05);
+    }
+    .btn-logout {
+      border-color: var(--error);
+      color: var(--error);
+    }
+    .btn-logout:hover {
+      background: rgba(239,68,68,0.05);
+    }
+
+    .table-container {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      display: none;
+    }
+    .table-container.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    th {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      background: rgba(0,0,0,0.2);
+    }
+    td {
+      color: #cbd5e1;
+    }
+    tr:last-child td {
+      border-bottom: none;
+    }
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--error);
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      transition: all 0.2s;
+    }
+    .btn-delete:hover {
+      background: var(--error);
+      color: white;
+    }
+    .timestamp {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .badge-pool {
+      background: rgba(212, 255, 58, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(212, 255, 58, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Password Authentication Panel -->
+  <div class="login-container" id="login-container">
+    <div class="login-title">Developer Authentication</div>
+    <input type="password" class="login-input" id="password-input" placeholder="••••••" autofocus />
+    <button class="login-btn" id="login-btn">Authenticate</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+
+  <!-- Main Console Dashboard -->
+  <div class="dashboard" id="dashboard">
+    <div class="dashboard-header">
+      <div class="dashboard-title">Developer Console</div>
+      <div class="dashboard-tabs">
+        <button class="tab-btn active" data-tab="users">Registered Students</button>
+        <button class="tab-btn" data-tab="violations">Console Violations</button>
+        <button class="tab-btn btn-logout" id="logout-btn">Exit</button>
+      </div>
+    </div>
+
+    <!-- Tab Content: Users -->
+    <div class="table-container active" id="tab-users">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Remaining Cheers Pool</th>
+            <th>Last Cheers</th>
+            <th>Last Set Credits</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="users-list">
+          <!-- Populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Tab Content: Violations -->
+    <div class="table-container" id="tab-violations">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Violated URL</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="violations-list">
+          <!-- Populated dynamically -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const HASH_TARGET = '11122b5a51b0e394f6a8d7fafef9180057bf2640ece183ecdb51e26efd5b1448';
+    const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    const sbHeaders = {
+      'apikey': sbKey,
+      'Authorization': 'Bearer ' + sbKey,
+      'Content-Type': 'application/json'
+    };
+
+    // SHA-256 Hashing helper using WebCrypto
+    async function sha256(str) {
+      const buffer = new TextEncoder().encode(str);
+      const hash = await crypto.subtle.digest('SHA-256', buffer);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const loginContainer = document.getElementById('login-container');
+    const dashboard = document.getElementById('dashboard');
+    const passInput = document.getElementById('password-input');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+
+    async function handleAuth() {
+      const hash = await sha256(passInput.value);
+      if (hash === HASH_TARGET) {
+        sessionStorage.setItem('dev_auth', 'true');
+        showDashboard();
+      } else {
+        loginError.textContent = 'Invalid credentials';
+        passInput.value = '';
+      }
+    }
+
+    loginBtn.addEventListener('click', handleAuth);
+    passInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleAuth();
+    });
+
+    if (sessionStorage.getItem('dev_auth') === 'true') {
+      showDashboard();
+    }
+
+    function showDashboard() {
+      loginContainer.style.display = 'none';
+      dashboard.style.display = 'flex';
+      loadData();
+    }
+
+    // Tabs logic
+    const tabs = document.querySelectorAll('.tab-btn[data-tab]');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.table-container').forEach(c => c.classList.remove('active'));
+        
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.getAttribute('data-tab')).classList.add('active');
+      });
+    });
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem('dev_auth');
+      window.location.reload();
+    });
+
+    async function loadData() {
+      try {
+        // Fetch verified students and limits concurrently
+        const [usersRes, limitsRes, violationsRes] = await Promise.all([
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students', { headers: sbHeaders }),
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits', { headers: sbHeaders }),
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/console_violations?order=violated_at.desc', { headers: sbHeaders })
+        ]);
+
+        const users = await usersRes.json();
+        const limits = await limitsRes.json();
+        const violations = await violationsRes.json();
+
+        // Populate users table
+        const usersList = document.getElementById('users-list');
+        usersList.innerHTML = '';
+        
+        users.forEach(u => {
+          const limit = limits.find(l => l.id === u.id) || {};
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${u.name || 'Unknown'}</strong></td>
+            <td><code style="font-family: 'JetBrains Mono', monospace;">${u.id}</code></td>
+            <td><span class="badge badge-pool">${limit.cheers_pool_remaining !== undefined ? limit.cheers_pool_remaining : '—'}</span></td>
+            <td class="timestamp">${limit.last_used_cheers ? new Date(limit.last_used_cheers).toLocaleString() : 'Never'}</td>
+            <td class="timestamp">${limit.last_used_set ? new Date(limit.last_used_set).toLocaleString() : 'Never'}</td>
+            <td><button class="btn-delete" onclick="deleteUser('${u.id}')">Delete</button></td>
+          `;
+          usersList.appendChild(row);
+        });
+
+        // Populate violations table
+        const violationsList = document.getElementById('violations-list');
+        violationsList.innerHTML = '';
+        violations.forEach(v => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${v.student_name || 'Unknown'}</strong></td>
+            <td><code style="font-family: 'JetBrains Mono', monospace;">${v.student_id || '—'}</code></td>
+            <td style="font-size: 12px; color: #a3a3a3;"><code>${v.url || '—'}</code></td>
+            <td class="timestamp">${new Date(v.violated_at).toLocaleString()}</td>
+            <td><button class="btn-delete" onclick="deleteViolation('${v.id}')">Clear</button></td>
+          `;
+          violationsList.appendChild(row);
+        });
+
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      }
+    }
+
+    async function deleteUser(id) {
+      if (!confirm(`Are you sure you want to delete student ${id}? This deletes them from all tables and revokes access.`)) return;
+      try {
+        await Promise.all([
+          fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.${id}`, { method: 'DELETE', headers: sbHeaders }),
+          fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${id}`, { method: 'DELETE', headers: sbHeaders })
+        ]);
+        loadData();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function deleteViolation(id) {
+      try {
+        await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/console_violations?id=eq.${id}`, { method: 'DELETE', headers: sbHeaders });
+        loadData();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
