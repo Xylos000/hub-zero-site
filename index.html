@@ -850,6 +850,43 @@
     const id = urlParams.get('id') || '';
     localStorage.setItem('Signed_in', JSON.stringify({ name: name, id: id }));
     
+    // Initialize student limits on Supabase table from the client side securely
+    (async function() {
+      try {
+        const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits';
+        const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+        
+        // Fetch to see if limits row already exists
+        const checkRes = await fetch(sbUrl + '?id=eq.' + encodeURIComponent(id), {
+          headers: {
+            'apikey': sbKey,
+            'Authorization': 'Bearer ' + sbKey
+          }
+        });
+        const limitsData = await checkRes.json();
+        
+        // If not, insert default values
+        if (!limitsData || limitsData.length === 0) {
+          await fetch(sbUrl, {
+            method: 'POST',
+            headers: {
+              'apikey': sbKey,
+              'Authorization': 'Bearer ' + sbKey,
+              'Content-Type': 'application/json',
+              'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({
+              id: id,
+              cheers_pool_remaining: 500,
+              last_pool_reset: new Date().toISOString()
+            })
+          });
+        }
+      } catch (err) {
+        console.error("Failed to initialize usage limits:", err);
+      }
+    })();
+
     alert("Verification Complete!\nName: " + name + "\nID: " + id);
     
     // Clean URL query params
