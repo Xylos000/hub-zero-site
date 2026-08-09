@@ -782,11 +782,13 @@
     backdrop-filter: blur(12px);
     z-index: 10000;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.35s ease;
+    padding: 60px 10px;
+    overflow-y: auto;
   }
   .modal-overlay.active {
     opacity: 1;
@@ -799,11 +801,10 @@
     padding: 40px;
     max-width: 580px;
     width: 92%;
-    max-height: 90vh;
-    overflow-y: auto;
-    transform: scale(0.97) translateY(8px);
+    transform: scale(0.97) translateY(-16px);
     transition: transform 0.35s var(--ease);
     position: relative;
+    margin-bottom: 40px;
   }
   .modal-overlay.active .modal-box {
     transform: scale(1) translateY(0);
@@ -838,21 +839,21 @@
   }
 
   .modal-scroll {
-    max-height: 340px;
+    max-height: 400px;
     overflow-y: auto;
-    padding-right: 8px;
-    margin-bottom: 20px;
+    padding-right: 12px;
+    margin-bottom: 24px;
   }
   .modal-scroll::-webkit-scrollbar { width: 5px; }
   .modal-scroll::-webkit-scrollbar-track { background: transparent; }
   .modal-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
 
   .modal-section {
-    background: rgba(255,255,255,0.02);
+    background: rgba(255,255,255,0.015);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 22px;
-    margin-bottom: 16px;
+    padding: 24px;
+    margin-bottom: 20px;
   }
   .modal-section-title {
     font-family: 'JetBrains Mono', monospace;
@@ -877,22 +878,30 @@
 
   .modal-check-label {
     display: flex;
-    align-items: flex-start;
-    gap: 10px;
+    align-items: center;
+    gap: 12px;
     font-size: 13px;
     color: var(--fg);
     cursor: pointer;
-    margin-top: 14px;
+    margin-top: 18px;
     user-select: none;
     line-height: 1.5;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 6px;
+    padding: 10px 14px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .modal-check-label:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
   }
   .modal-check-label input[type="checkbox"] {
-    margin-top: 2px;
     accent-color: var(--accent);
     cursor: pointer;
     flex-shrink: 0;
-    width: 14px;
-    height: 14px;
+    width: 15px;
+    height: 15px;
   }
 
   .modal-warning {
@@ -981,7 +990,7 @@
 <!-- ─── HERO ─── -->
 <section class="hero" id="top">
   <div class="hero-inner">
-    <p class="hero-eyebrow" id="hero-eyebrow">School script tools</p>
+    <p class="hero-eyebrow" id="hero-eyebrow" style="display: none;"></p>
 
     <h1 class="hero-heading">
       <span class="line"><span id="line1">Hub</span></span>
@@ -1046,10 +1055,10 @@
           <p>A toolkit that handles the boring stuff on EP so you don't have to.</p>
           <ul class="feature-list">
             <li>Complete any task automatically</li>
+            <li>Get every answer right</li>
             <li>Set or give your cheer credits</li>
             <li>Check &amp; send cheers without scrolling the leaderboard</li>
             <li>Auto-complete information slides</li>
-            <li>More on the way</li>
           </ul>
         </div>
       </div>
@@ -1156,7 +1165,7 @@
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="footer-logo">Hub <em>Zero.</em></div>
-      <p>School script tools for EP &amp; Realm.</p>
+      <p>Custom scripts for EP &amp; Realm.</p>
     </div>
     <div class="footer-meta">
       <span>2026</span>
