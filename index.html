@@ -524,53 +524,67 @@
   }
 
   .gallery-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    position: relative;
+    background: rgba(13, 19, 31, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 14px;
+    padding: 8px;
     overflow: hidden;
-    transition: border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
   .gallery-item:hover {
-    border-color: var(--accent);
-    box-shadow: 0 12px 30px rgba(212, 255, 58, 0.08);
+    border-color: rgba(212, 255, 58, 0.35);
+    background: rgba(13, 19, 31, 0.65);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(212, 255, 58, 0.04);
   }
   .gallery-item img {
     width: 100%;
     aspect-ratio: 16/10;
     object-fit: cover;
     display: block;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     filter: brightness(0.85);
-    transition: filter 0.3s ease;
+    transition: filter 0.3s ease, border-color 0.3s ease;
   }
   .gallery-item:hover img {
     filter: brightness(1.02);
+    border-color: rgba(255, 255, 255, 0.06);
   }
 
   .gallery-label {
+    position: absolute;
+    bottom: 18px;
+    left: 18px;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: #e2e8f0;
     text-transform: uppercase;
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-    background: rgba(8, 12, 20, 0.5);
+    background: rgba(8, 12, 20, 0.8);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 6px 12px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    transition: color 0.3s ease;
+    gap: 6px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    pointer-events: none;
   }
   .gallery-item:hover .gallery-label {
-    color: var(--fg);
+    background: rgba(8, 12, 20, 0.95);
+    border-color: rgba(212, 255, 58, 0.35);
   }
   .gallery-label::before {
     content: '';
-    width: 6px; height: 6px;
+    width: 5px; height: 5px;
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
-    box-shadow: 0 0 8px var(--accent);
+    box-shadow: 0 0 6px var(--accent);
   }
 
   /* ─── GET SCRIPTS CTA ─── */
