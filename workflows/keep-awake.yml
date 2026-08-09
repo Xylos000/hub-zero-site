@@ -1,0 +1,14 @@
+name: Keep Proxy Awake
+
+on:
+  schedule:
+    - cron: '*/10 * * * *' # Runs every 10 minutes 24/7
+  workflow_dispatch: # Allows you to manually trigger it from the GitHub Actions tab if wanted
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Proxy
+        run: |
+          curl -I -s -A "Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://residential-6k3h.onrender.com/
