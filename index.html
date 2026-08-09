@@ -3,1251 +3,1403 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hub Zero — Showcase</title>
+<title>Hub Zero</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #000000;
-    --card: #080808;
-    --line: #141414;
-    --fg: #ffffff;
-    --muted: #64748b;
+    --bg: #050505;
+    --surface: #111111;
+    --surface2: #181818;
+    --border: #222222;
+    --fg: #f5f5f5;
+    --muted: #888888;
     --accent: #d4ff3a;
+    --accent-dim: rgba(212,255,58,0.12);
     --ease: cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
+
   body {
     background: var(--bg);
     color: var(--fg);
     font-family: 'Syne', sans-serif;
-    overflow-x: hidden;
-    line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
-  ::selection { background: var(--accent); color: var(--bg); }
 
+  ::selection { background: var(--accent); color: #000; }
+
+  /* ─── LOADER ─── */
   .loader {
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background: var(--bg);
     z-index: 9999;
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-    transition: transform 0.8s cubic-bezier(0.85, 0, 0.15, 1);
+    transition: opacity 0.6s ease 0.3s, visibility 0.6s ease 0.3s;
   }
-  .loader.loaded {
-    transform: translateY(-100%);
-  }
-  .loader-inner {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 200px;
-  }
-  .loader-line {
-    width: 100%;
-    height: 1px;
-    background: rgba(255, 255, 255, 0.1);
-    position: relative;
-    overflow: hidden;
-  }
-  .loader-line::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    height: 100%;
-    width: 100%;
-    background: var(--accent);
-    transform: translateX(-100%);
-    animation: load 1s cubic-bezier(0.85, 0, 0.15, 1) forwards;
-  }
-  .loader-text {
+  .loader.gone { opacity: 0; visibility: hidden; }
+  .loader-word {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.4em;
+    color: var(--accent);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.3em;
-    color: var(--muted);
-    animation: pulseText 1.5s ease-in-out infinite;
+    animation: pulse 1s ease-in-out infinite;
   }
-  @keyframes load {
-    to { transform: translateX(0); }
-  }
-  @keyframes pulseText {
-    0%, 100% { opacity: 0.6; }
-    50% { opacity: 1; }
-  }
+  @keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
 
-  .progress {
-    position: fixed;
-    top: 0; left: 0;
+  /* ─── PROGRESS BAR ─── */
+  #progress {
+    position: fixed; top: 0; left: 0;
     height: 2px;
     background: var(--accent);
-    z-index: 1000;
-    width: 0%;
-    transition: width 0.05s linear;
+    z-index: 1001;
+    width: 0;
+    transition: width 0.1s linear;
   }
 
+  /* ─── NAV ─── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
-    padding: 22px 40px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     z-index: 100;
-    background: rgba(0, 0, 0, 0.75);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--line);
-    color: var(--fg);
-    transform: translateY(-100%);
-    transition: transform 0.8s var(--ease);
+    background: rgba(5,5,5,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transition: opacity 0.5s ease 0.4s;
   }
-  .loaded nav {
-    transform: translateY(0);
-  }
+  nav.show { opacity: 1; }
+
   .nav-logo {
     font-weight: 800;
-    font-size: 16px;
-    letter-spacing: -0.02em;
+    font-size: 17px;
+    letter-spacing: -0.03em;
     color: var(--fg);
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 8px;
   }
-  .nav-meta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--fg);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    display: flex;
-    gap: 32px;
-    align-items: center;
-  }
-  .nav-meta a {
-    color: var(--fg);
-    text-decoration: none;
-    position: relative;
-  }
-  .nav-meta a::after {
-    content: '';
-    position: absolute;
-    left: 0; bottom: -4px;
-    width: 0; height: 1px;
+  .nav-logo .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
     background: var(--accent);
-    transition: width 0.3s var(--ease);
+    display: inline-block;
   }
-  .nav-meta a:hover::after { width: 100%; }
 
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    transition: color 0.2s ease, background 0.2s ease;
+  }
+  .nav-links a:hover { color: var(--fg); background: rgba(255,255,255,0.05); }
+  .nav-links .nav-cta a {
+    background: var(--accent);
+    color: #000;
+    font-weight: 700;
+  }
+  .nav-links .nav-cta a:hover {
+    background: #e2ff60;
+    color: #000;
+  }
+
+  /* ─── HERO ─── */
   .hero {
     min-height: 100vh;
-    padding: 140px 40px 60px;
+    padding: 120px 32px 80px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     position: relative;
-    background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.03) 1px, transparent 0);
-    background-size: 44px 44px;
   }
 
-  .hero-content {
-    max-width: 1000px;
+  /* Subtle grid background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 60px 60px;
+    opacity: 0.3;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 30%, black 40%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 900px;
     margin: 0 auto;
     width: 100%;
+    position: relative;
   }
 
-  .hero-title-wrap { margin: 30px 0; position: relative; text-align: center; }
-  .hero-title {
-    font-size: clamp(48px, 10vw, 120px);
-    font-weight: 800;
-    line-height: 0.9;
-    letter-spacing: -0.045em;
+  .hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 28px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.6s var(--ease) 0.5s;
   }
-  .hero-title .line {
+  .hero-eyebrow.show { opacity: 1; transform: translateY(0); }
+
+  .hero-heading {
+    font-size: clamp(52px, 9vw, 110px);
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 32px;
+  }
+  .hero-heading .line {
     display: block;
     overflow: hidden;
-    padding-bottom: 0.04em;
   }
-  .hero-title .line > span {
-    display: inline-block;
-    transform: translateY(110%);
+  .hero-heading .line span {
+    display: block;
+    transform: translateY(100%);
+    transition: transform 0.9s var(--ease);
   }
-  .loaded .hero-title .line > span {
-    animation: lineIn 1.1s var(--ease) forwards;
-  }
-  .loaded .hero-title .line:nth-child(1) > span { animation-delay: 0.2s; }
-  .loaded .hero-title .line:nth-child(2) > span { animation-delay: 0.36s; }
-  @keyframes lineIn { to { transform: translateY(0); } }
-  .hero-title em {
+  .hero-heading .line:nth-child(1) span { transition-delay: 0.55s; }
+  .hero-heading .line:nth-child(2) span { transition-delay: 0.7s; }
+  .hero-heading .line span.show { transform: translateY(0); }
+
+  .hero-heading em {
     font-family: 'Instrument Serif', serif;
-    font-weight: 400;
     font-style: italic;
+    font-weight: 400;
     color: var(--accent);
   }
 
-  .hero-arrow {
+  .hero-sub {
+    font-size: 17px;
+    color: #aaaaaa;
+    line-height: 1.65;
+    max-width: 520px;
+    margin-bottom: 44px;
+    font-weight: 400;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.7s var(--ease) 0.9s;
+  }
+  .hero-sub.show { opacity: 1; transform: translateY(0); }
+
+  .hero-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: all 0.7s var(--ease) 1.05s;
+  }
+  .hero-actions.show { opacity: 1; transform: translateY(0); }
+
+  /* ─── BUTTONS ─── */
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 14px 28px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover {
+    background: #e2ff60;
+    border-color: #e2ff60;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(212,255,58,0.25);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--fg);
+    border-color: var(--border);
+  }
+  .btn-secondary:hover {
+    border-color: #555;
+    background: rgba(255,255,255,0.04);
+  }
+  .btn:disabled {
+    background: #1c1c1c !important;
+    border-color: #1c1c1c !important;
+    color: #444 !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+  .btn-danger {
+    background: transparent;
+    color: #f87171;
+    border-color: rgba(248,113,113,0.4);
+  }
+  .btn-danger:hover {
+    background: rgba(248,113,113,0.1);
+    border-color: #f87171;
+  }
+
+  /* ─── SCROLL INDICATOR ─── */
+  .scroll-hint {
     position: absolute;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    z-index: 10;
+    gap: 8px;
+    opacity: 0;
+    transition: opacity 0.6s ease 1.4s;
   }
-  .hero-arrow svg {
-    animation: arrowBounce 2s infinite ease-in-out;
-  }
-  @keyframes arrowBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(12px); }
-  }
-
-  .marquee {
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    padding: 30px 0;
-    overflow: hidden;
-    white-space: nowrap;
-    background: var(--bg);
-  }
-  .marquee-track {
-    display: inline-flex;
-    animation: marquee 28s linear infinite;
-    gap: 70px;
-    padding-right: 70px;
-  }
-  .marquee-item {
-    font-size: clamp(36px, 5.5vw, 64px);
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    display: inline-flex;
-    align-items: center;
-    gap: 70px;
-    color: var(--fg);
-  }
-  .marquee-item .for {
-    color: var(--accent);
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-weight: 400;
-  }
-  .marquee-item .dot {
-    width: 10px; height: 10px;
-    background: var(--accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  @keyframes marquee { to { transform: translateX(-50%); } }
-
-  .services-title {
-    font-size: clamp(40px, 6vw, 88px);
-    font-weight: 700;
-    line-height: 0.92;
-    letter-spacing: -0.035em;
-  }
-  .services-title em {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
-    font-style: italic;
-    color: var(--accent);
-  }
-
-  /* About section styles */
-  .about-section {
-    padding: 120px 40px;
-    border-bottom: 1px solid var(--line);
-  }
-  .about-header {
-    text-align: center;
-    margin-bottom: 60px;
-  }
-  .about-desc {
+  .scroll-hint.show { opacity: 1; }
+  .scroll-hint span {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 15px;
-    color: #e2e8f0;
-    line-height: 1.8;
-    max-width: 800px;
-    margin: 0 auto 50px auto;
-    text-align: center;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
   }
-  .scripts-showcase {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
+  .scroll-arrow {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, var(--border), transparent);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-arrow::after {
+    content: '';
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--accent);
+    animation: drip 2s ease-in-out infinite;
+  }
+  @keyframes drip {
+    0% { top: -100%; }
+    100% { top: 200%; }
+  }
+
+  /* ─── SECTION COMMON ─── */
+  section {
+    padding: 100px 32px;
+    position: relative;
+  }
+  section + section {
+    border-top: 1px solid var(--border);
+  }
+
+  .section-inner {
     max-width: 1000px;
     margin: 0 auto;
   }
-  @media (max-width: 768px) {
-    .scripts-showcase {
-      grid-template-columns: 1fr;
-    }
-  }
-  .script-card {
-    background: var(--card);
-    border: 1px solid var(--line);
-    padding: 32px;
-    border-radius: 12px;
-    transition: all 0.3s var(--ease);
-  }
-  .script-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 10px 30px rgba(212, 255, 58, 0.05);
-    transform: translateY(-4px);
-  }
-  .script-card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 24px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    color: #ffffff;
-  }
-  .script-card-desc {
-    font-size: 14.5px;
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
     color: var(--muted);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .section-title {
+    font-size: clamp(30px, 5vw, 54px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 16px;
+  }
+  .section-title em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  /* ─── ABOUT SECTION ─── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 56px;
+  }
+  @media (max-width: 700px) {
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  .about-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 32px;
+    transition: border-color 0.25s ease, transform 0.25s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s var(--ease);
+  }
+  .about-card:hover {
+    border-color: #333;
+    transform: translateY(-3px);
+  }
+  .about-card:hover::before { transform: scaleX(1); }
+
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-bottom: 20px;
+  }
+
+  .about-card h3 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    color: var(--fg);
+  }
+  .about-card p {
+    font-size: 14.5px;
+    color: #999;
     line-height: 1.7;
   }
 
-  /* Gallery section styles */
-  .gallery-section {
-    padding: 120px 40px;
-    border-bottom: 1px solid var(--line);
+  .about-card .feature-list {
+    list-style: none;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
   }
-  .gallery-header {
-    text-align: center;
-    margin-bottom: 60px;
-  }
-  .gallery-subtitle {
-    font-family: 'JetBrains Mono', monospace;
+  .about-card .feature-list li {
     font-size: 13px;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    margin-top: 10px;
+    color: #bbb;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
   }
+  .about-card .feature-list li::before {
+    content: '→';
+    color: var(--accent);
+    font-size: 12px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+
+  /* ─── HOW IT WORKS ─── */
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    margin-top: 56px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  @media (max-width: 700px) {
+    .steps { grid-template-columns: 1fr; }
+  }
+
+  .step {
+    background: var(--surface);
+    padding: 36px 32px;
+    transition: background 0.2s ease;
+  }
+  .step:hover { background: var(--surface2); }
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 16px;
+    display: block;
+  }
+  .step h3 {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 10px;
+  }
+  .step p {
+    font-size: 14px;
+    color: #888;
+    line-height: 1.65;
+  }
+
+  /* ─── GALLERY ─── */
   .gallery-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    max-width: 1100px;
-    margin: 0 auto;
+    gap: 16px;
+    margin-top: 56px;
   }
-  @media (max-width: 768px) {
-    .gallery-grid {
-      grid-template-columns: 1fr;
-    }
+  @media (max-width: 700px) {
+    .gallery-grid { grid-template-columns: 1fr; }
   }
+
   .gallery-item {
-    background: var(--card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
     overflow: hidden;
-    transition: all 0.4s var(--ease);
+    transition: border-color 0.25s ease, transform 0.25s ease;
   }
   .gallery-item:hover {
-    border-color: var(--accent);
-    transform: scale(1.02);
+    border-color: #444;
+    transform: scale(1.015);
   }
   .gallery-item img {
     width: 100%;
-    height: auto;
-    display: block;
     aspect-ratio: 16/10;
     object-fit: cover;
+    display: block;
+    filter: brightness(0.9);
+    transition: filter 0.25s ease;
   }
-  .gallery-caption {
+  .gallery-item:hover img { filter: brightness(1); }
+
+  .gallery-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--muted);
-    padding: 16px;
-    border-top: 1px solid var(--line);
-    background: #020202;
-  }
-
-  /* Get scripts section styles */
-  .get-scripts-section {
-    padding: 120px 40px;
-    border-bottom: 1px solid var(--line);
-    text-align: center;
-  }
-  .get-scripts-subtitle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    color: var(--muted);
-  }
-  .btn-large {
-    padding: 18px 48px;
-    font-size: 13px;
-    border-radius: 6px;
-    letter-spacing: 0.2em;
-  }
-
-  /* Logged In Dashboard styling */
-  .welcome-box {
-    margin-top: 30px;
-    background: var(--card);
-    border: 1px solid var(--line);
-    padding: 40px;
-    border-radius: 16px;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-    text-align: center;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-  }
-  .welcome-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    margin-bottom: 24px;
-    color: #ffffff;
-  }
-  .welcome-actions {
-    display: flex;
-    justify-content: center;
-    gap: 16px;
-  }
-
-  /* How to use toggle wrapper */
-  .how-to-use-wrapper {
-    margin-top: 24px;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .how-to-toggle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    color: var(--accent);
-    background: none;
-    border: none;
-    cursor: pointer;
+    text-transform: uppercase;
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.3);
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 0;
-    outline: none;
-    transition: color 0.2s ease;
   }
-  .how-to-toggle:hover {
-    color: #ffffff;
-  }
-  .toggle-arrow {
-    font-size: 10px;
-    transition: transform 0.3s var(--ease);
-  }
-  .how-to-toggle.active .toggle-arrow {
-    transform: rotate(180deg);
-  }
-  .how-to-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s var(--ease), padding 0.4s var(--ease);
-    text-align: left;
-    background: var(--card);
-    border: 1px solid transparent;
-    border-radius: 8px;
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 700px;
-  }
-  .how-to-content.active {
-    max-height: 300px;
-    border-color: var(--line);
-    padding: 24px;
-    margin-top: 10px;
-  }
-  .how-to-content h4 {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    margin-bottom: 16px;
-    letter-spacing: 0.1em;
-  }
-  .how-to-content ol {
-    margin-left: 20px;
-    color: #cbd5e1;
-    font-size: 14px;
-    line-height: 1.8;
-  }
-  .how-to-content li {
-    margin-bottom: 12px;
-  }
-
-  .nav-btn-accent {
+  .gallery-label::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
     background: var(--accent);
-    color: var(--bg) !important;
-    padding: 6px 14px;
-    border-radius: 4px;
-    font-weight: 700;
-    transition: all 0.2s ease;
-  }
-  .nav-btn-accent:hover {
-    box-shadow: 0 0 10px rgba(212, 255, 58, 0.5);
-    background: #e1ff5a;
-  }
-  .nav-btn-accent::after {
-    display: none !important;
+    flex-shrink: 0;
   }
 
-  .scripts-loader {
-    padding: 100px 40px;
-    border-bottom: 1px solid var(--line);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: var(--bg);
-  }
-  .scripts-loader-header {
-    margin-bottom: 40px;
+  /* ─── GET SCRIPTS CTA ─── */
+  .cta-section {
     text-align: center;
+    padding: 120px 32px;
   }
-  .loader-box-container {
-    display: flex;
-    gap: 16px;
+
+  .cta-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 72px 48px;
     max-width: 700px;
-    width: 100%;
-    background: var(--card);
-    border: 1px solid var(--line);
-    padding: 16px 20px;
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    box-sizing: border-box;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
   }
-  .loader-box-input {
+  .cta-box::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 20%; right: 20%;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 0 0 4px 4px;
+  }
+
+  .cta-box .section-title { margin-bottom: 16px; }
+
+  .cta-tagline {
+    font-size: 16px;
+    color: #888;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .cta-note {
+    margin-top: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    letter-spacing: 0.08em;
+  }
+
+  /* ─── LOGGED-IN WELCOME ─── */
+  .welcome-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 48px;
+    display: none;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .welcome-section h2 {
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 24px;
+  }
+  .highlight-green { color: var(--accent); }
+  .welcome-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ─── DASHBOARD (LOGGED IN) ─── */
+  .dashboard-section {
+    padding: 100px 32px;
+    display: none;
+  }
+  .dashboard-inner {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .code-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+  .code-input {
     flex: 1;
     background: transparent;
     border: none;
     outline: none;
-    color: var(--fg);
     font-family: 'JetBrains Mono', monospace;
     font-size: 13px;
+    color: #aaa;
     width: 100%;
+    min-width: 0;
   }
-  .loader-box-btn {
+  .code-copy-btn {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
+    font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     background: var(--accent);
-    border: 1px solid var(--accent);
-    color: var(--bg);
-    padding: 10px 20px;
+    color: #000;
+    border: 2px solid var(--accent);
+    padding: 10px 18px;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: 700;
-    transition: all 0.2s ease;
     white-space: nowrap;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
   }
-  .loader-box-btn:hover {
+  .code-copy-btn:hover {
     background: transparent;
-    border-color: var(--accent);
     color: var(--accent);
-    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
   }
 
-  footer {
-    padding: 120px 40px 40px;
-    position: relative;
-    overflow: hidden;
-  }
-  .footer-logo {
-    font-size: clamp(60px, 14vw, 160px);
-    font-weight: 800;
-    line-height: 0.9;
-    letter-spacing: -0.04em;
-    margin-bottom: 80px;
-    text-align: center;
-    text-transform: uppercase;
-    font-family: 'Syne', sans-serif;
-  }
-  .footer-logo span {
-    display: inline-block;
-    color: transparent;
-    -webkit-text-stroke: 1px var(--fg);
-  }
-  .footer-logo em {
-    font-family: 'Instrument Serif', serif;
-    font-weight: 400;
-    font-style: italic;
+  .how-to-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
     color: var(--accent);
-    -webkit-text-stroke: 0;
-    text-transform: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    padding: 0;
+    transition: color 0.2s ease;
   }
-  .footer-bottom {
-    border-top: 1px solid var(--line);
-    padding: 30px 0 10px;
+  .how-to-toggle:hover { color: #fff; }
+  .toggle-arrow {
+    font-size: 10px;
+    transition: transform 0.3s var(--ease);
+    display: inline-block;
+  }
+  .how-to-toggle.active .toggle-arrow { transform: rotate(180deg); }
+
+  .how-to-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s var(--ease);
+  }
+  .how-to-content.open { max-height: 300px; }
+  .how-to-inner {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 12px;
+  }
+  .how-to-inner h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+  .how-to-inner ol {
+    margin-left: 18px;
+    color: #bbb;
+    font-size: 14px;
+    line-height: 1.75;
+  }
+  .how-to-inner ol li { margin-bottom: 8px; }
+
+  /* ─── FOOTER ─── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 32px 32px;
+  }
+  .footer-inner {
+    max-width: 1000px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+  .footer-brand .footer-logo {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--fg);
+    display: flex;
     align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .footer-brand .footer-logo em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+  }
+  .footer-brand p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .footer-meta {
     font-family: 'JetBrains Mono', monospace;
     font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--muted);
+    letter-spacing: 0.2em;
+    color: #444;
     text-transform: uppercase;
+    text-align: right;
   }
+  .footer-meta span { display: block; margin-bottom: 4px; }
 
-  .fade-up {
+  /* ─── FADE-UP REVEAL ─── */
+  .reveal {
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: opacity, transform;
+    transform: translateY(18px);
+    transition: opacity 0.75s var(--ease), transform 0.75s var(--ease);
   }
-  .fade-up.in { opacity: 1; transform: translateY(0); }
-  .fade-up.d1 { transition-delay: 0.1s; }
-  .fade-up.d2 { transition-delay: 0.2s; }
-  .fade-up.d3 { transition-delay: 0.3s; }
+  .reveal.d1 { transition-delay: 0.1s; }
+  .reveal.d2 { transition-delay: 0.2s; }
+  .reveal.d3 { transition-delay: 0.3s; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
 
-  body.modal-open {
-    overflow: hidden;
-  }
+  /* ─── MODAL ─── */
+  body.modal-open { overflow: hidden; }
+
   .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(12px);
     z-index: 10000;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.4s var(--ease);
+    transition: opacity 0.35s ease;
   }
   .modal-overlay.active {
     opacity: 1;
     pointer-events: auto;
   }
   .modal-box {
-    background: var(--card);
-    border: 1px solid var(--line);
-    padding: 50px;
-    max-width: 600px;
-    width: 90%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    max-width: 580px;
+    width: 92%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.97) translateY(8px);
+    transition: transform 0.35s var(--ease);
     position: relative;
-    box-shadow: 0 40px 80px rgba(0,0,0,0.8);
-    transform: scale(0.97);
-    transition: transform 0.4s var(--ease);
   }
   .modal-overlay.active .modal-box {
-    transform: scale(1);
-  }
-  .modal-step {
-    display: flex;
-    flex-direction: column;
-  }
-  .modal-title {
-    font-size: 26px;
-    font-weight: 800;
-    line-height: 1.2;
-    letter-spacing: -0.02em;
-    margin-bottom: 28px;
-    color: #ffffff;
-    text-transform: uppercase;
-  }
-  .modal-title.highlight {
-    color: var(--accent);
-  }
-  .modal-title.highlight-red {
-    color: #ef4444;
-  }
-  .modal-text {
-    font-size: 16px;
-    line-height: 1.7;
-    color: #e5e5e5;
-    margin-bottom: 24px;
-  }
-  .modal-info-box {
-    background: rgba(212, 255, 58, 0.04);
-    border-left: 3px solid var(--accent);
-    padding: 20px 24px;
-    margin-bottom: 24px;
-  }
-  .modal-info-box-title {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--accent);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-    display: block;
-  }
-  .modal-info-box .modal-text {
-    margin-bottom: 0;
-    font-size: 15px;
-    line-height: 1.6;
-    color: #e5e5e5;
-  }
-  .modal-text.warning {
-    color: #ef4444;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    letter-spacing: 0.05em;
-  }
-  .modal-text.info {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    border-top: 1px solid var(--line);
-    padding-top: 20px;
-    margin-top: 10px;
-  }
-  .modal-footer-warning {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--muted);
-    margin-bottom: 24px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .modal-buttons {
-    display: flex;
-    gap: 16px;
-    justify-content: flex-end;
-  }
-  .btn {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    padding: 12px 28px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s var(--ease);
-  }
-  .btn-red {
-    background: transparent;
-    border-color: #ef4444;
-    color: #ef4444;
-  }
-  .btn-red:hover {
-    background: #ef4444;
-    color: #ffffff;
-    box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-  }
-  .btn-green {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: var(--bg);
-  }
-  .btn-green:hover {
-    background: transparent;
-    border-color: var(--accent);
-    color: var(--accent);
-    box-shadow: 0 0 15px rgba(212, 255, 58, 0.4);
-  }
-  .highlight-green {
-    color: var(--accent);
+    transform: scale(1) translateY(0);
   }
 
-  /* Setup modal design modifications */
-  .setup-modal-box {
-    max-width: 650px !important;
-    padding: 40px !important;
+  .modal-step { display: none; flex-direction: column; }
+  .modal-step.show { display: flex; }
+
+  .modal-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
   }
-  .modal-text-intro {
-    font-size: 14px;
-    color: #cbd5e1;
-    line-height: 1.6;
-    margin-bottom: 24px;
+  .modal-title {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 20px;
+    color: var(--fg);
   }
-  .setup-scroll-container {
-    max-height: 350px;
-    overflow-y: auto;
-    padding-right: 12px;
-    border-bottom: 1px solid var(--line);
-    margin-bottom: 10px;
-  }
-  .setup-scroll-container::-webkit-scrollbar {
-    width: 6px;
-  }
-  .setup-scroll-container::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .setup-scroll-container::-webkit-scrollbar-thumb {
-    background: #262626;
-    border-radius: 3px;
-  }
-  .setup-section {
-    background: rgba(255,255,255,0.01);
-    border: 1px solid var(--line);
-    padding: 20px;
-    border-radius: 8px;
+  .modal-title.green { color: var(--accent); }
+  .modal-title.red { color: #f87171; }
+
+  .modal-body {
+    font-size: 14.5px;
+    color: #bbb;
+    line-height: 1.7;
     margin-bottom: 20px;
   }
-  .setup-section-title {
+
+  .modal-scroll {
+    max-height: 340px;
+    overflow-y: auto;
+    padding-right: 8px;
+    margin-bottom: 20px;
+  }
+  .modal-scroll::-webkit-scrollbar { width: 5px; }
+  .modal-scroll::-webkit-scrollbar-track { background: transparent; }
+  .modal-scroll::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
+
+  .modal-section {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    margin-bottom: 16px;
+  }
+  .modal-section-title {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--accent);
-    letter-spacing: 0.1em;
-    margin-bottom: 12px;
+    font-size: 10px;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
   }
-  .setup-list {
+  .modal-section ol {
     margin-left: 18px;
-    margin-bottom: 16px;
-    color: #cbd5e1;
-    font-size: 13px;
-    line-height: 1.7;
-  }
-  .setup-list li {
-    margin-bottom: 8px;
-  }
-  .setup-desc-text {
+    color: #bbb;
     font-size: 13.5px;
-    color: #cbd5e1;
     line-height: 1.7;
-    margin-bottom: 16px;
   }
-  .setup-checkbox-label {
+  .modal-section ol li { margin-bottom: 8px; }
+  .modal-section p {
+    font-size: 13.5px;
+    color: #bbb;
+    line-height: 1.7;
+  }
+
+  .modal-check-label {
     display: flex;
     align-items: flex-start;
     gap: 10px;
     font-size: 13px;
-    color: #ffffff;
+    color: var(--fg);
     cursor: pointer;
+    margin-top: 14px;
     user-select: none;
+    line-height: 1.5;
   }
-  .setup-checkbox-label input[type="checkbox"] {
-    margin-top: 3px;
+  .modal-check-label input[type="checkbox"] {
+    margin-top: 2px;
     accent-color: var(--accent);
     cursor: pointer;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
   }
-  .setup-warning-block {
-    background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    padding: 20px;
-    border-radius: 8px;
-    color: #fca5a5;
-    font-size: 13px;
-    line-height: 1.7;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 20px;
+
+  .modal-warning {
+    background: rgba(248,113,113,0.07);
+    border: 1px solid rgba(248,113,113,0.25);
+    border-radius: 7px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
     font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: #fca5a5;
+    line-height: 1.7;
+    font-weight: 600;
+    text-align: center;
   }
-  .final-section {
-    background: rgba(212, 255, 58, 0.03);
-    border-color: rgba(212, 255, 58, 0.2);
+
+  .modal-final {
+    background: var(--accent-dim);
+    border: 1px solid rgba(212,255,58,0.2);
+    border-radius: 7px;
+    padding: 18px 20px;
   }
-  .final-label {
-    font-size: 14px;
+  .modal-final .modal-check-label {
+    margin-top: 0;
+    font-weight: 700;
     color: var(--accent);
   }
-  .btn:disabled {
-    background: #1a1a1a !important;
-    border-color: #1a1a1a !important;
-    color: #404040 !important;
-    cursor: not-allowed !important;
-    box-shadow: none !important;
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+  }
+
+  /* Redirecting step */
+  .modal-redirect {
+    text-align: center;
+    padding: 40px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .modal-redirect .modal-title { margin-bottom: 0; }
+  .redirect-dots { color: var(--accent); }
+
+  /* ─── MOBILE TWEAKS ─── */
+  @media (max-width: 600px) {
+    nav { padding: 0 20px; }
+    .hero { padding: 100px 20px 70px; }
+    section { padding: 72px 20px; }
+    .cta-box { padding: 48px 24px; }
+    .modal-box { padding: 28px 20px; }
+    footer { padding: 48px 20px 24px; }
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+    .footer-meta { text-align: left; }
+    .steps { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 
+<!-- Loader -->
 <div class="loader" id="loader">
-  <div class="loader-inner">
-    <div class="loader-line"></div>
-    <span class="loader-text">HUB ZERO</span>
-  </div>
+  <span class="loader-word">HUB ZERO</span>
 </div>
 
-<div class="progress" id="progress"></div>
+<!-- Scroll progress -->
+<div id="progress"></div>
 
-<nav>
-  <div class="nav-logo">HUB ZERO</div>
-  <div class="nav-meta">
-    <span class="nav-non-logged" id="nav-non-logged-links">
-      <a href="#about">About</a>
-      <a href="#gallery">Gallery</a>
-      <a href="#get-scripts" class="nav-btn-accent">Get scripts</a>
-    </span>
-    <span class="nav-logged" id="nav-logged-links" style="display: none;">
-      <a href="#scripts-dashboard" class="nav-btn-accent">Dashboard</a>
-    </span>
-  </div>
+<!-- Nav -->
+<nav id="main-nav">
+  <div class="nav-logo">HUB ZERO<span class="dot"></span></div>
+  <ul class="nav-links" id="nav-non-logged">
+    <li><a href="#about">Scripts</a></li>
+    <li><a href="#how">How it works</a></li>
+    <li><a href="#gallery">Gallery</a></li>
+    <li class="nav-cta"><a href="#get-scripts" id="nav-get-scripts">Get Scripts</a></li>
+  </ul>
+  <ul class="nav-links" id="nav-logged" style="display:none;">
+    <li class="nav-cta"><a href="#dashboard">Dashboard</a></li>
+  </ul>
 </nav>
 
-<section class="hero">
-  <div class="hero-content">
-    <div class="hero-title-wrap">
-      <h1 class="hero-title">
-        <span class="line"><span>HUB</span></span>
-        <span class="line"><span>ZERO<em>.</em></span></span>
-      </h1>
+<!-- ─── HERO ─── -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <p class="hero-eyebrow" id="hero-eyebrow">School script tools</p>
+
+    <h1 class="hero-heading">
+      <span class="line"><span id="line1">Hub</span></span>
+      <span class="line"><span id="line2">Zero<em>.</em></span></span>
+    </h1>
+
+    <p class="hero-sub" id="hero-sub">
+      Custom scripts for the sites you use every day at school.
+      Right now: <strong style="color:#e2e8f0;">Education Perfect</strong> and <strong style="color:#e2e8f0;">Realm</strong> — with more on the way.
+    </p>
+
+    <!-- Non-logged in actions -->
+    <div class="hero-actions" id="hero-actions-anon">
+      <button class="btn btn-primary" id="btn-get-loader">Get Scripts</button>
+      <a class="btn btn-secondary" href="#about">See what's included</a>
     </div>
 
-    <!-- Logged In Welcome Message -->
-    <div id="logged-in-welcome" class="welcome-box fade-up d1" style="display: none;">
-      <h2 class="welcome-title">Glad you could make it, <span id="welcome-username" class="highlight-green">User</span>.</h2>
+    <!-- Logged in welcome -->
+    <div class="welcome-section" id="logged-in-welcome">
+      <h2>Welcome back, <span class="highlight-green" id="welcome-username">User</span>.</h2>
       <div class="welcome-actions">
-        <button class="btn btn-green" id="btn-relink-realm">Relink Realm</button>
-        <button class="btn btn-red" id="btn-logout-dashboard">Logout</button>
+        <button class="btn btn-primary" id="btn-relink-realm">Relink Realm</button>
+        <button class="btn btn-danger" id="btn-logout-dashboard">Log out</button>
       </div>
     </div>
   </div>
-  
-  <div class="hero-arrow fade-up d2">
-    <svg width="32" height="64" viewBox="0 0 24 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 0V44M12 44L2 34M12 44L22 34" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
+
+  <div class="scroll-hint" id="scroll-hint">
+    <div class="scroll-arrow"></div>
+    <span>Scroll</span>
   </div>
 </section>
 
-<div class="marquee">
-  <div class="marquee-track">
-    <div class="marquee-item">EP <span class="dot"></span> Realm <span class="dot"></span> <span class="for">More coming..</span> <span class="dot"></span></div>
-    <div class="marquee-item">EP <span class="dot"></span> Realm <span class="dot"></span> <span class="for">More coming..</span> <span class="dot"></span></div>
-    <div class="marquee-item">EP <span class="dot"></span> Realm <span class="dot"></span> <span class="for">More coming..</span> <span class="dot"></span></div>
-    <div class="marquee-item">EP <span class="dot"></span> Realm <span class="dot"></span> <span class="for">More coming..</span> <span class="dot"></span></div>
-  </div>
-</div>
-
-<!-- Non-Logged In Sections Wrapper -->
+<!-- ─── NON-LOGGED-IN SECTIONS ─── -->
 <div id="non-logged-sections">
-  <!-- About Section -->
-  <section class="about-section" id="about">
-    <div class="about-header fade-up">
-      <h2 class="services-title">What is <em>Hub Zero?</em></h2>
-    </div>
-    <div class="about-content fade-up d1">
-      <p class="about-desc">
-        We are Hub Zero! We spend time crafting the perfect and most useful scripts for the websites you use at school. Currently we might be able to interest you in the following scripts:
-      </p>
-      
-      <div class="scripts-showcase">
-        <div class="script-card">
-          <h3 class="script-card-title">Student Searcher <span class="highlight-green">(on realm)</span></h3>
-          <p class="script-card-desc">
-            Browse any student in the entire school. Impersonate them on your realm homepage. Send them an email from realm. Browse through each year level + MORE FEATURES TO COME AT USER SUGGESTION
-          </p>
+
+  <!-- What's included -->
+  <section id="about">
+    <div class="section-inner">
+      <p class="section-label reveal">What's included</p>
+      <h2 class="section-title reveal d1">Two scripts.<br><em>A lot of features.</em></h2>
+
+      <div class="about-grid">
+        <!-- Card 1 -->
+        <div class="about-card reveal d1" id="card-realm">
+          <span class="card-tag">Realm</span>
+          <h3>Student Searcher</h3>
+          <p>Browse every student at your school, all from within Realm.</p>
+          <ul class="feature-list">
+            <li>Search any student by name or year level</li>
+            <li>Impersonate them on your Realm homepage</li>
+            <li>Send them an email straight from Realm</li>
+            <li>Browse the full school by year group</li>
+            <li>More features added at user request</li>
+          </ul>
         </div>
-        
-        <div class="script-card">
-          <h3 class="script-card-title">Education Perfect Script Hub</h3>
-          <p class="script-card-desc">
-            Complete any task. Give or set your cheer credits. Check and send cheers easily without needing to complete a task or scroll the leaderboard. Auto information slides + MORE TO COME
-          </p>
+
+        <!-- Card 2 -->
+        <div class="about-card reveal d2" id="card-ep">
+          <span class="card-tag">Education Perfect</span>
+          <h3>EP Script Hub</h3>
+          <p>A toolkit that handles the boring stuff on EP so you don't have to.</p>
+          <ul class="feature-list">
+            <li>Complete any task automatically</li>
+            <li>Set or give your cheer credits</li>
+            <li>Check &amp; send cheers without scrolling the leaderboard</li>
+            <li>Auto-complete information slides</li>
+            <li>More on the way</li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Gallery Section -->
-  <section class="gallery-section" id="gallery">
-    <div class="gallery-header fade-up">
-      <h2 class="services-title">Gallery</h2>
-      <p class="gallery-subtitle">View our scripts in action!</p>
-    </div>
-    
-    <div class="gallery-grid fade-up d1">
-      <div class="gallery-item">
-        <img src="EP-Hub.png" alt="EP Hub" loading="lazy">
-        <div class="gallery-caption">EP Hub Interface</div>
-      </div>
-      <div class="gallery-item">
-        <img src="Realm-Search.png" alt="Realm Search" loading="lazy">
-        <div class="gallery-caption">Realm Student Search</div>
-      </div>
-      <div class="gallery-item">
-        <img src="Realm-Yeargroup.png" alt="Realm Yeargroup" loading="lazy">
-        <div class="gallery-caption">Realm Yeargroup Browser</div>
-      </div>
-      <div class="gallery-item">
-        <img src="Realm-Student-Profile.png" alt="Realm Student Profile" loading="lazy">
-        <div class="gallery-caption">Realm Detailed Student Profile</div>
+  <!-- How it works -->
+  <section id="how">
+    <div class="section-inner">
+      <p class="section-label reveal">Getting started</p>
+      <h2 class="section-title reveal d1">Three steps.<br><em>That's all.</em></h2>
+
+      <div class="steps reveal d2">
+        <div class="step">
+          <span class="step-num">STEP 01</span>
+          <h3>Log in with Realm</h3>
+          <p>Click "Get Scripts" and you'll be sent to sign in with your school Realm account. This verifies you're a student.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">STEP 02</span>
+          <h3>Copy the loader</h3>
+          <p>After signing in, you'll get a short piece of code. Copy it — it's the only thing you need to run any script.</p>
+        </div>
+        <div class="step">
+          <span class="step-num">STEP 03</span>
+          <h3>Paste into the console</h3>
+          <p>On Realm or EP, press <strong>Ctrl + Shift + J</strong> to open the console, paste the code, and hit Enter. Done.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Get Scripts Section -->
-  <section class="get-scripts-section" id="get-scripts">
-    <div class="get-scripts-header fade-up">
-      <h2 class="services-title">Get <em>Scripts</em>.</h2>
-      <p class="get-scripts-subtitle">Ready to get started?</p>
-    </div>
-    <div class="fade-up d1" style="display: flex; justify-content: center; margin-top: 30px;">
-      <button class="btn btn-green btn-large" id="btn-get-loader">Get script loader</button>
+  <!-- Gallery -->
+  <section id="gallery">
+    <div class="section-inner">
+      <p class="section-label reveal">In action</p>
+      <h2 class="section-title reveal d1">See what it<br><em>looks like.</em></h2>
+
+      <div class="gallery-grid">
+        <div class="gallery-item reveal d1">
+          <img src="EP-Hub.png" alt="EP Hub interface" loading="lazy">
+          <div class="gallery-label">EP Hub Interface</div>
+        </div>
+        <div class="gallery-item reveal d2">
+          <img src="Realm-Search.png" alt="Realm student search" loading="lazy">
+          <div class="gallery-label">Realm — Student Search</div>
+        </div>
+        <div class="gallery-item reveal d1">
+          <img src="Realm-Yeargroup.png" alt="Realm year group browser" loading="lazy">
+          <div class="gallery-label">Realm — Year Group Browser</div>
+        </div>
+        <div class="gallery-item reveal d2">
+          <img src="Realm-Student-Profile.png" alt="Realm student profile" loading="lazy">
+          <div class="gallery-label">Realm — Detailed Student Profile</div>
+        </div>
+      </div>
     </div>
   </section>
-</div>
 
-<!-- Logged In Section Wrapper -->
-<div id="logged-sections" style="display: none;">
-  <section class="scripts-loader" id="scripts-dashboard">
-    <div class="scripts-loader-header">
-      <h2 class="services-title"><em>Scripts</em> Loader.</h2>
+  <!-- CTA -->
+  <section class="cta-section" id="get-scripts">
+    <div class="cta-box reveal">
+      <p class="section-label" style="justify-content:center; margin-bottom:16px;">Ready to go?</p>
+      <h2 class="section-title">Get the<br><em>scripts.</em></h2>
+      <p class="cta-tagline">Free for verified students. Setup takes under two minutes.</p>
+      <button class="btn btn-primary" id="btn-get-loader-2" style="font-size:13px; padding:16px 40px;">Get Scripts — It's Free</button>
+      <p class="cta-note">Microsoft Edge required &nbsp;·&nbsp; St Patricks students only</p>
     </div>
-    <div class="loader-box-container">
-      <input type="text" class="loader-box-input" id="loader-code-input" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
-      <button class="loader-box-btn" id="btn-copy-loader">Copy Code</button>
+  </section>
+
+</div><!-- /non-logged-sections -->
+
+<!-- ─── DASHBOARD (LOGGED IN) ─── -->
+<div class="dashboard-section" id="logged-sections">
+  <div class="dashboard-inner">
+    <p class="section-label">Your loader script</p>
+    <h2 class="section-title">Scripts <em>Loader.</em></h2>
+
+    <div class="code-box" style="margin-top:28px;">
+      <input class="code-input" id="loader-code-input" type="text" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
+      <button class="code-copy-btn" id="btn-copy-loader">Copy</button>
     </div>
-    
-    <div class="how-to-use-wrapper">
-      <button class="how-to-toggle" id="btn-how-to-toggle">
-        How to use this?
-        <span class="toggle-arrow">▼</span>
-      </button>
-      <div class="how-to-content" id="how-to-use-content">
-        <h4>USING THE SCRIPT:</h4>
+
+    <button class="how-to-toggle" id="btn-how-to-toggle">
+      How do I use this?
+      <span class="toggle-arrow">▼</span>
+    </button>
+
+    <div class="how-to-content" id="how-to-use-content">
+      <div class="how-to-inner">
+        <h4>Using the script</h4>
         <ol>
-          <li>You will run the developer tools on Realm or EP by pressing <strong>CTRL + SHIFT + J</strong> on your keyboard.</li>
-          <li>You will paste the loader script into the console and execute it.</li>
-          <li><strong>YOU WILL NOT BE ABLE TO ACCESS DEVELOPER TOOLS ONCE THE SCRIPT HAS BEEN EXECUTED.</strong></li>
+          <li>On Realm or EP, press <strong>Ctrl + Shift + J</strong> to open Developer Tools.</li>
+          <li>Paste the loader code above into the console and press Enter.</li>
+          <li><strong>Note:</strong> Developer Tools will be disabled once the script is running — this is normal.</li>
         </ol>
       </div>
     </div>
-  </section>
+  </div>
 </div>
 
-<!-- Footer -->
+<!-- ─── FOOTER ─── -->
 <footer>
-  <h2 class="footer-logo fade-up"><span>HUB</span> <em>ZERO</em>.</h2>
-  <div class="footer-bottom fade-up d1">
-    <span>2026</span>
-    <span>BY XYLOS</span>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">Hub <em>Zero.</em></div>
+      <p>School script tools for EP &amp; Realm.</p>
+    </div>
+    <div class="footer-meta">
+      <span>2026</span>
+      <span>By Xylos</span>
+    </div>
   </div>
 </footer>
 
-<!-- Setup and Redirection Modal Overlay -->
+<!-- ─── MODAL ─── -->
 <div class="modal-overlay" id="modal-overlay">
-  <div class="modal-box setup-modal-box">
-    <!-- Edge Browser Warning -->
-    <div class="modal-step" id="modal-step-edge" style="display: none;">
-      <h3 class="modal-title highlight-red">Edge Required</h3>
-      <p class="modal-text">This platform can only be accessed using <strong>Microsoft Edge</strong> to ensure script compatibility.</p>
-      <p class="modal-text info">Please copy this link and open it in Edge.</p>
-      <div class="modal-footer-warning">Unsupported Browser</div>
-      <div class="modal-buttons">
-        <button class="btn btn-red" id="btn-edge-close">Close</button>
+  <div class="modal-box">
+
+    <!-- Edge warning -->
+    <div class="modal-step" id="modal-step-edge">
+      <p class="modal-label">Browser check</p>
+      <h3 class="modal-title red">Edge Required</h3>
+      <p class="modal-body">Hub Zero only works in <strong>Microsoft Edge</strong>. Please open this page in Edge and try again.</p>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="btn-edge-close">Close</button>
       </div>
     </div>
 
-    <!-- Multi-Checkbox Setup Steps -->
-    <div class="modal-step" id="modal-step-setup" style="display: none;">
-      <h3 class="modal-title highlight">Setting up - MUST READ</h3>
-      <p class="modal-text-intro">Getting the script loader and using it is very simple. Below we will outline everything:</p>
-      
-      <div class="setup-scroll-container">
-        <!-- Section 1 -->
-        <div class="setup-section">
-          <h4 class="setup-section-title">GETTING THE SCRIPT</h4>
-          <ol class="setup-list">
-            <li>Pressing continue will redirect you to log in <strong>WITH REALM</strong>.</li>
-            <li>After you have logged in, you will be considered verified and added to our system.</li>
-            <li>That's it. You will have access to Hub Zero's EP and Realm scripts forever.</li>
+    <!-- Setup checklist -->
+    <div class="modal-step" id="modal-step-setup">
+      <p class="modal-label">Before you continue — must read</p>
+      <h3 class="modal-title green">Setting Up</h3>
+
+      <div class="modal-scroll">
+        <div class="modal-section">
+          <p class="modal-section-title">Getting the script</p>
+          <ol>
+            <li>Pressing Continue will redirect you to log in <strong>with Realm</strong>.</li>
+            <li>After logging in, you'll be verified and added to our system.</li>
+            <li>That's it — you'll have access to Hub Zero's EP and Realm scripts forever.</li>
           </ol>
-          <label class="setup-checkbox-label">
+          <label class="modal-check-label">
             <input type="checkbox" class="setup-checkbox" id="chk-setup-1">
-            <span>I have read the Getting the Script section</span>
+            <span>I've read this section</span>
           </label>
         </div>
 
-        <!-- Section 2 -->
-        <div class="setup-section">
-          <h4 class="setup-section-title">USING THE SCRIPT</h4>
-          <ol class="setup-list">
-            <li>You will run the developer tools on Realm or EP by pressing <strong>CTRL + SHIFT + J</strong> on your keyboard.</li>
-            <li>You will paste the loader script into the console and execute it.</li>
-            <li><strong>YOU WILL NOT BE ABLE TO ACCESS DEVELOPER TOOLS ONCE THE SCRIPT HAS BEEN EXECUTED.</strong></li>
+        <div class="modal-section">
+          <p class="modal-section-title">Using the script</p>
+          <ol>
+            <li>Open Developer Tools on Realm or EP with <strong>Ctrl + Shift + J</strong>.</li>
+            <li>Paste the loader script into the console and press Enter.</li>
+            <li><strong>Developer Tools will be disabled once the script runs.</strong> This is expected.</li>
           </ol>
-          <label class="setup-checkbox-label">
+          <label class="modal-check-label">
             <input type="checkbox" class="setup-checkbox" id="chk-setup-2">
-            <span>I have read the Using the Script section</span>
+            <span>I've read this section</span>
           </label>
         </div>
 
-        <!-- Section 3 -->
-        <div class="setup-section">
-          <h4 class="setup-section-title">GETTING HELP</h4>
-          <p class="setup-desc-text">If you need help getting set up there will be additional information once you have logged in.</p>
-          <label class="setup-checkbox-label">
+        <div class="modal-section">
+          <p class="modal-section-title">Getting help</p>
+          <p>If you need help getting set up, more information is available once you've logged in.</p>
+          <label class="modal-check-label">
             <input type="checkbox" class="setup-checkbox" id="chk-setup-3">
-            <span>I have read the Getting Help section</span>
+            <span>I've read this section</span>
           </label>
         </div>
 
-        <!-- Warning Block -->
-        <div class="setup-warning-block">
+        <div class="modal-warning">
           ATTEMPTING TO REVERSE ENGINEER OUR SCRIPTS WILL ALERT US AND YOU WILL BE BLACKLISTED. TEACHER ACCOUNTS WILL BE BLACKLISTED.
         </div>
 
-        <!-- Final section -->
-        <div class="setup-section final-section">
-          <label class="setup-checkbox-label final-label">
+        <div class="modal-final">
+          <label class="modal-check-label">
             <input type="checkbox" class="setup-checkbox" id="chk-setup-final">
-            <strong>I have read ALL the above information and understand it</strong>
+            <strong>I have read all of the above and I understand it</strong>
           </label>
         </div>
       </div>
 
-      <div class="modal-buttons" style="margin-top: 24px;">
-        <button class="btn btn-red" id="btn-setup-cancel">Cancel</button>
-        <button class="btn btn-green" id="btn-setup-continue" disabled>Continue</button>
+      <div class="modal-footer">
+        <button class="btn btn-danger" id="btn-setup-cancel">Cancel</button>
+        <button class="btn btn-primary" id="btn-setup-continue" disabled>Continue</button>
       </div>
     </div>
 
-    <!-- Step 2: Confirmation Redirection -->
-    <div class="modal-step" id="modal-step-redirect" style="display: none; align-items: center; justify-content: center; text-align: center; padding: 40px 0;">
-      <h3 class="modal-title highlight" style="margin-bottom: 0;">Redirecting to Realm sign on<span id="redirect-dots">.</span></h3>
+    <!-- Redirecting -->
+    <div class="modal-step" id="modal-step-redirect">
+      <div class="modal-redirect">
+        <h3 class="modal-title green">Redirecting to Realm<span class="redirect-dots" id="redirect-dots">.</span></h3>
+        <p class="modal-body" style="margin-bottom:0;">Taking you to sign in with your school account...</p>
+      </div>
     </div>
+
   </div>
 </div>
 
 <script>
-  const isEdge = /Edg/i.test(navigator.userAgent);
-  const overlay = document.getElementById('modal-overlay');
-  const stepEdge = document.getElementById('modal-step-edge');
-  const stepSetup = document.getElementById('modal-step-setup');
-  const stepRedirect = document.getElementById('modal-step-redirect');
+  /* ─── LOADER ─── */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('gone');
+      document.getElementById('main-nav').classList.add('show');
+      // Hero reveal
+      document.getElementById('hero-eyebrow').classList.add('show');
+      setTimeout(() => {
+        document.getElementById('line1').classList.add('show');
+        document.getElementById('line2').classList.add('show');
+      }, 100);
+      setTimeout(() => {
+        document.getElementById('hero-sub').classList.add('show');
+        document.getElementById('hero-actions-anon').classList.add('show');
+        document.getElementById('scroll-hint').classList.add('show');
+      }, 200);
+    }, 600);
+  });
 
-  // Verify and load user view states
-  (async function() {
-    const signedIn = localStorage.getItem('Signed_in');
-    if (signedIn) {
-      try {
-        const data = JSON.parse(signedIn);
-        const id = data.id;
-        if (id) {
-          const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
-          
-          // Check blacklist
-          const blacklistRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), {
-            headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
-          });
-          if (blacklistRes.ok) {
-            const blacklistRecords = await blacklistRes.json();
-            if (blacklistRecords && blacklistRecords.length > 0) {
-              localStorage.removeItem('Signed_in');
-              alert("Blacklisted: " + blacklistRecords[0].reason);
-              window.location.reload();
-              return;
-            }
-          }
+  /* ─── PROGRESS ─── */
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+    progress.style.width = Math.min(pct, 100) + '%';
+  }, { passive: true });
 
-          // Check registration
-          const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id), {
-            headers: {
-              'apikey': sbKey,
-              'Authorization': 'Bearer ' + sbKey
-            }
-          });
-          if (res.ok) {
-            const records = await res.json();
-            if (!records || records.length === 0) {
-              localStorage.removeItem('Signed_in');
-              alert("Account error. Please log in again");
-              window.location.reload();
-              return;
-            }
-          }
-          
-          // Setup logged in DOM state
-          document.getElementById('nav-non-logged-links').style.display = 'none';
-          document.getElementById('nav-logged-links').style.display = 'block';
-          document.getElementById('non-logged-sections').style.display = 'none';
-          document.getElementById('logged-sections').style.display = 'block';
-          document.getElementById('logged-in-welcome').style.display = 'block';
-          document.getElementById('welcome-username').textContent = data.name;
-        }
-      } catch (e) {
-        console.error("Session verification error:", e);
+  /* ─── SCROLL REVEAL ─── */
+  const revealObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObs.unobserve(e.target);
       }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
+
+  /* ─── SESSION CHECK ─── */
+  const isEdge = /Edg/i.test(navigator.userAgent);
+
+  (async function verifySession() {
+    const stored = localStorage.getItem('Signed_in');
+    if (!stored) return;
+    try {
+      const data = JSON.parse(stored);
+      const id = data.id;
+      if (!id) return;
+
+      const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+      const headers = { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey };
+
+      // Blacklist check
+      const blRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), { headers });
+      if (blRes.ok) {
+        const bl = await blRes.json();
+        if (bl && bl.length > 0) {
+          localStorage.removeItem('Signed_in');
+          alert('Blacklisted: ' + bl[0].reason);
+          window.location.reload();
+          return;
+        }
+      }
+
+      // Registration check
+      const vRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.' + encodeURIComponent(id), { headers });
+      if (vRes.ok) {
+        const records = await vRes.json();
+        if (!records || records.length === 0) {
+          localStorage.removeItem('Signed_in');
+          alert('Account error. Please log in again.');
+          window.location.reload();
+          return;
+        }
+      }
+
+      // Show logged-in state
+      setLoggedInUI(data.name);
+    } catch (e) {
+      console.error('Session error:', e);
     }
   })();
 
-  // Handle URL redirect verification queries
+  function setLoggedInUI(name) {
+    document.getElementById('nav-non-logged').style.display = 'none';
+    document.getElementById('nav-logged').style.display = 'flex';
+    document.getElementById('non-logged-sections').style.display = 'none';
+    document.getElementById('logged-sections').style.display = 'block';
+    const welcome = document.getElementById('logged-in-welcome');
+    welcome.style.display = 'block';
+    document.getElementById('hero-actions-anon').style.display = 'none';
+    document.getElementById('welcome-username').textContent = name;
+    document.getElementById('scroll-hint').style.display = 'none';
+  }
+
+  /* ─── VERIFICATION CALLBACK ─── */
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.get('verified') === 'true') {
     const name = urlParams.get('name') || '';
     const id = urlParams.get('id') || '';
-    
     (async function() {
       try {
         const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
-        
-        // Verify blacklist before logging in
-        const blacklistRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), {
-          headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
-        });
-        if (blacklistRes.ok) {
-          const blacklistRecords = await blacklistRes.json();
-          if (blacklistRecords && blacklistRecords.length > 0) {
-            alert("Access Denied: You are blacklisted. Reason: " + blacklistRecords[0].reason);
-            const newUrl = window.location.pathname;
-            window.history.replaceState({}, document.title, newUrl);
+        const headers = { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey };
+
+        const blRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.' + encodeURIComponent(id), { headers });
+        if (blRes.ok) {
+          const bl = await blRes.json();
+          if (bl && bl.length > 0) {
+            alert('Access Denied: You are blacklisted. Reason: ' + bl[0].reason);
+            window.history.replaceState({}, document.title, window.location.pathname);
             return;
           }
         }
 
-        // Save sign-in state
-        localStorage.setItem('Signed_in', JSON.stringify({ name: name, id: id }));
+        localStorage.setItem('Signed_in', JSON.stringify({ name, id }));
 
-        // Upsert limits profile
         const sbUrl = 'https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits';
-        const checkRes = await fetch(sbUrl + '?id=eq.' + encodeURIComponent(id), {
-          headers: { 'apikey': sbKey, 'Authorization': 'Bearer ' + sbKey }
-        });
+        const checkRes = await fetch(sbUrl + '?id=eq.' + encodeURIComponent(id), { headers });
         const limitsData = await checkRes.json();
-        
+
         if (!limitsData || limitsData.length === 0) {
           await fetch(sbUrl, {
             method: 'POST',
-            headers: {
-              'apikey': sbKey,
-              'Authorization': 'Bearer ' + sbKey,
-              'Content-Type': 'application/json',
-              'Prefer': 'return=minimal'
-            },
-            body: JSON.stringify({
-              id: id,
-              cheers_pool_remaining: 500,
-              last_pool_reset: new Date().toISOString()
-            })
+            headers: { ...headers, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
+            body: JSON.stringify({ id, cheers_pool_remaining: 500, last_pool_reset: new Date().toISOString() })
           });
         }
-        
-        alert("Verified ✔");
-        const newUrl = window.location.pathname;
-        window.history.replaceState({}, document.title, newUrl);
-        window.location.reload();
 
+        alert('Verified!');
+        window.history.replaceState({}, document.title, window.location.pathname);
+        window.location.reload();
       } catch (err) {
-        console.error("Verification callback processing failed:", err);
+        console.error('Verification callback error:', err);
       }
     })();
   }
 
-  // Copy code box
+  /* ─── DASHBOARD CONTROLS ─── */
   const copyBtn = document.getElementById('btn-copy-loader');
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
       const input = document.getElementById('loader-code-input');
       input.select();
       document.execCommand('copy');
-      
-      const originalText = copyBtn.textContent;
       copyBtn.textContent = 'Copied!';
       copyBtn.style.background = '#22c55e';
       copyBtn.style.borderColor = '#22c55e';
-      copyBtn.style.color = '#ffffff';
+      copyBtn.style.color = '#fff';
       setTimeout(() => {
-        copyBtn.textContent = originalText;
+        copyBtn.textContent = 'Copy';
         copyBtn.style.background = '';
         copyBtn.style.borderColor = '';
         copyBtn.style.color = '';
@@ -1255,153 +1407,111 @@
     });
   }
 
-  // Dashboard Toggle Actions
   const howToToggle = document.getElementById('btn-how-to-toggle');
   const howToContent = document.getElementById('how-to-use-content');
-  if (howToToggle && howToContent) {
+  if (howToToggle) {
     howToToggle.addEventListener('click', () => {
-      const isActive = howToToggle.classList.toggle('active');
-      if (isActive) {
-        howToContent.classList.add('active');
-      } else {
-        howToContent.classList.remove('active');
-      }
+      const open = howToToggle.classList.toggle('active');
+      howToContent.classList.toggle('open', open);
     });
   }
 
-  // Relink and Logout button actions
   const relinkBtn = document.getElementById('btn-relink-realm');
-  if (relinkBtn) {
-    relinkBtn.addEventListener('click', () => {
-      window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
-    });
-  }
+  if (relinkBtn) relinkBtn.addEventListener('click', () => {
+    window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+  });
+
   const logoutBtn = document.getElementById('btn-logout-dashboard');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem('Signed_in');
-      window.location.reload();
+  if (logoutBtn) logoutBtn.addEventListener('click', () => {
+    localStorage.removeItem('Signed_in');
+    window.location.reload();
+  });
+
+  /* ─── SCRIPT CARDS → scroll to CTA ─── */
+  document.querySelectorAll('.about-card').forEach(card => {
+    card.addEventListener('click', () => {
+      document.getElementById('get-scripts').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    });
+  });
+
+  /* ─── NAV CTA also triggers modal ─── */
+  const navGetScripts = document.getElementById('nav-get-scripts');
+  if (navGetScripts) {
+    navGetScripts.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal();
     });
   }
 
-  // Scroll reveal loader progress and intersection fade-ups
-  const progress = document.getElementById('progress');
-  function updateProgress() {
-    const scrollPercent = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-    progress.style.width = Math.min(scrollPercent, 100) + '%';
+  /* ─── MODAL ─── */
+  const overlay = document.getElementById('modal-overlay');
+  const stepEdge = document.getElementById('modal-step-edge');
+  const stepSetup = document.getElementById('modal-step-setup');
+  const stepRedirect = document.getElementById('modal-step-redirect');
+
+  function showStep(step) {
+    [stepEdge, stepSetup, stepRedirect].forEach(s => s.classList.remove('show'));
+    step.classList.add('show');
   }
-  window.addEventListener('scroll', updateProgress, { passive: true });
-  updateProgress();
 
-  const fadeObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in');
-        fadeObserver.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('.fade-up').forEach(el => fadeObserver.observe(el));
+  function openModal() {
+    document.body.classList.add('modal-open');
+    overlay.classList.add('active');
+    if (!isEdge) {
+      showStep(stepEdge);
+    } else {
+      showStep(stepSetup);
+    }
+  }
 
-  // Multi-Checkbox modal validate logic
+  function closeModal() {
+    overlay.classList.remove('active');
+    document.body.classList.remove('modal-open');
+    // Reset checkboxes
+    document.querySelectorAll('.setup-checkbox').forEach(c => c.checked = false);
+    btnContinue.disabled = true;
+  }
+
+  document.getElementById('btn-get-loader').addEventListener('click', openModal);
+  document.getElementById('btn-get-loader-2').addEventListener('click', openModal);
+
+  document.getElementById('btn-edge-close').addEventListener('click', closeModal);
+  document.getElementById('btn-setup-cancel').addEventListener('click', closeModal);
+
   const chk1 = document.getElementById('chk-setup-1');
   const chk2 = document.getElementById('chk-setup-2');
   const chk3 = document.getElementById('chk-setup-3');
   const chkFinal = document.getElementById('chk-setup-final');
   const btnContinue = document.getElementById('btn-setup-continue');
-  const btnCancel = document.getElementById('btn-setup-cancel');
-  const btnGetLoader = document.getElementById('btn-get-loader');
 
-  function validateCheckboxes() {
-    if (chk1.checked && chk2.checked && chk3.checked && chkFinal.checked) {
-      btnContinue.disabled = false;
-    } else {
-      btnContinue.disabled = true;
-    }
-  }
-
-  [chk1, chk2, chk3, chkFinal].forEach(chk => {
-    if (chk) {
-      chk.addEventListener('change', validateCheckboxes);
-    }
-  });
-
-  if (btnGetLoader) {
-    btnGetLoader.addEventListener('click', () => {
-      document.body.classList.add('modal-open');
-      overlay.classList.add('active');
-      
-      if (!isEdge) {
-        stepSetup.style.display = 'none';
-        stepRedirect.style.display = 'none';
-        stepEdge.style.display = 'flex';
-      } else {
-        stepSetup.style.display = 'flex';
-        stepRedirect.style.display = 'none';
-        stepEdge.style.display = 'none';
-      }
-    });
-  }
-
-  if (btnCancel) {
-    btnCancel.addEventListener('click', () => {
-      overlay.classList.remove('active');
-      document.body.classList.remove('modal-open');
-      [chk1, chk2, chk3, chkFinal].forEach(c => c.checked = false);
-      btnContinue.disabled = true;
-    });
-  }
-
-  const btnEdgeClose = document.getElementById('btn-edge-close');
-  if (btnEdgeClose) {
-    btnEdgeClose.addEventListener('click', () => {
-      overlay.classList.remove('active');
-      document.body.classList.remove('modal-open');
-    });
-  }
-
-  if (btnContinue) {
-    btnContinue.addEventListener('click', () => {
-      stepSetup.style.display = 'none';
-      stepRedirect.style.display = 'flex';
-
-      let dotCount = 1;
-      const dotsSpan = document.getElementById('redirect-dots');
-      const dotsInterval = setInterval(() => {
-        dotCount = (dotCount % 3) + 1;
-        if (dotsSpan) {
-          dotsSpan.textContent = '.'.repeat(dotCount);
-        }
-      }, 400);
-
-      setTimeout(() => {
-        clearInterval(dotsInterval);
-        overlay.style.backgroundColor = '#000000';
-        overlay.style.opacity = '1';
-        const modalBox = document.querySelector('.modal-box');
-        if (modalBox) modalBox.style.display = 'none';
-        window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
-      }, 2000);
-    });
-  }
-
-  document.querySelectorAll('.script-card').forEach(card => {
-    card.style.cursor = 'pointer';
-    card.addEventListener('click', () => {
-      const target = document.getElementById('btn-get-loader');
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }
+  [chk1, chk2, chk3, chkFinal].forEach(c => {
+    c.addEventListener('change', () => {
+      btnContinue.disabled = !(chk1.checked && chk2.checked && chk3.checked && chkFinal.checked);
     });
   });
 
-  window.addEventListener('load', () => {
+  btnContinue.addEventListener('click', () => {
+    showStep(stepRedirect);
+
+    let dotCount = 1;
+    const dotsSpan = document.getElementById('redirect-dots');
+    const interval = setInterval(() => {
+      dotCount = (dotCount % 3) + 1;
+      if (dotsSpan) dotsSpan.textContent = '.'.repeat(dotCount);
+    }, 400);
+
     setTimeout(() => {
-      document.getElementById('loader').classList.add('loaded');
-      document.body.classList.add('loaded');
-    }, 500);
+      clearInterval(interval);
+      overlay.style.background = '#000';
+      document.querySelector('.modal-box').style.display = 'none';
+      window.location.href = 'http://residential-6k3h.onrender.com/proxy?url=https://realm.stpatricks.qld.edu.au/';
+    }, 2000);
+  });
+
+  // Close on overlay click (outside box)
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) closeModal();
   });
 </script>
-
 </body>
 </html>
