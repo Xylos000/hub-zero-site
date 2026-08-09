@@ -540,8 +540,7 @@
   }
   .gallery-item img {
     width: 100%;
-    aspect-ratio: 16/10;
-    object-fit: cover;
+    height: auto;
     display: block;
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.3);
@@ -569,7 +568,6 @@
     padding: 6px 12px;
     display: flex;
     align-items: center;
-    gap: 6px;
     transition: background-color 0.3s ease, border-color 0.3s ease;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     pointer-events: none;
@@ -577,14 +575,6 @@
   .gallery-item:hover .gallery-label {
     background: rgba(8, 12, 20, 0.95);
     border-color: rgba(212, 255, 58, 0.35);
-  }
-  .gallery-label::before {
-    content: '';
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
-    flex-shrink: 0;
-    box-shadow: 0 0 6px var(--accent);
   }
 
   /* ─── GET SCRIPTS CTA ─── */
