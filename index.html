@@ -502,47 +502,68 @@
   /* ─── GALLERY ─── */
   .gallery-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    grid-template-columns: 1fr;
+    gap: 20px;
     margin-top: 56px;
   }
-  @media (max-width: 700px) {
-    .gallery-grid { grid-template-columns: 1fr; }
+  @media (min-width: 650px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .gallery-featured {
+      grid-column: span 2;
+    }
+  }
+  @media (min-width: 1000px) {
+    .gallery-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    .gallery-featured {
+      grid-column: span 3;
+    }
   }
 
   .gallery-item {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    transition: border-color 0.25s ease, transform 0.25s ease;
+    transition: border-color 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   }
   .gallery-item:hover {
-    border-color: #444;
-    transform: scale(1.015);
+    border-color: var(--accent);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(212, 255, 58, 0.08);
   }
   .gallery-item img {
     width: 100%;
     aspect-ratio: 16/10;
     object-fit: cover;
     display: block;
-    filter: brightness(0.9);
-    transition: filter 0.25s ease;
+    filter: brightness(0.85);
+    transition: filter 0.3s ease;
   }
-  .gallery-item:hover img { filter: brightness(1); }
+  .gallery-item:hover img {
+    filter: brightness(1.02);
+  }
 
   .gallery-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     color: var(--muted);
     text-transform: uppercase;
-    padding: 14px 16px;
+    padding: 16px 20px;
     border-top: 1px solid var(--border);
-    background: rgba(0,0,0,0.3);
+    background: rgba(8, 12, 20, 0.5);
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: color 0.3s ease;
+  }
+  .gallery-item:hover .gallery-label {
+    color: var(--fg);
   }
   .gallery-label::before {
     content: '';
@@ -550,6 +571,7 @@
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
+    box-shadow: 0 0 8px var(--accent);
   }
 
   /* ─── GET SCRIPTS CTA ─── */
@@ -1099,20 +1121,32 @@
 
       <div class="gallery-grid">
         <div class="gallery-item reveal d1">
-          <img src="EP-Hub.png" alt="EP Hub interface" loading="lazy">
-          <div class="gallery-label">EP Hub Interface</div>
+          <img src="Student_Search.png" alt="Realm student search" loading="lazy">
+          <div class="gallery-label">Realm &mdash; Student Search</div>
         </div>
         <div class="gallery-item reveal d2">
-          <img src="Realm-Search.png" alt="Realm student search" loading="lazy">
-          <div class="gallery-label">Realm — Student Search</div>
+          <img src="Year_Browse.png" alt="Realm year group browser" loading="lazy">
+          <div class="gallery-label">Realm &mdash; Year Group Browser</div>
+        </div>
+        <div class="gallery-item reveal d3">
+          <img src="Student_Profile.png" alt="Detailed student profile" loading="lazy">
+          <div class="gallery-label">Realm &mdash; Detailed Profile</div>
         </div>
         <div class="gallery-item reveal d1">
-          <img src="Realm-Yeargroup.png" alt="Realm year group browser" loading="lazy">
-          <div class="gallery-label">Realm — Year Group Browser</div>
+          <img src="Always_Correct.png" alt="EP always correct feature" loading="lazy">
+          <div class="gallery-label">EP &mdash; Always Correct</div>
         </div>
         <div class="gallery-item reveal d2">
-          <img src="Realm-Student-Profile.png" alt="Realm student profile" loading="lazy">
-          <div class="gallery-label">Realm — Detailed Student Profile</div>
+          <img src="Send_Cheer.png" alt="EP send cheer feature" loading="lazy">
+          <div class="gallery-label">EP &mdash; Send Cheer</div>
+        </div>
+        <div class="gallery-item reveal d3">
+          <img src="Send_Cheer2.png" alt="EP send cheer details" loading="lazy">
+          <div class="gallery-label">EP &mdash; Send Cheer Confirmation</div>
+        </div>
+        <div class="gallery-item gallery-featured reveal d1">
+          <img src="Main_EP_UI.png" alt="EP Script Hub main dashboard" loading="lazy" style="aspect-ratio: 21/9; object-position: top;">
+          <div class="gallery-label">EP Script Hub Main Dashboard</div>
         </div>
       </div>
     </div>
