@@ -540,7 +540,9 @@
   }
   .gallery-item img {
     width: 100%;
-    height: auto;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    object-position: top;
     display: block;
     border-radius: 10px;
     border: 1px solid rgba(0, 0, 0, 0.3);
@@ -575,6 +577,52 @@
   .gallery-item:hover .gallery-label {
     background: rgba(8, 12, 20, 0.95);
     border-color: rgba(212, 255, 58, 0.35);
+  }
+
+  /* ─── LIGHTBOX ─── */
+  .lightbox-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(15px);
+    z-index: 11000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 24px;
+  }
+  .lightbox-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .lightbox-image {
+    max-width: 95%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+    transform: scale(0.95);
+    transition: transform 0.3s var(--ease);
+  }
+  .lightbox-overlay.active .lightbox-image {
+    transform: scale(1);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 24px;
+    right: 32px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 40px;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .lightbox-close:hover {
+    color: var(--accent);
+    transform: scale(1.1);
   }
 
   /* ─── GET SCRIPTS CTA ─── */
@@ -1295,6 +1343,12 @@
   </div>
 </div>
 
+<!-- ─── LIGHTBOX OVERLAY ─── -->
+<div class="lightbox-overlay" id="lightbox-overlay">
+  <button class="lightbox-close" id="lightbox-close" title="Close">&times;</button>
+  <img class="lightbox-image" id="lightbox-image" src="" alt="Full size preview">
+</div>
+
 <script>
   /* ─── LOADER ─── */
   window.addEventListener('load', () => {
@@ -1554,9 +1608,46 @@
     }, 2000);
   });
 
-  // Close on overlay click (outside box)
+  // Close setup modal on overlay click (outside box)
   overlay.addEventListener('click', (e) => {
     if (e.target === overlay) closeModal();
+  });
+
+  // Lightbox Zoom Logic
+  const lightbox = document.getElementById('lightbox-overlay');
+  const lightboxImg = document.getElementById('lightbox-image');
+  const lightboxClose = document.getElementById('lightbox-close');
+
+  document.querySelectorAll('.gallery-item img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', (e) => {
+      e.stopPropagation();
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  const closeLightbox = () => {
+    lightbox.classList.remove('active');
+    if (!document.body.classList.contains('modal-open')) {
+      document.body.style.overflow = '';
+    }
+  };
+
+  if (lightboxClose) {
+    lightboxClose.addEventListener('click', closeLightbox);
+  }
+  if (lightbox) {
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target === lightboxImg) {
+        closeLightbox();
+      }
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
   });
 </script>
 </body>
