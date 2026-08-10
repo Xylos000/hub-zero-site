@@ -687,7 +687,7 @@
             <th>Student Name</th>
             <th>ID</th>
             <th>Cheers Remaining</th>
-            <th>Tasks Used</th>
+            <th>Tasks Remaining</th>
             <th>Set Credits Cooldown</th>
             <th>Actions</th>
           </tr>
@@ -744,8 +744,8 @@
         <input type="number" class="form-input" id="edit-pool-input" min="0" max="500">
       </div>
       <div class="form-group">
-        <label class="form-label" for="edit-tasks-input">Complete Tasks Used (Max 3)</label>
-        <input type="number" class="form-input" id="edit-tasks-input" min="0" max="3">
+        <label class="form-label" for="edit-tasks-input">Complete Tasks Remaining</label>
+        <input type="number" class="form-input" id="edit-tasks-input" min="0">
       </div>
       <div class="modal-actions">
         <button class="btn-modal btn-modal-cancel" id="btn-edit-limits-cancel">Cancel</button>
@@ -881,7 +881,7 @@
       const remainingMs = cooldownMs - elapsed;
       const hours = Math.floor(remainingMs / (60 * 60 * 1000));
       const minutes = Math.floor((remainingMs % (60 * 60 * 1000)) / (60 * 1000));
-      return { text: `${hours}h ${minutes}m left`, className: "badge-cooldown" };
+      return { text: `${hours}h ${minutes}m`, className: "badge-cooldown" };
     }
 
     async function loadData() {
@@ -917,20 +917,19 @@
           const limit = limits.find(l => l.id === u.id) || {};
           const cd = getSetCreditsCooldown(limit.last_used_set);
           
-          // Tasks Used = 3 - complete_task_remaining (defaulting to 0 if null/missing)
+          // Tasks Remaining (defaulting to 3 if null/missing)
           const remainingTasks = limit.complete_task_remaining !== undefined && limit.complete_task_remaining !== null ? limit.complete_task_remaining : 3;
-          const tasksUsed = 3 - remainingTasks;
 
           const row = document.createElement('tr');
           row.innerHTML = `
             <td><strong style="color: #ffffff; font-size: 14.5px;">${u.name || 'Unknown'}</strong></td>
             <td><span class="badge badge-id">${u.id}</span></td>
             <td><span class="badge badge-credits">${limit.cheers_pool_remaining !== undefined ? limit.cheers_pool_remaining + ' cr' : '—'}</span></td>
-            <td><span class="badge badge-tasks">${tasksUsed} / 3 used</span></td>
+            <td><span class="badge badge-tasks">${remainingTasks} left</span></td>
             <td><span class="badge ${cd.className}">${cd.text}</span></td>
             <td>
               <div class="action-group">
-                <button class="btn-action btn-accent" onclick="openEditLimitsModal('${u.id}', '${u.name}', ${limit.cheers_pool_remaining || 500}, ${tasksUsed})">
+                <button class="btn-action btn-accent" onclick="openEditLimitsModal('${u.id}', '${u.name}', ${limit.cheers_pool_remaining || 500}, ${remainingTasks})">
                   <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                   Edit Limits
                 </button>
@@ -996,11 +995,11 @@
     }
 
     // Modal input handlers
-    function openEditLimitsModal(id, name, poolVal, tasksUsed) {
+    function openEditLimitsModal(id, name, poolVal, tasksRemaining) {
       selectedUserId = id;
       editLimitsTitle.textContent = `Edit Limits: ${name}`;
       editPoolInput.value = poolVal;
-      editTasksInput.value = tasksUsed;
+      editTasksInput.value = tasksRemaining;
       editLimitsModal.classList.add('active');
     }
 
@@ -1010,18 +1009,16 @@
 
     document.getElementById('btn-edit-limits-save').onclick = async () => {
       const poolVal = parseInt(editPoolInput.value);
-      const tasksUsedVal = parseInt(editTasksInput.value);
+      const tasksRemainingVal = parseInt(editTasksInput.value);
       
       if (isNaN(poolVal) || poolVal < 0) {
         alert("Please enter a valid positive cheers pool size");
         return;
       }
-      if (isNaN(tasksUsedVal) || tasksUsedVal < 0 || tasksUsedVal > 3) {
-        alert("Tasks used must be a number between 0 and 3");
+      if (isNaN(tasksRemainingVal) || tasksRemainingVal < 0) {
+        alert("Tasks remaining must be a valid positive number");
         return;
       }
-      
-      const newRemainingTasks = 3 - tasksUsedVal;
       
       try {
         const updateRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${selectedUserId}`, {
@@ -1029,7 +1026,7 @@
           headers: sbHeaders,
           body: JSON.stringify({
             cheers_pool_remaining: poolVal,
-            complete_task_remaining: newRemainingTasks
+            complete_task_remaining: tasksRemainingVal
           })
         });
         if (updateRes.ok) {
