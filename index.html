@@ -671,130 +671,67 @@
 
   /* ─── LOGGED-IN WELCOME ─── */
   .welcome-section {
-    background: #0c0d12;
-    border: 1px solid #1c202d;
-    border-radius: 16px;
-    padding: 36px 40px;
-    margin-top: 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 40px;
+    margin-top: 48px;
     display: none;
-    max-width: 680px;
+    max-width: 620px;
     margin-left: auto;
     margin-right: auto;
-    text-align: left;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255,255,255,0.03);
-    position: relative;
-    overflow: hidden;
+    text-align: center;
   }
-  .welcome-section::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(212, 255, 58, 0.4), transparent);
-  }
-  .welcome-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #94a3b8;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: 5px 12px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-  }
-  .welcome-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 8px var(--accent);
-    animation: welcome-pulse 2s infinite ease-in-out;
-  }
-  @keyframes welcome-pulse {
-    0%, 100% { opacity: 0.6; transform: scale(0.9); }
-    50% { opacity: 1; transform: scale(1.1); }
-  }
-  .welcome-title {
-    font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+  .welcome-section h2 {
     font-size: 26px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: #f8fafc;
-    line-height: 1.25;
-    margin-bottom: 10px;
-  }
-  .welcome-sub {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 14px;
-    color: #94a3b8;
-    line-height: 1.6;
+    font-weight: 700;
+    letter-spacing: -0.02em;
     margin-bottom: 24px;
-    max-width: 580px;
   }
-  .highlight-green {
-    color: var(--accent);
-    text-shadow: 0 0 24px rgba(212, 255, 58, 0.35);
-  }
+  .highlight-green { color: var(--accent); }
   .welcome-actions {
     display: flex;
     gap: 12px;
+    justify-content: center;
     flex-wrap: wrap;
-    align-items: center;
   }
 
   /* ─── DASHBOARD (LOGGED IN) ─── */
   .dashboard-section {
-    padding: 80px 32px 120px;
+    padding: 100px 32px 120px;
     display: none;
   }
   .dashboard-inner {
-    max-width: 860px;
+    max-width: 760px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 80px;
+    gap: 48px;
   }
 
   .loader-card-box {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 48px;
-    position: relative;
-    overflow: hidden;
-  }
-  .loader-card-box::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 10%; right: 10%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    border-radius: 14px;
+    padding: 48px 40px;
   }
   .dashboard-desc {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 15px;
     color: #94a3b8;
     line-height: 1.6;
-    margin-top: 12px;
-    max-width: 650px;
+    margin-top: 14px;
   }
 
   .code-box {
-    background: #07090e;
-    border: 1px solid #1e2433;
-    border-radius: 10px;
+    background: #080808;
+    border: 1px solid var(--border);
+    border-radius: 8px;
     padding: 14px 18px;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     margin-top: 28px;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
   }
   .code-input {
     flex: 1;
@@ -802,186 +739,85 @@
     border: none;
     outline: none;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 13.5px;
+    font-size: 13px;
     color: #cbd5e1;
     width: 100%;
     min-width: 0;
     user-select: all;
   }
   .code-copy-btn {
-    font-family: 'Plus Jakarta Sans', 'JetBrains Mono', sans-serif;
-    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     background: var(--accent);
     color: #000;
-    border: 1px solid var(--accent);
-    padding: 10px 20px;
-    border-radius: 6px;
+    border: 2px solid var(--accent);
+    padding: 10px 18px;
+    border-radius: 4px;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s ease;
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
   .code-copy-btn:hover {
-    background: #e2ff60;
-    border-color: #e2ff60;
-    box-shadow: 0 4px 16px rgba(212, 255, 58, 0.3);
+    background: transparent;
+    color: var(--accent);
   }
 
-  .code-meta-hint {
-    margin-top: 14px;
+  /* ─── ALLOW PASTING TROUBLESHOOTING BOX ─── */
+  .allow-pasting-box {
+    background: var(--surface);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    border-radius: 14px;
+    padding: 36px 40px;
     display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .pasting-badge {
+    display: inline-flex;
     align-items: center;
     gap: 8px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px;
-    color: #64748b;
-  }
-
-  /* ─── HOW TO USE (DEDICATED SECTION) ─── */
-  .how-to-section {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-  .how-steps-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  @media (max-width: 800px) {
-    .how-steps-grid { grid-template-columns: 1fr; }
-    .issues-grid { grid-template-columns: 1fr !important; }
-    .loader-card-box { padding: 32px 24px; }
-    .welcome-section { padding: 28px 24px; }
-  }
-  .how-step-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    position: relative;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .how-step-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255,255,255,0.15);
-  }
-  .step-badge {
     font-family: 'JetBrains Mono', monospace;
     font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.12em;
-    color: var(--accent);
-    background: var(--accent-dim);
-    padding: 4px 8px;
-    border-radius: 4px;
-    align-self: flex-start;
-  }
-  .how-step-card h3 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    color: #f8fafc;
-    letter-spacing: -0.02em;
-  }
-  .how-step-card p {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13.5px;
-    color: #94a3b8;
-    line-height: 1.65;
-  }
-  .step-note {
-    margin-top: auto;
-    padding-top: 12px;
-    border-top: 1px solid rgba(255,255,255,0.06);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 12px;
-    color: #64748b;
-    line-height: 1.5;
-  }
-  .step-note strong {
-    color: #cbd5e1;
-  }
-
-  /* ─── COMMON ISSUES (TROUBLESHOOTING) ─── */
-  .issues-section {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-  }
-  .issues-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-  }
-  .issue-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 28px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-  .issue-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(255,255,255,0.15);
-  }
-  .issue-card.highlight-issue {
-    background: #0e111a;
-    border-color: rgba(245, 158, 11, 0.35);
-  }
-  .issue-card.highlight-issue:hover {
-    border-color: rgba(245, 158, 11, 0.55);
-  }
-  .issue-tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 11px;
-    font-weight: 700;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 3px 8px;
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    padding: 4px 10px;
     border-radius: 4px;
     align-self: flex-start;
   }
-  .issue-tag.warning {
-    background: rgba(245, 158, 11, 0.12);
-    color: #fbbf24;
-    border: 1px solid rgba(245, 158, 11, 0.25);
-  }
-  .issue-tag.info {
-    background: rgba(59, 130, 246, 0.12);
-    color: #60a5fa;
-    border: 1px solid rgba(59, 130, 246, 0.25);
-  }
-  .issue-card h3 {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 16px;
+  .pasting-title {
+    font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+    font-size: 18px;
     font-weight: 700;
     color: #f8fafc;
     letter-spacing: -0.01em;
+    text-transform: uppercase;
   }
-  .issue-card p {
+  .pasting-desc {
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13.5px;
-    color: #94a3b8;
+    font-size: 14.5px;
+    color: #cbd5e1;
     line-height: 1.65;
   }
-  .issue-subtext {
-    font-size: 12.5px !important;
-    color: #64748b !important;
+  .pasting-kbd {
+    background: #1e2433;
+    border: 1px solid #334155;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: #fbbf24;
+    font-weight: 700;
   }
 
   kbd {
@@ -994,15 +830,6 @@
     color: #f1f5f9;
     box-shadow: 0 1px 2px rgba(0,0,0,0.5);
     display: inline-block;
-  }
-  .inline-code {
-    background: rgba(212, 255, 58, 0.12);
-    color: var(--accent);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    border: 1px solid rgba(212, 255, 58, 0.25);
   }
 
   /* ─── FOOTER ─── */
@@ -1271,8 +1098,7 @@
   </ul>
   <ul class="nav-links" id="nav-logged" style="display:none;">
     <li><a href="#dashboard">Script</a></li>
-    <li><a href="#how-to-use">How to use</a></li>
-    <li><a href="#common-issues">Issues</a></li>
+    <li><a href="#common-issues">Common Issues</a></li>
     <li class="nav-cta"><a href="#dashboard" id="nav-dash-cta">Get Script</a></li>
   </ul>
 </nav>
@@ -1300,29 +1126,14 @@
 
     <!-- Logged in welcome -->
     <div class="welcome-section" id="logged-in-welcome">
-      <div class="welcome-badge">
-        <span class="welcome-dot"></span>
-        <span>Active Session &middot; St Patricks Realm</span>
-      </div>
-      <h2 class="welcome-title">Welcome back, <span class="highlight-green" id="welcome-username">User</span>.</h2>
-      <p class="welcome-sub">Your student account is verified and ready. Copy your loader script below or check the guide to get started.</p>
+      <h2>Welcome back, <span class="highlight-green" id="welcome-username">User</span>.</h2>
       <div class="welcome-actions">
-        <button class="btn btn-primary" id="btn-hero-get-script">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
-          Get Script
-        </button>
-        <button class="btn btn-secondary" id="btn-hero-how-to">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-          How to use
-        </button>
+        <button class="btn btn-primary" id="btn-hero-get-script">Get Script</button>
         <button class="btn btn-warning" id="btn-relink-realm">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
           Relink Realm
         </button>
-        <button class="btn btn-danger" id="btn-logout-dashboard">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-          Log out
-        </button>
+        <button class="btn btn-danger" id="btn-logout-dashboard">Log out</button>
       </div>
     </div>
   </div>
@@ -1456,95 +1267,28 @@
 <div class="dashboard-section" id="logged-sections">
   <div class="dashboard-inner">
     
-    <!-- 1. Script Loader -->
+    <!-- Script Loader -->
     <div class="loader-card-box" id="dashboard">
       <p class="section-label">Your loader script</p>
       <h2 class="section-title">Scripts <em>Loader.</em></h2>
-      <p class="dashboard-desc">This is your universal script loader for Realm and Education Perfect. Copy the code below, open the browser console on your target page, and press Enter.</p>
+      <p class="dashboard-desc">This is the loader for Hub Zero. Your account as been whitelisted. Run this in the browser console on Realm or EP</p>
 
       <div class="code-box">
         <input class="code-input" id="loader-code-input" type="text" readonly value="javascript:fetch('https://hub-zero.site/loader.js').then(r=>r.text()).then(eval)">
-        <button class="code-copy-btn" id="btn-copy-loader">
-          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-          <span>Copy</span>
-        </button>
-      </div>
-
-      <div class="code-meta-hint">
-        <span>Tip: Press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> to open console on Realm or EP</span>
+        <button class="code-copy-btn" id="btn-copy-loader">Copy</button>
       </div>
     </div>
 
-    <!-- 2. How to use (Dedicated Section) -->
-    <div class="how-to-section" id="how-to-use">
-      <div class="section-header-block">
-        <p class="section-label">Instructions</p>
-        <h2 class="section-title">How do I <em>use this?</em></h2>
+    <!-- Troubleshooting: Allow Pasting -->
+    <div class="allow-pasting-box" id="common-issues">
+      <div class="pasting-badge">
+        <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+        <span>Common Issues</span>
       </div>
-
-      <div class="how-steps-grid">
-        <div class="how-step-card">
-          <div class="step-badge">STEP 01</div>
-          <h3>Open Developer Tools</h3>
-          <p>On Realm or EP, press <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> (or <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>J</kbd> on Mac) to open Developer Tools.</p>
-        </div>
-
-        <div class="how-step-card">
-          <div class="step-badge">STEP 02</div>
-          <h3>Paste the Loader</h3>
-          <p>Paste the loader code above into the console and press <kbd>Enter</kbd>.</p>
-        </div>
-
-        <div class="how-step-card">
-          <div class="step-badge">STEP 03</div>
-          <h3>Start Using Hub Zero</h3>
-          <p>The Hub Zero interface will open on your page and load automatically.</p>
-          <div class="step-note">
-            <strong>Note:</strong> Developer Tools will be disabled once the script is running &mdash; this is normal.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. Common Issues (Troubleshooting) -->
-    <div class="issues-section" id="common-issues">
-      <div class="section-header-block">
-        <p class="section-label">Troubleshooting</p>
-        <h2 class="section-title">Common <em>Issues.</em></h2>
-      </div>
-
-      <div class="issues-grid">
-        <!-- Issue 1: Allow Pasting -->
-        <div class="issue-card highlight-issue">
-          <div class="issue-tag warning">
-            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            Important
-          </div>
-          <h3>Make sure to allow pasting</h3>
-          <p>If you receive a security warning like <em>"Content from the internet can be harmful, don't paste code you don't understand"</em>, simply type <code class="inline-code">allow pasting</code> into the console and press <kbd>Enter</kbd>.</p>
-          <p class="issue-subtext">You will then be all good to paste the loader script normally.</p>
-        </div>
-
-        <!-- Issue 2: DevTools Protection -->
-        <div class="issue-card">
-          <div class="issue-tag info">
-            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-            Protection
-          </div>
-          <h3>DevTools lock screen</h3>
-          <p>The script includes built-in protection against inspecting. If Developer Tools are open, a lock overlay will appear. Close DevTools (press <kbd>F12</kbd>) to resume using the widget.</p>
-        </div>
-
-        <!-- Issue 3: Page Reload -->
-        <div class="issue-card">
-          <div class="issue-tag info">
-            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-            Reloading
-          </div>
-          <h3>Script resets on reload</h3>
-          <p>Browser scripts run in the current session. Whenever you refresh or open a new tab, simply open the console and paste the loader code again to relaunch Hub Zero.</p>
-        </div>
-      </div>
+      <h3 class="pasting-title">Make sure to allow pasting</h3>
+      <p class="pasting-desc">
+        If you receive an error like <em>"Content from the internet can be harmful, don't paste code you don't understand"</em>, simply type <kbd class="pasting-kbd">allow pasting</kbd> into the console and submit. You should be all good to paste the script from there.
+      </p>
     </div>
 
   </div>
@@ -1810,16 +1554,6 @@
     });
   }
 
-  const heroHowToBtn = document.getElementById('btn-hero-how-to');
-  if (heroHowToBtn) {
-    heroHowToBtn.addEventListener('click', () => {
-      const howTo = document.getElementById('how-to-use');
-      if (howTo) {
-        howTo.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  }
-
   const copyBtn = document.getElementById('btn-copy-loader');
   if (copyBtn) {
     copyBtn.addEventListener('click', () => {
@@ -1828,17 +1562,16 @@
       navigator.clipboard.writeText(input.value).catch(() => {
         document.execCommand('copy');
       });
-      const originalHTML = copyBtn.innerHTML;
-      copyBtn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg> <span>Copied!</span>';
+      copyBtn.textContent = 'Copied!';
       copyBtn.style.background = '#22c55e';
       copyBtn.style.borderColor = '#22c55e';
       copyBtn.style.color = '#fff';
       setTimeout(() => {
-        copyBtn.innerHTML = originalHTML;
+        copyBtn.textContent = 'Copy';
         copyBtn.style.background = '';
         copyBtn.style.borderColor = '';
         copyBtn.style.color = '';
-      }, 1800);
+      }, 1500);
     });
   }
 
