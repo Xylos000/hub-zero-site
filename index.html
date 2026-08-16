@@ -503,21 +503,17 @@
     display: block;
   }
   .step h3 {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 700;
     letter-spacing: -0.01em;
-    margin-bottom: 10px;
-  }
-  .step p {
-    font-size: 14px;
-    color: #888;
-    line-height: 1.65;
+    margin-bottom: 0;
+    line-height: 1.35;
   }
 
   /* ─── GALLERY CAROUSEL ─── */
   .gallery-carousel-wrapper {
     position: relative;
-    max-width: 860px;
+    max-width: 900px;
     margin: 56px auto 0;
     display: flex;
     align-items: center;
@@ -526,29 +522,50 @@
   .gallery-track-container {
     width: 100%;
     overflow: hidden;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    background: rgba(13, 19, 31, 0.45);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .gallery-track {
     display: flex;
+    align-items: center;
     transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
     width: 100%;
   }
   .gallery-slide {
     min-width: 100%;
     box-sizing: border-box;
-    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
     cursor: zoom-in;
   }
+  .gallery-card {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13, 19, 31, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 8px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    max-width: 100%;
+    margin: 0 auto;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .gallery-card:hover {
+    border-color: rgba(212, 255, 58, 0.35);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 24px rgba(212, 255, 58, 0.05);
+  }
   .gallery-slide img {
-    width: 100%;
+    max-width: 100%;
+    max-height: 480px;
+    width: auto;
     height: auto;
     display: block;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.4);
-    filter: brightness(0.92);
+    border-radius: 8px;
+    filter: brightness(0.95);
     transition: filter 0.3s ease;
   }
   .gallery-slide:hover img {
@@ -1003,8 +1020,12 @@
     background: rgba(255, 255, 255, 0.02);
     border: 1px solid var(--border);
     border-radius: 10px;
-    padding: 18px 20px;
-    margin-bottom: 14px;
+    padding: 20px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+  .modal-section:hover {
+    border-color: rgba(255, 255, 255, 0.12);
   }
   .modal-section-title {
     font-family: 'JetBrains Mono', monospace;
@@ -1015,54 +1036,60 @@
     color: var(--accent);
     margin-bottom: 8px;
   }
-  .modal-section p {
+  .modal-section-text {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 13.5px;
     color: #cbd5e1;
     line-height: 1.6;
-    margin: 0;
+    margin: 0 0 14px;
   }
-  .modal-section strong {
+  .modal-section-text strong {
     color: #fff;
   }
-  .modal-warning-subtle {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10.5px;
-    color: #f87171;
-    background: rgba(239, 68, 68, 0.08);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    border-radius: 6px;
-    padding: 10px 14px;
-    margin: 14px 0 16px;
-    line-height: 1.5;
-    letter-spacing: 0.02em;
-  }
-  .modal-compact-agree {
+  .modal-check-label {
     display: flex;
     align-items: center;
     gap: 10px;
     font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 13px;
+    font-size: 12.5px;
     font-weight: 600;
-    color: #e2e8f0;
+    color: #94a3b8;
     cursor: pointer;
     user-select: none;
-    background: rgba(212, 255, 58, 0.06);
-    border: 1px solid rgba(212, 255, 58, 0.2);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 6px;
-    padding: 10px 14px;
+    padding: 8px 12px;
     transition: all 0.2s ease;
   }
-  .modal-compact-agree:hover {
-    background: rgba(212, 255, 58, 0.12);
-    border-color: rgba(212, 255, 58, 0.4);
+  .modal-check-label:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: #f1f5f9;
   }
-  .modal-compact-agree input[type="checkbox"] {
+  .modal-check-label input[type="checkbox"] {
     accent-color: var(--accent);
     cursor: pointer;
     width: 15px;
     height: 15px;
     flex-shrink: 0;
+  }
+  .modal-check-label:has(input:checked) {
+    background: rgba(212, 255, 58, 0.08);
+    border-color: rgba(212, 255, 58, 0.3);
+    color: #f8fafc;
+  }
+  .modal-warning-subtle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: #fca5a5;
+    background: rgba(239, 68, 68, 0.08);
+    border: 1px solid rgba(239, 68, 68, 0.22);
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 16px 0 6px;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: normal;
   }
 
   .modal-footer {
@@ -1216,17 +1243,14 @@
         <div class="step">
           <span class="step-num">STEP 01</span>
           <h3>Link to Realm Account</h3>
-          <p>Sign in with your Realm account to authenticate.</p>
         </div>
         <div class="step">
           <span class="step-num">STEP 02</span>
           <h3>Wait for verification to complete (10s~)</h3>
-          <p>Our system will automatically verify and whitelist your account.</p>
         </div>
         <div class="step">
           <span class="step-num">STEP 03</span>
           <h3>You will be provided with the script loader</h3>
-          <p>Copy your loader and run it in the browser console on Realm or EP.</p>
         </div>
       </div>
     </div>
@@ -1245,25 +1269,39 @@
         <div class="gallery-track-container" id="gallery-track-container">
           <div class="gallery-track" id="gallery-track">
             <div class="gallery-slide" data-index="0">
-              <img src="Student_Search.png" alt="Realm student search" loading="lazy">
+              <div class="gallery-card">
+                <img src="Student_Search.png" alt="Realm student search" loading="lazy">
+              </div>
             </div>
             <div class="gallery-slide" data-index="1">
-              <img src="Year_Browse.png" alt="Realm year group browser" loading="lazy">
+              <div class="gallery-card">
+                <img src="Year_Browse.png" alt="Realm year group browser" loading="lazy">
+              </div>
             </div>
             <div class="gallery-slide" data-index="2">
-              <img src="Student_Profile.png" alt="Detailed student profile" loading="lazy">
+              <div class="gallery-card">
+                <img src="Student_Profile.png" alt="Detailed student profile" loading="lazy">
+              </div>
             </div>
             <div class="gallery-slide" data-index="3">
-              <img src="Always_Correct.png" alt="EP always correct feature" loading="lazy">
+              <div class="gallery-card">
+                <img src="Always_Correct.png" alt="EP always correct feature" loading="lazy">
+              </div>
             </div>
             <div class="gallery-slide" data-index="4">
-              <img src="Send_Cheer.png" alt="EP send cheer feature" loading="lazy">
+              <div class="gallery-card">
+                <img src="Send_Cheer.png" alt="EP send cheer feature" loading="lazy">
+              </div>
             </div>
             <div class="gallery-slide" data-index="5">
-              <img src="Send_Cheer2.png" alt="EP send cheer details" loading="lazy">
+              <div class="gallery-card">
+                <img src="Send_Cheer2.png" alt="EP send cheer details" loading="lazy">
+              </div>
             </div>
             <div class="gallery-slide" data-index="6">
-              <img src="Main_EP_UI.png" alt="EP Script Hub main dashboard" loading="lazy">
+              <div class="gallery-card">
+                <img src="Main_EP_UI.png" alt="EP Script Hub main dashboard" loading="lazy">
+              </div>
             </div>
           </div>
         </div>
@@ -1354,33 +1392,39 @@
 
     <!-- Setup checklist -->
     <div class="modal-step" id="modal-step-setup">
-      <p class="modal-label">Before you continue — must read</p>
-      <h3 class="modal-title green">Setting Up</h3>
+      <h3 class="modal-title green" style="margin-bottom: 22px; font-size: 22px; letter-spacing: -0.02em;">BEFORE YOU CONTINUE...</h3>
 
       <div class="modal-scroll">
         <div class="modal-section">
           <p class="modal-section-title">Getting the script</p>
-          <p>Continue to load Realm Sign on to link your Realm account. You will be verified and added to our system.</p>
+          <p class="modal-section-text">Continue to load Realm Sign on to link your Realm account. You will be verified and added to our system.</p>
+          <label class="modal-check-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-1">
+            <span>I understand and agree to link my Realm account</span>
+          </label>
         </div>
 
         <div class="modal-section">
           <p class="modal-section-title">Using the script</p>
-          <p>On either Realm or EP run the sequence <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> to open the console. Simply paste the loader there.</p>
+          <p class="modal-section-text">On either Realm or EP run the sequence <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd> to open the console. Simply paste the loader there.</p>
+          <label class="modal-check-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-2">
+            <span>I understand how to paste and run the loader in console</span>
+          </label>
         </div>
 
         <div class="modal-section">
           <p class="modal-section-title">Help</p>
-          <p>Common issues will be posted on logged in site as they are found by us. <strong>IF YOU GET AN ERROR WHILE PASTING THE SCRIPT TYPE <kbd>"allow pasting"</kbd> INTO THE CONSOLE</strong></p>
+          <p class="modal-section-text">Common issues will be posted on logged in site as they are found by us. <strong>IF YOU GET AN ERROR WHILE PASTING THE SCRIPT TYPE <kbd>"allow pasting"</kbd> INTO THE CONSOLE</strong></p>
+          <label class="modal-check-label">
+            <input type="checkbox" class="setup-checkbox" id="chk-setup-3">
+            <span>I understand to type "allow pasting" if blocked</span>
+          </label>
         </div>
 
         <div class="modal-warning-subtle">
           ATTEMPTING TO REVERSE ENGINEER OUR SCRIPTS WILL ALERT US AND YOU WILL BE BLACKLISTED. TEACHER ACCOUNTS WILL BE BLACKLISTED.
         </div>
-
-        <label class="modal-compact-agree">
-          <input type="checkbox" class="setup-checkbox" id="chk-setup-final">
-          <span>I have read all of the above and I understand it</span>
-        </label>
       </div>
 
       <div class="modal-footer">
@@ -1706,8 +1750,9 @@
   function closeModal() {
     overlay.classList.remove('active');
     document.body.classList.remove('modal-open');
-    const chk = document.getElementById('chk-setup-final');
-    if (chk) chk.checked = false;
+    if (chk1) chk1.checked = false;
+    if (chk2) chk2.checked = false;
+    if (chk3) chk3.checked = false;
     if (btnContinue) btnContinue.disabled = true;
   }
 
@@ -1720,14 +1765,20 @@
   const btnSetupCancel = document.getElementById('btn-setup-cancel');
   if (btnSetupCancel) btnSetupCancel.addEventListener('click', closeModal);
 
-  const chkFinal = document.getElementById('chk-setup-final');
+  const chk1 = document.getElementById('chk-setup-1');
+  const chk2 = document.getElementById('chk-setup-2');
+  const chk3 = document.getElementById('chk-setup-3');
   const btnContinue = document.getElementById('btn-setup-continue');
 
-  if (chkFinal && btnContinue) {
-    chkFinal.addEventListener('change', () => {
-      btnContinue.disabled = !chkFinal.checked;
-    });
-  }
+  const updateContinueState = () => {
+    if (btnContinue && chk1 && chk2 && chk3) {
+      btnContinue.disabled = !(chk1.checked && chk2.checked && chk3.checked);
+    }
+  };
+
+  [chk1, chk2, chk3].forEach(c => {
+    if (c) c.addEventListener('change', updateContinueState);
+  });
 
   if (btnContinue) {
     btnContinue.addEventListener('click', () => {
