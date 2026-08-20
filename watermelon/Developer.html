@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub Zero — Developer Console</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap">
+  <style>
+    :root {
+      --bg: #05080f;
+      --sidebar: #090e18;
+      --card: #0c111d;
+      --border: #141c2b;
+      --border-hover: #1e293b;
+      
+      --accent: #3b82f6;
+      --purple: #a855f7;
+      --pink: #ec4899;
+      --cyan: #06b6d4;
+      --success: #10b981;
+      --error: #ef4444;
+      
+      --fg: #f8fafc;
+      --muted: #64748b;
+      --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--fg);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      overflow-x: hidden;
+    }
+
+    /* ─── AUTHENTICATION SCREEN ─── */
+    .login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg);
+      z-index: 999;
+      position: fixed;
+      top: 0;
+      left: 0;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 400px;
+      background: var(--sidebar);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      text-align: center;
+    }
+
+    .login-title {
+      font-size: 22px;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+    }
+
+    .login-title span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .login-input {
+      font-family: var(--font-mono);
+      background: #020408;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      padding: 12px;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 16px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .login-input:focus {
+      border-color: var(--purple);
+      box-shadow: 0 0 12px rgba(168, 85, 247, 0.15);
+    }
+
+    .login-btn {
+      font-family: var(--font-main);
+      background: var(--purple);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      border-radius: 6px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .login-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(168, 85, 247, 0.3);
+    }
+
+    .login-error {
+      color: var(--error);
+      font-size: 12.5px;
+      min-height: 18px;
+      font-weight: 500;
+    }
+
+    /* ─── SIDEBAR NAVIGATION ─── */
+    .sidebar {
+      width: 260px;
+      background: var(--sidebar);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: none; /* Shown dynamically on auth */
+      flex-direction: column;
+      padding: 30px 20px;
+      justify-content: space-between;
+      z-index: 10;
+    }
+
+    .sidebar-top {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .sidebar-logo {
+      font-size: 20px;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      text-transform: uppercase;
+      padding-left: 12px;
+    }
+
+    .sidebar-logo span {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      list-style: none;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .nav-item svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: var(--fg);
+      background: var(--card);
+    }
+
+    .nav-item.active {
+      border: 1px solid var(--border);
+    }
+
+    .nav-item.active svg {
+      stroke: var(--accent);
+    }
+
+    .sidebar-footer {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn-exit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--error);
+      font-family: var(--font-main);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-exit:hover {
+      background: rgba(239, 68, 68, 0.08);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
+
+    .btn-exit svg {
+      width: 14px;
+      height: 14px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+      fill: none;
+    }
+
+    /* ─── MAIN CONTENT WINDOW ─── */
+    .main-window {
+      margin-left: 260px;
+      flex: 1;
+      padding: 40px;
+      display: none; /* Shown dynamically on auth */
+      flex-direction: column;
+      gap: 30px;
+      box-sizing: border-box;
+    }
+
+    /* Headers, Search & Filters */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .page-title {
+      font-size: 24px;
+      font-weight: 850;
+      letter-spacing: -0.03em;
+    }
+
+    .search-wrapper {
+      position: relative;
+      width: 320px;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 38px;
+      background: var(--sidebar);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0 16px 0 38px;
+      color: var(--fg);
+      font-family: var(--font-main);
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      stroke: var(--muted);
+      stroke-width: 2.5;
+      fill: none;
+      pointer-events: none;
+    }
+
+    /* Summary Widgets Grid */
+    .widgets-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .widget-card {
+      background: var(--sidebar);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .widget-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .widget-value {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--fg);
+      font-family: var(--font-mono);
+    }
+
+    /* Sleek Tables */
+    .panel-container {
+      background: var(--sidebar);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: none;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    }
+
+    .panel-container.active {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    th {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      background: #070b13;
+    }
+
+    td {
+      font-size: 13.5px;
+      color: #cbd5e1;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background: #0b111d;
+    }
+
+    /* Badges & Indicators */
+    .badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 4px;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .badge-id {
+      background: rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .badge-credits {
+      background: rgba(6, 182, 212, 0.12);
+      color: var(--cyan);
+      border: 1px solid rgba(6, 182, 212, 0.2);
+    }
+
+    .badge-tasks {
+      background: rgba(168, 85, 247, 0.12);
+      color: var(--purple);
+      border: 1px solid rgba(168, 85, 247, 0.2);
+    }
+
+    .badge-ready {
+      background: rgba(16, 185, 129, 0.12);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .badge-cooldown {
+      background: rgba(236, 72, 153, 0.12);
+      color: var(--pink);
+      border: 1px solid rgba(236, 72, 153, 0.2);
+    }
+
+    .timestamp {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* Actions buttons */
+    .action-group {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-action {
+      background: #020408;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--font-main);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 6px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-action:hover {
+      color: var(--fg);
+      border-color: var(--border-hover);
+    }
+
+    .btn-action.btn-accent:hover {
+      color: var(--cyan);
+      border-color: rgba(6, 182, 212, 0.4);
+      background: rgba(6, 182, 212, 0.05);
+    }
+
+    .btn-action.btn-purple:hover {
+      color: var(--purple);
+      border-color: rgba(168, 85, 247, 0.4);
+      background: rgba(168, 85, 247, 0.05);
+    }
+
+    .btn-action.btn-error:hover {
+      color: var(--error);
+      border-color: rgba(239, 68, 68, 0.4);
+      background: rgba(239, 68, 68, 0.05);
+    }
+
+    .btn-action.btn-success:hover {
+      color: var(--success);
+      border-color: rgba(16, 185, 129, 0.4);
+      background: rgba(16, 185, 129, 0.05);
+    }
+
+    /* ─── CUSTOM MODALS ─── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 10, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      transform: translateY(10px);
+      transition: transform 0.2s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0);
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .form-input {
+      background: #020408;
+      border: 1px solid var(--border);
+      color: var(--fg);
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 13.5px;
+      outline: none;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+
+    .form-input:focus {
+      border-color: var(--purple);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .btn-modal {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .btn-modal-cancel {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--fg);
+    }
+
+    .btn-modal-cancel:hover {
+      background: rgba(255,255,255,0.03);
+    }
+
+    .btn-modal-save {
+      background: var(--purple);
+      color: white;
+    }
+
+    .btn-modal-save:hover {
+      opacity: 0.95;
+      box-shadow: 0 4px 12px rgba(168, 85, 247, 0.25);
+    }
+
+    .btn-modal-red {
+      background: var(--error);
+      color: white;
+    }
+
+    .btn-modal-red:hover {
+      opacity: 0.95;
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AUTHENTICATION SCREEN -->
+  <div class="login-screen" id="login-container">
+    <div class="login-card">
+      <div class="login-title">Hub Zero <span>Console</span></div>
+      <input type="password" class="login-input" id="password-input" placeholder="••••••" autofocus />
+      <button class="login-btn" id="login-btn">Authenticate</button>
+      <div class="login-error" id="login-error"></div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR NAVIGATION -->
+  <nav class="sidebar" id="sidebar-container">
+    <div class="sidebar-top">
+      <div class="sidebar-logo">Hub Zero <span>Console</span></div>
+      <ul class="nav-list">
+        <li class="nav-item active" data-tab="users">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          Registered Students
+        </li>
+        <li class="nav-item" data-tab="blacklist">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+          Blacklist Registry
+        </li>
+        <li class="nav-item" data-tab="violations">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+          Console Violations
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <button class="btn-exit" id="logout-btn">
+        <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+        Exit Session
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN WINDOW -->
+  <main class="main-window" id="dashboard">
+    <!-- Topbar -->
+    <div class="top-bar">
+      <div class="page-title" id="page-title-label">Registered Students</div>
+      <div class="search-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" class="search-input" id="search-input" placeholder="Search student by name or ID..." />
+      </div>
+    </div>
+
+    <!-- Stats widgets -->
+    <div class="widgets-grid">
+      <div class="widget-card">
+        <span class="widget-label">Total Students</span>
+        <span class="widget-value" id="stat-total-users">0</span>
+      </div>
+      <div class="widget-card">
+        <span class="widget-label">Active Cooldowns</span>
+        <span class="widget-value" id="stat-active-cooldowns">0</span>
+      </div>
+      <div class="widget-card">
+        <span class="widget-label">Blacklisted</span>
+        <span class="widget-value" id="stat-total-blacklist">0</span>
+      </div>
+      <div class="widget-card">
+        <span class="widget-label">Log Violations</span>
+        <span class="widget-value" id="stat-total-violations">0</span>
+      </div>
+    </div>
+
+    <!-- Tab Panels -->
+    <!-- Registered Students Panel -->
+    <div class="panel-container active" id="tab-users">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Cheers Remaining</th>
+            <th>Tasks Remaining</th>
+            <th>Set Credits Cooldown</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Blacklist Panel -->
+    <div class="panel-container" id="tab-blacklist">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Reason</th>
+            <th>Blacklisted Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="blacklist-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Violations Panel -->
+    <div class="panel-container" id="tab-violations">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Violated URL</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="violations-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- EDIT LIMITS MODAL -->
+  <div class="modal-overlay" id="edit-limits-modal">
+    <div class="modal-card">
+      <div class="modal-title" id="edit-limits-title">Edit Limits</div>
+      <div class="form-group">
+        <label class="form-label" for="edit-pool-input">Cheers Pool Remaining</label>
+        <input type="number" class="form-input" id="edit-pool-input" min="0" max="500">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-tasks-input">Complete Tasks Remaining</label>
+        <input type="number" class="form-input" id="edit-tasks-input" min="0">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-edit-limits-cancel">Cancel</button>
+        <button class="btn-modal btn-modal-save" id="btn-edit-limits-save">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLACKLIST MODAL -->
+  <div class="modal-overlay" id="blacklist-modal">
+    <div class="modal-card">
+      <div class="modal-title">Blacklist Student</div>
+      <div class="form-group">
+        <label class="form-label" for="blacklist-reason-input">Reason for blacklisting</label>
+        <input type="text" class="form-input" id="blacklist-reason-input" placeholder="e.g. Injected malicious code via console">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-blacklist-cancel">Cancel</button>
+        <button class="btn-modal btn-modal-red" id="btn-blacklist-save">Blacklist & Remove</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const HASH_TARGET = '11122b5a51b0e394f6a8d7fafef9180057bf2640ece183ecdb51e26efd5b1448';
+    const sbKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc';
+    const sbHeaders = {
+      'apikey': sbKey,
+      'Authorization': 'Bearer ' + sbKey,
+      'Content-Type': 'application/json'
+    };
+
+    let selectedUserId = null;
+    let selectedUserName = null;
+
+    async function sha256(str) {
+      const buffer = new TextEncoder().encode(str);
+      const hash = await crypto.subtle.digest('SHA-256', buffer);
+      return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const loginContainer = document.getElementById('login-container');
+    const sidebarContainer = document.getElementById('sidebar-container');
+    const dashboard = document.getElementById('dashboard');
+    const passInput = document.getElementById('password-input');
+    const loginBtn = document.getElementById('login-btn');
+    const loginError = document.getElementById('login-error');
+
+    const editLimitsModal = document.getElementById('edit-limits-modal');
+    const editLimitsTitle = document.getElementById('edit-limits-title');
+    const editPoolInput = document.getElementById('edit-pool-input');
+    const editTasksInput = document.getElementById('edit-tasks-input');
+    const blacklistModal = document.getElementById('blacklist-modal');
+    const blacklistReasonInput = document.getElementById('blacklist-reason-input');
+    const searchInput = document.getElementById('search-input');
+    const pageTitleLabel = document.getElementById('page-title-label');
+
+    async function handleAuth() {
+      const hash = await sha256(passInput.value);
+      if (hash === HASH_TARGET) {
+        sessionStorage.setItem('dev_auth', 'true');
+        showDashboard();
+      } else {
+        loginError.textContent = 'Invalid credentials';
+        passInput.value = '';
+      }
+    }
+
+    loginBtn.addEventListener('click', handleAuth);
+    passInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleAuth();
+    });
+
+    if (sessionStorage.getItem('dev_auth') === 'true') {
+      showDashboard();
+    }
+
+    function showDashboard() {
+      loginContainer.style.display = 'none';
+      sidebarContainer.style.display = 'flex';
+      dashboard.style.display = 'flex';
+      loadData();
+    }
+
+    // Sidebar navigation tabs
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(i => i.classList.remove('active'));
+        document.querySelectorAll('.panel-container').forEach(c => c.classList.remove('active'));
+        
+        item.classList.add('active');
+        const tabName = item.getAttribute('data-tab');
+        document.getElementById('tab-' + tabName).classList.add('active');
+        
+        // Update header page label
+        pageTitleLabel.textContent = item.textContent.trim();
+        // Clear search
+        searchInput.value = '';
+        filterTable();
+      });
+    });
+
+    // Real-time client-side search filtering
+    searchInput.addEventListener('input', filterTable);
+
+    function filterTable() {
+      const query = searchInput.value.toLowerCase().trim();
+      const activeTabId = document.querySelector('.nav-item.active').getAttribute('data-tab');
+      const rows = document.querySelectorAll(`#tab-${activeTabId} tbody tr`);
+      
+      rows.forEach(row => {
+        const text = row.textContent.toLowerCase();
+        row.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      sessionStorage.removeItem('dev_auth');
+      window.location.reload();
+    });
+
+    // Calculates cooldown remaining text and classes
+    function getSetCreditsCooldown(lastUsedSetIso) {
+      if (!lastUsedSetIso) return { text: "Ready", className: "badge-ready" };
+      const lastUsed = new Date(lastUsedSetIso);
+      const now = new Date();
+      const cooldownMs = 48 * 60 * 60 * 1000;
+      const elapsed = now - lastUsed;
+      if (elapsed >= cooldownMs) {
+        return { text: "Ready", className: "badge-ready" };
+      }
+      const remainingMs = cooldownMs - elapsed;
+      const hours = Math.floor(remainingMs / (60 * 60 * 1000));
+      const minutes = Math.floor((remainingMs % (60 * 60 * 1000)) / (60 * 1000));
+      return { text: `${hours}h ${minutes}m`, className: "badge-cooldown" };
+    }
+
+    async function loadData() {
+      try {
+        const [usersRes, limitsRes, violationsRes, blacklistRes] = await Promise.all([
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students', { headers: sbHeaders }),
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits', { headers: sbHeaders }),
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/console_violations?order=violated_at.desc', { headers: sbHeaders }),
+          fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?order=blacklisted_at.desc', { headers: sbHeaders })
+        ]);
+
+        const users = await usersRes.json();
+        const limits = await limitsRes.json();
+        const violations = await violationsRes.json();
+        const blacklisted = await blacklistRes.json();
+
+        // Update stats widgets values
+        document.getElementById('stat-total-users').textContent = users.length;
+        document.getElementById('stat-total-blacklist').textContent = blacklisted.length;
+        document.getElementById('stat-total-violations').textContent = violations.length;
+        
+        let activeCooldowns = 0;
+        limits.forEach(l => {
+          const cd = getSetCreditsCooldown(l.last_used_set);
+          if (cd.text !== "Ready") activeCooldowns++;
+        });
+        document.getElementById('stat-active-cooldowns').textContent = activeCooldowns;
+
+        // 1. Registered Students
+        const usersList = document.getElementById('users-list');
+        usersList.innerHTML = '';
+        users.forEach(u => {
+          const limit = limits.find(l => l.id === u.id) || {};
+          const cd = getSetCreditsCooldown(limit.last_used_set);
+          
+          // Tasks Remaining (defaulting to 3 if null/missing)
+          const remainingTasks = limit.complete_task_remaining !== undefined && limit.complete_task_remaining !== null ? limit.complete_task_remaining : 3;
+
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong style="color: #ffffff; font-size: 14.5px;">${u.name || 'Unknown'}</strong></td>
+            <td><span class="badge badge-id">${u.id}</span></td>
+            <td><span class="badge badge-credits">${limit.cheers_pool_remaining !== undefined ? limit.cheers_pool_remaining + ' cr' : '—'}</span></td>
+            <td><span class="badge badge-tasks">${remainingTasks} left</span></td>
+            <td><span class="badge ${cd.className}">${cd.text}</span></td>
+            <td>
+              <div class="action-group">
+                <button class="btn-action btn-accent" onclick="openEditLimitsModal('${u.id}', '${u.name}', ${limit.cheers_pool_remaining || 500}, ${remainingTasks})">
+                  <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                  Edit Limits
+                </button>
+                <button class="btn-action btn-purple" onclick="clearCooldown('${u.id}')" ${cd.text === 'Ready' ? 'disabled style="opacity:0.4; cursor:default;"' : ''}>
+                  <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+                  Reset CD
+                </button>
+                <button class="btn-action btn-error" onclick="openBlacklistModal('${u.id}', '${u.name}')">
+                  <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="12" cy="12" r="10"></circle><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line></svg>
+                  Blacklist
+                </button>
+              </div>
+            </td>
+          `;
+          usersList.appendChild(row);
+        });
+
+        // 2. Blacklist Registry
+        const blacklistList = document.getElementById('blacklist-list');
+        blacklistList.innerHTML = '';
+        blacklisted.forEach(b => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong style="color: #ffffff;">${b.name || 'Unknown'}</strong></td>
+            <td><span class="badge badge-id">${b.id}</span></td>
+            <td style="color: var(--error); font-weight: 500;">${b.reason || 'None provided'}</td>
+            <td class="timestamp">${new Date(b.blacklisted_at).toLocaleString()}</td>
+            <td>
+              <button class="btn-action btn-success" onclick="whitelistUser('${b.id}')">
+                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                Whitelist
+              </button>
+            </td>
+          `;
+          blacklistList.appendChild(row);
+        });
+
+        // 3. Violations Logs
+        const violationsList = document.getElementById('violations-list');
+        violationsList.innerHTML = '';
+        violations.forEach(v => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td><strong>${v.student_name || 'Unknown'}</strong></td>
+            <td><span class="badge badge-id">${v.student_id || '—'}</span></td>
+            <td style="font-size: 12px; color: #cbd5e1;"><code style="background: rgba(0,0,0,0.25); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border); font-family: var(--font-mono);">${v.url || '—'}</code></td>
+            <td class="timestamp">${new Date(v.violated_at).toLocaleString()}</td>
+            <td>
+              <button class="btn-action btn-error" onclick="deleteViolation('${v.id}')">
+                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                Clear Log
+              </button>
+            </td>
+          `;
+          violationsList.appendChild(row);
+        });
+
+        filterTable();
+
+      } catch (err) {
+        console.error("Failed to load dashboard data:", err);
+      }
+    }
+
+    // Modal input handlers
+    function openEditLimitsModal(id, name, poolVal, tasksRemaining) {
+      selectedUserId = id;
+      editLimitsTitle.textContent = `Edit Limits: ${name}`;
+      editPoolInput.value = poolVal;
+      editTasksInput.value = tasksRemaining;
+      editLimitsModal.classList.add('active');
+    }
+
+    document.getElementById('btn-edit-limits-cancel').onclick = () => {
+      editLimitsModal.classList.remove('active');
+    };
+
+    document.getElementById('btn-edit-limits-save').onclick = async () => {
+      const poolVal = parseInt(editPoolInput.value);
+      const tasksRemainingVal = parseInt(editTasksInput.value);
+      
+      if (isNaN(poolVal) || poolVal < 0) {
+        alert("Please enter a valid positive cheers pool size");
+        return;
+      }
+      if (isNaN(tasksRemainingVal) || tasksRemainingVal < 0) {
+        alert("Tasks remaining must be a valid positive number");
+        return;
+      }
+      
+      try {
+        const updateRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${selectedUserId}`, {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            cheers_pool_remaining: poolVal,
+            complete_task_remaining: tasksRemainingVal
+          })
+        });
+        if (updateRes.ok) {
+          editLimitsModal.classList.remove('active');
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    async function clearCooldown(id) {
+      if (!confirm("Clear the Set Credits 48h cooldown for this user?")) return;
+      try {
+        const updateRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${id}`, {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({ last_used_set: null })
+        });
+        if (updateRes.ok) {
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    function openBlacklistModal(id, name) {
+      selectedUserId = id;
+      selectedUserName = name;
+      blacklistReasonInput.value = '';
+      blacklistModal.classList.add('active');
+    }
+
+    document.getElementById('btn-blacklist-cancel').onclick = () => {
+      blacklistModal.classList.remove('active');
+    };
+
+    document.getElementById('btn-blacklist-save').onclick = async () => {
+      const reason = blacklistReasonInput.value.trim() || 'No reason provided';
+      try {
+        const insertRes = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students', {
+          method: 'POST',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            id: selectedUserId,
+            name: selectedUserName,
+            reason: reason,
+            blacklisted_at: new Date().toISOString()
+          })
+        });
+
+        if (insertRes.ok) {
+          await Promise.all([
+            fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students?id=eq.${selectedUserId}`, { method: 'DELETE', headers: sbHeaders }),
+            fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=eq.${selectedUserId}`, { method: 'DELETE', headers: sbHeaders })
+          ]);
+          
+          blacklistModal.classList.remove('active');
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    async function whitelistUser(id) {
+      if (!confirm(`Remove student ${id} from blacklist?`)) return;
+      try {
+        const deleteRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/blacklisted_students?id=eq.${id}`, {
+          method: 'DELETE',
+          headers: sbHeaders
+        });
+        if (deleteRes.ok) {
+          loadData();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function deleteViolation(id) {
+      try {
+        await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/console_violations?id=eq.${id}`, { method: 'DELETE', headers: sbHeaders });
+        loadData();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  </script>
+</body>
+</html>
