@@ -1373,7 +1373,7 @@
             <td><strong style="color: #ffffff; font-size: 14.5px;">${u.name || 'Unknown'}</strong></td>
             <td><span class="badge badge-id">${u.id}</span></td>
             <td><span class="badge badge-credits">${limit.cheers_pool_remaining !== undefined ? limit.cheers_pool_remaining + ' cr' : '—'}</span></td>
-            <td><span class="badge badge-tasks">${remainingTasks} left</span></td>
+            <td><span class="badge badge-tasks">${remainingTasks}</span></td>
             <td><span class="badge ${cd.className}">${cd.text}</span></td>
             <td>
               <div class="action-group">
@@ -1636,7 +1636,7 @@
     }
 
     async function resetAllDailyLimits() {
-      if (!confirm("Are you sure you want to RESET daily credits pool (500cr) and tasks (3 left) for ALL registered students?")) return;
+      if (!confirm("Are you sure you want to RESET daily credits pool (500cr) and tasks (3) for ALL registered students?")) return;
       try {
         const btn = document.getElementById('btn-reset-all-limits');
         btn.innerHTML = `<span>Resetting...</span>`;
