@@ -618,11 +618,11 @@
     .btn-top-action {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 9px 14px;
+      gap: 7px;
+      padding: 7px 12px;
       border-radius: 6px;
       font-family: var(--font-main);
-      font-size: 11.5px;
+      font-size: 11px;
       font-weight: 750;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -630,6 +630,19 @@
       transition: all 0.2s;
       border: 1px solid transparent;
       user-select: none;
+    }
+
+    .btn-indigo-glow {
+      background: rgba(99, 102, 241, 0.12);
+      border-color: rgba(99, 102, 241, 0.3);
+      color: #818cf8;
+    }
+    .btn-indigo-glow:hover {
+      background: rgba(99, 102, 241, 0.22);
+      border-color: rgba(99, 102, 241, 0.5);
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.3);
+      color: #ffffff;
+      transform: translateY(-1px);
     }
 
     .btn-purple-glow {
@@ -725,37 +738,23 @@
       color: #cbd5e1;
     }
 
-    /* Color pills */
+    /* Color pills (clean background highlight, no circle dot) */
     .color-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 3px 8px;
-      border-radius: 20px;
+      justify-content: center;
+      padding: 3px 10px;
+      border-radius: 6px;
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 750;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
-    .color-pill-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-    }
-    .pill-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .pill-red .color-pill-dot { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
-    
-    .pill-orange { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
-    .pill-orange .color-pill-dot { background: #f97316; box-shadow: 0 0 6px #f97316; }
-
-    .pill-yellow { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
-    .pill-yellow .color-pill-dot { background: #eab308; box-shadow: 0 0 6px #eab308; }
-
-    .pill-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
-    .pill-green .color-pill-dot { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
-
-    .pill-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
-    .pill-blue .color-pill-dot { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+    .pill-red { background: rgba(239, 68, 68, 0.18); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.35); }
+    .pill-orange { background: rgba(249, 115, 22, 0.18); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.35); }
+    .pill-yellow { background: rgba(234, 179, 8, 0.18); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.35); }
+    .pill-green { background: rgba(34, 197, 94, 0.18); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.35); }
+    .pill-blue { background: rgba(59, 130, 246, 0.18); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.35); }
 
     /* Type Picker Option Group */
     .type-picker-grid {
@@ -881,40 +880,29 @@
   <main class="main-window" id="dashboard">
     <!-- Topbar -->
     <div class="top-bar">
-      <div class="page-title" id="page-title-label">Registered Students</div>
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div class="page-title" id="page-title-label">Registered Students</div>
+        <span class="badge badge-id" id="page-counter-badge" style="font-size: 11.5px; padding: 3px 8px;">0 Total</span>
+      </div>
       <div class="top-actions">
-        <button class="btn-top-action btn-purple-glow" id="btn-reset-all-cooldowns" onclick="resetAllCooldowns()">
-          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-          Reset ALL Cooldowns
-        </button>
-        <button class="btn-top-action btn-cyan-glow" id="btn-reset-all-limits" onclick="resetAllDailyLimits()">
-          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
-          Reset ALL Daily Limits
-        </button>
+        <div id="users-top-actions" style="display: flex; gap: 8px; align-items: center;">
+          <button class="btn-top-action btn-indigo-glow" id="btn-edit-all-limits" onclick="openEditAllLimitsModal()">
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Edit ALL Limits
+          </button>
+          <button class="btn-top-action btn-purple-glow" id="btn-reset-all-cooldowns" onclick="resetAllCooldowns()">
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            Reset ALL Cooldowns
+          </button>
+          <button class="btn-top-action btn-cyan-glow" id="btn-reset-all-limits" onclick="resetAllDailyLimits()">
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+            Reset ALL Daily Limits
+          </button>
+        </div>
         <div class="search-wrapper">
           <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" class="search-input" id="search-input" placeholder="Search student or feature..." />
+          <input type="text" class="search-input" id="search-input" placeholder="Search..." />
         </div>
-      </div>
-    </div>
-
-    <!-- Stats widgets -->
-    <div class="widgets-grid">
-      <div class="widget-card">
-        <span class="widget-label">Total Students</span>
-        <span class="widget-value" id="stat-total-users">0</span>
-      </div>
-      <div class="widget-card">
-        <span class="widget-label">Active Cooldowns</span>
-        <span class="widget-value" id="stat-active-cooldowns">0</span>
-      </div>
-      <div class="widget-card">
-        <span class="widget-label">Features Enabled</span>
-        <span class="widget-value" id="stat-features-active" style="color: var(--cyan);">0 / 7</span>
-      </div>
-      <div class="widget-card">
-        <span class="widget-label">Blacklisted</span>
-        <span class="widget-value" id="stat-total-blacklist">0</span>
       </div>
     </div>
 
@@ -940,11 +928,8 @@
 
     <!-- Feature Controls Panel -->
     <div class="panel-container" id="tab-features">
-      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #070b13;">
-        <div>
-          <div style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">EP Hub Feature Flagging</div>
-          <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Toggling any feature instantly notifies and halts all active EP Hub clients.</div>
-        </div>
+      <div style="padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #070b13;">
+        <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: #cbd5e1;">Feature Flagging</span>
         <div style="display: flex; gap: 8px;">
           <button class="btn-action btn-success" onclick="enableAllFeatures()">Enable All</button>
           <button class="btn-action btn-error" onclick="disableAllFeatures()">Disable All</button>
@@ -956,7 +941,6 @@
             <th>Feature Name</th>
             <th>Library ID</th>
             <th>Category</th>
-            <th>Description</th>
             <th>Status</th>
             <th style="text-align: right; padding-right: 28px;">Control</th>
           </tr>
@@ -969,13 +953,10 @@
 
     <!-- Announcements Panel -->
     <div class="panel-container" id="tab-announcements">
-      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #070b13;">
+      <div style="padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #070b13;">
+        <span style="font-size: 13px; font-weight: 800; text-transform: uppercase; color: #cbd5e1;">Active Announcements</span>
         <div>
-          <div style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">EP Hub Dynamic Announcements</div>
-          <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Drag rows or use arrow buttons to change display order. Changes instantly sync to active EP Hub clients.</div>
-        </div>
-        <div>
-          <button class="btn-action btn-accent" onclick="openCreateAnnouncementModal()" style="padding: 8px 14px; font-size: 12px; font-weight: 700;">
+          <button class="btn-action btn-accent" onclick="openCreateAnnouncementModal()" style="padding: 7px 12px; font-size: 11.5px; font-weight: 700;">
             <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             New Announcement
           </button>
@@ -986,7 +967,7 @@
           <tr>
             <th style="width: 80px; text-align: center;">Order</th>
             <th style="width: 140px;">Type</th>
-            <th style="width: 120px;">Color</th>
+            <th style="width: 110px;">Color</th>
             <th>Title & Message Content</th>
             <th style="width: 100px;">Status</th>
             <th style="text-align: right; padding-right: 28px; width: 180px;">Actions</th>
@@ -1033,7 +1014,61 @@
         </tbody>
       </table>
     </div>
+    <!-- Blacklist Panel -->
+    <div class="panel-container" id="tab-blacklist">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Reason</th>
+            <th>Blacklisted Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="blacklist-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Violations Panel -->
+    <div class="panel-container" id="tab-violations">
+      <table>
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>ID</th>
+            <th>Violated URL</th>
+            <th>Time</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="violations-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
   </main>
+
+  <!-- EDIT ALL LIMITS MODAL -->
+  <div class="modal-overlay" id="edit-all-limits-modal">
+    <div class="modal-card">
+      <div class="modal-title">Edit ALL Students Limits</div>
+      <div class="form-group">
+        <label class="form-label" for="edit-all-pool-input">Cheers Pool Remaining (All Students)</label>
+        <input type="number" class="form-input" id="edit-all-pool-input" value="500" min="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="edit-all-tasks-input">Complete Tasks Remaining (All Students)</label>
+        <input type="number" class="form-input" id="edit-all-tasks-input" value="3" min="0">
+      </div>
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-edit-all-limits-cancel">Cancel</button>
+        <button class="btn-modal btn-modal-save" id="btn-edit-all-limits-save">Apply to All</button>
+      </div>
+    </div>
+  </div>
 
   <!-- EDIT LIMITS MODAL -->
   <div class="modal-overlay" id="edit-limits-modal">
@@ -1232,13 +1267,44 @@
         const tabName = item.getAttribute('data-tab');
         document.getElementById('tab-' + tabName).classList.add('active');
         
-        // Update header page label
+        // Update header page label & counter
         pageTitleLabel.textContent = item.textContent.trim();
+        updateTabCounter(tabName);
+
+        // Show top actions only on users tab
+        const usersTopActions = document.getElementById('users-top-actions');
+        if (usersTopActions) {
+          usersTopActions.style.display = tabName === 'users' ? 'flex' : 'none';
+        }
+
         // Clear search
         searchInput.value = '';
         filterTable();
       });
     });
+
+    function updateTabCounter(tabName) {
+      const badge = document.getElementById('page-counter-badge');
+      if (!badge) return;
+      
+      if (tabName === 'users') {
+        const count = document.querySelectorAll('#users-list tr').length;
+        badge.textContent = `${count} Students`;
+      } else if (tabName === 'features') {
+        const activeCount = document.querySelectorAll('#features-list input[type="checkbox"]:checked').length;
+        const total = document.querySelectorAll('#features-list tr').length;
+        badge.textContent = `${activeCount} / ${total} Active`;
+      } else if (tabName === 'announcements') {
+        const count = currentAnnouncements.length;
+        badge.textContent = `${count} Announcements`;
+      } else if (tabName === 'blacklist') {
+        const count = document.querySelectorAll('#blacklist-list tr').length;
+        badge.textContent = `${count} Blacklisted`;
+      } else if (tabName === 'violations') {
+        const count = document.querySelectorAll('#violations-list tr').length;
+        badge.textContent = `${count} Violations`;
+      }
+    }
 
     // Real-time client-side search filtering
     searchInput.addEventListener('input', filterTable);
@@ -1291,17 +1357,6 @@
         const limits = await limitsRes.json();
         const violations = await violationsRes.json();
         const blacklisted = await blacklistRes.json();
-
-        // Update stats widgets values
-        document.getElementById('stat-total-users').textContent = users.length;
-        document.getElementById('stat-total-blacklist').textContent = blacklisted.length;
-        
-        let activeCooldowns = 0;
-        limits.forEach(l => {
-          const cd = getSetCreditsCooldown(l.last_used_set);
-          if (cd.text !== "Ready") activeCooldowns++;
-        });
-        document.getElementById('stat-active-cooldowns').textContent = activeCooldowns;
 
         // 1. Registered Students
         const usersList = document.getElementById('users-list');
@@ -1380,6 +1435,8 @@
           violationsList.appendChild(row);
         });
 
+        const currentActiveTab = document.querySelector('.nav-item.active').getAttribute('data-tab');
+        updateTabCounter(currentActiveTab);
         filterTable();
 
       } catch (err) {
@@ -1389,13 +1446,13 @@
 
     // ─── Features Management System ───
     const DEFAULT_FEATURES = [
-      { id: "complete_task", name: "Complete Task", category: "Tasks", description: "Instantly completes the currently active task with 100% score", enabled: true },
-      { id: "give_credits", name: "Give Credits", category: "Credits", description: "Awards credits to the user account up to daily pool limit", enabled: true },
-      { id: "set_credits", name: "Set Credits", category: "Credits", description: "Sets the user account credits to a specified target balance", enabled: true },
-      { id: "check_cheers", name: "Check Cheers", category: "Cheers", description: "Retrieves real-time cheers and credit stats from EP servers", enabled: true },
-      { id: "send_cheer", name: "Send Cheer", category: "Cheers", description: "Sends customizable cheers and stickers to classmates", enabled: true },
-      { id: "auto_slides", name: "Auto Info Slides", category: "Automation", description: "Automatically advances through lesson informational slides", enabled: true },
-      { id: "always_correct", name: "Always Correct", category: "Automation", description: "Automatically validates and fills correct answers in exercises", enabled: true }
+      { id: "complete_task", name: "Complete Task", category: "Tasks", enabled: true },
+      { id: "give_credits", name: "Give Credits", category: "Credits", enabled: true },
+      { id: "set_credits", name: "Set Credits", category: "Credits", enabled: true },
+      { id: "check_cheers", name: "Check Cheers", category: "Cheers", enabled: true },
+      { id: "send_cheer", name: "Send Cheer", category: "Cheers", enabled: true },
+      { id: "auto_slides", name: "Auto Info Slides", category: "Automation", enabled: true },
+      { id: "always_correct", name: "Always Correct", category: "Automation", enabled: true }
     ];
 
     async function loadFeatures() {
@@ -1415,12 +1472,6 @@
           features = DEFAULT_FEATURES;
         }
 
-        const enabledCount = features.filter(f => f.enabled !== false).length;
-        const featActiveEl = document.getElementById('stat-features-active');
-        if (featActiveEl) {
-          featActiveEl.textContent = `${enabledCount} / ${features.length}`;
-        }
-
         tbody.innerHTML = '';
         features.forEach(f => {
           const isEnabled = f.enabled !== false;
@@ -1429,7 +1480,6 @@
             <td><strong style="color: #ffffff; font-size: 14px;">${f.name}</strong></td>
             <td><code style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 3px 7px; border-radius: 4px; font-family: var(--font-mono); font-size: 11.5px; color: #a855f7;">${f.id}</code></td>
             <td><span class="badge" style="background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25);">${f.category || 'General'}</span></td>
-            <td style="color: var(--muted); font-size: 12.5px; max-width: 280px;">${f.description || '—'}</td>
             <td>
               <span class="badge ${isEnabled ? 'badge-ready' : 'badge-cooldown'}" id="status-badge-${f.id}">
                 ${isEnabled ? 'ACTIVE' : 'DISABLED'}
@@ -1468,11 +1518,8 @@
           })
         });
 
-        // Refresh stats
-        const enabledCount = document.querySelectorAll('#features-list input[type="checkbox"]:checked').length;
-        const total = document.querySelectorAll('#features-list input[type="checkbox"]').length;
-        const featActiveEl = document.getElementById('stat-features-active');
-        if (featActiveEl) featActiveEl.textContent = `${enabledCount} / ${total}`;
+        const activeTab = document.querySelector('.nav-item.active').getAttribute('data-tab');
+        if (activeTab === 'features') updateTabCounter('features');
 
       } catch (err) {
         console.error(`Failed to update feature ${id}:`, err);
@@ -1504,6 +1551,57 @@
     }
 
     // ─── Bulk Admin Controls ───
+    function openEditAllLimitsModal() {
+      const modal = document.getElementById('edit-all-limits-modal');
+      if (modal) modal.classList.add('active');
+    }
+
+    document.getElementById('btn-edit-all-limits-cancel').onclick = () => {
+      document.getElementById('edit-all-limits-modal').classList.remove('active');
+    };
+
+    document.getElementById('btn-edit-all-limits-save').onclick = async () => {
+      const pool = parseInt(document.getElementById('edit-all-pool-input').value);
+      const tasks = parseInt(document.getElementById('edit-all-tasks-input').value);
+
+      if (isNaN(pool) || pool < 0 || isNaN(tasks) || tasks < 0) {
+        alert("Please enter valid positive numbers.");
+        return;
+      }
+
+      if (!confirm(`Apply ${pool} credits pool and ${tasks} tasks remaining to ALL registered students?`)) return;
+
+      try {
+        const btn = document.getElementById('btn-edit-all-limits-save');
+        btn.textContent = "Applying...";
+        btn.disabled = true;
+
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=neq.placeholder_null_safe', {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            cheers_pool_remaining: pool,
+            complete_task_remaining: tasks
+          })
+        });
+
+        if (res.ok) {
+          document.getElementById('edit-all-limits-modal').classList.remove('active');
+          alert("✓ Limits updated for all students!");
+          loadData();
+        } else {
+          throw new Error("Supabase error: " + res.status);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to update all limits: " + err.message);
+      } finally {
+        const btn = document.getElementById('btn-edit-all-limits-save');
+        btn.textContent = "Apply to All";
+        btn.disabled = false;
+      }
+    };
+
     async function resetAllCooldowns() {
       if (!confirm("Are you sure you want to RESET the 48h Set Credits cooldown for ALL registered students?")) return;
       try {
@@ -1764,7 +1862,6 @@
           </td>
           <td>
             <span class="color-pill pill-${color}">
-              <span class="color-pill-dot"></span>
               ${color}
             </span>
           </td>
