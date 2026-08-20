@@ -698,6 +698,136 @@
       transform: translateX(22px);
       background-color: #ffffff;
     }
+
+    /* Drag & Drop styling */
+    tr.drag-handle-row {
+      cursor: grab;
+      user-select: none;
+    }
+    tr.drag-handle-row:active {
+      cursor: grabbing;
+    }
+    tr.dragging {
+      opacity: 0.35;
+      background: rgba(99, 102, 241, 0.15) !important;
+    }
+    tr.drag-over {
+      border-top: 2px solid var(--accent) !important;
+    }
+    .drag-grip {
+      color: #64748b;
+      cursor: grab;
+      display: inline-flex;
+      align-items: center;
+      padding: 4px;
+    }
+    .drag-grip:hover {
+      color: #cbd5e1;
+    }
+
+    /* Color pills */
+    .color-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .color-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .pill-red { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .pill-red .color-pill-dot { background: #ef4444; box-shadow: 0 0 6px #ef4444; }
+    
+    .pill-orange { background: rgba(249, 115, 22, 0.15); color: #fb923c; border: 1px solid rgba(249, 115, 22, 0.3); }
+    .pill-orange .color-pill-dot { background: #f97316; box-shadow: 0 0 6px #f97316; }
+
+    .pill-yellow { background: rgba(234, 179, 8, 0.15); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .pill-yellow .color-pill-dot { background: #eab308; box-shadow: 0 0 6px #eab308; }
+
+    .pill-green { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .pill-green .color-pill-dot { background: #22c55e; box-shadow: 0 0 6px #22c55e; }
+
+    .pill-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .pill-blue .color-pill-dot { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+
+    /* Type Picker Option Group */
+    .type-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .type-picker-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 10px 6px;
+      border-radius: 8px;
+      background: #0b0f19;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: inherit;
+    }
+    .type-picker-btn svg {
+      width: 16px;
+      height: 16px;
+    }
+    .type-picker-btn:hover {
+      background: #111827;
+      border-color: #334155;
+      color: #fff;
+    }
+    .type-picker-btn.active {
+      background: rgba(99, 102, 241, 0.15);
+      border-color: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(99, 102, 241, 0.25);
+    }
+
+    /* Color Picker Option Group */
+    .color-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+    }
+    .color-picker-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 9px 6px;
+      border-radius: 8px;
+      background: #0b0f19;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 11.5px;
+      font-weight: 700;
+      font-family: inherit;
+      color: #94a3b8;
+    }
+    .color-picker-btn.active {
+      border-color: currentColor;
+      box-shadow: 0 0 12px currentColor;
+      color: #fff;
+    }
+    .color-btn-red { color: #f87171; }
+    .color-btn-orange { color: #fb923c; }
+    .color-btn-yellow { color: #facc15; }
+    .color-btn-green { color: #4ade80; }
+    .color-btn-blue { color: #60a5fa; }
   </style>
 </head>
 <body>
@@ -724,6 +854,10 @@
         <li class="nav-item" data-tab="features">
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           Feature Controls
+        </li>
+        <li class="nav-item" data-tab="announcements">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          Announcements
         </li>
         <li class="nav-item" data-tab="blacklist">
           <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -833,6 +967,37 @@
       </table>
     </div>
 
+    <!-- Announcements Panel -->
+    <div class="panel-container" id="tab-announcements">
+      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #070b13;">
+        <div>
+          <div style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">EP Hub Dynamic Announcements</div>
+          <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Drag rows or use arrow buttons to change display order. Changes instantly sync to active EP Hub clients.</div>
+        </div>
+        <div>
+          <button class="btn-action btn-accent" onclick="openCreateAnnouncementModal()" style="padding: 8px 14px; font-size: 12px; font-weight: 700;">
+            <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            New Announcement
+          </button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 80px; text-align: center;">Order</th>
+            <th style="width: 140px;">Type</th>
+            <th style="width: 120px;">Color</th>
+            <th>Title & Message Content</th>
+            <th style="width: 100px;">Status</th>
+            <th style="text-align: right; padding-right: 28px; width: 180px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="announcements-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+
     <!-- Blacklist Panel -->
     <div class="panel-container" id="tab-blacklist">
       <table>
@@ -885,6 +1050,97 @@
       <div class="modal-actions">
         <button class="btn-modal btn-modal-cancel" id="btn-edit-limits-cancel">Cancel</button>
         <button class="btn-modal btn-modal-save" id="btn-edit-limits-save">Save changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE / EDIT ANNOUNCEMENT MODAL -->
+  <div class="modal-overlay" id="announcement-modal">
+    <div class="modal-card" style="max-width: 520px; width: 95%;">
+      <div class="modal-title" id="announcement-modal-title">Create Announcement</div>
+      
+      <!-- Type Selection -->
+      <div class="form-group">
+        <label class="form-label">Announcement Type</label>
+        <div class="type-picker-grid" id="modal-type-picker">
+          <button type="button" class="type-picker-btn active" data-type="announcement">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 13v-2z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>
+            Announcement
+          </button>
+          <button type="button" class="type-picker-btn" data-type="info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Info
+          </button>
+          <button type="button" class="type-picker-btn" data-type="warning">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+            Warning
+          </button>
+          <button type="button" class="type-picker-btn" data-type="update">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+            Update
+          </button>
+        </div>
+      </div>
+
+      <!-- Color Selection -->
+      <div class="form-group">
+        <label class="form-label">Banner Color</label>
+        <div class="color-picker-grid" id="modal-color-picker">
+          <button type="button" class="color-picker-btn color-btn-red" data-color="red">
+            <span class="color-pill-dot" style="background: #ef4444; width: 8px; height: 8px; border-radius: 50%;"></span>
+            Red
+          </button>
+          <button type="button" class="color-picker-btn color-btn-orange" data-color="orange">
+            <span class="color-pill-dot" style="background: #f97316; width: 8px; height: 8px; border-radius: 50%;"></span>
+            Orange
+          </button>
+          <button type="button" class="color-picker-btn color-btn-yellow" data-color="yellow">
+            <span class="color-pill-dot" style="background: #eab308; width: 8px; height: 8px; border-radius: 50%;"></span>
+            Yellow
+          </button>
+          <button type="button" class="color-picker-btn color-btn-green" data-color="green">
+            <span class="color-pill-dot" style="background: #22c55e; width: 8px; height: 8px; border-radius: 50%;"></span>
+            Green
+          </button>
+          <button type="button" class="color-picker-btn color-btn-blue active" data-color="blue">
+            <span class="color-pill-dot" style="background: #3b82f6; width: 8px; height: 8px; border-radius: 50%;"></span>
+            Blue
+          </button>
+        </div>
+      </div>
+
+      <!-- Title Input (optional) -->
+      <div class="form-group">
+        <label class="form-label" for="modal-announcement-title">Title (Optional)</label>
+        <input type="text" class="form-input" id="modal-announcement-title" placeholder="e.g. Maintenance Notice">
+      </div>
+
+      <!-- Message Input (required) -->
+      <div class="form-group">
+        <label class="form-label" for="modal-announcement-msg">Message Content</label>
+        <textarea class="form-input" id="modal-announcement-msg" rows="3" placeholder="Enter announcement text to display on EP Hub..." style="resize: vertical; font-family: inherit; font-size: 13px; line-height: 1.4; padding: 10px;"></textarea>
+      </div>
+
+      <!-- Visible Switch -->
+      <div class="form-group" style="display: flex; justify-content: space-between; align-items: center;">
+        <label class="form-label" style="margin-bottom: 0;">Enabled (Visible on EP Hub)</label>
+        <label class="dev-switch">
+          <input type="checkbox" id="modal-announcement-enabled" checked>
+          <span class="dev-slider"></span>
+        </label>
+      </div>
+
+      <!-- Live Client Preview -->
+      <div class="form-group" style="margin-top: 15px;">
+        <label class="form-label">Live Client Preview</label>
+        <div id="modal-announcement-preview" style="padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: #070b13;">
+          <!-- Live Preview Card -->
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" id="btn-announcement-cancel">Cancel</button>
+        <button class="btn-modal btn-modal-save" id="btn-announcement-save">Save Announcement</button>
       </div>
     </div>
   </div>
@@ -1022,6 +1278,7 @@
     async function loadData() {
       try {
         loadFeatures();
+        loadAnnouncements();
 
         const [usersRes, limitsRes, violationsRes, blacklistRes] = await Promise.all([
           fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students', { headers: sbHeaders }),
@@ -1437,6 +1694,349 @@
         console.error(err);
       }
     }
+
+    // ─── Dynamic Announcements Management ───
+    let currentAnnouncements = [];
+    let editingAnnouncementId = null;
+    let selectedType = 'announcement';
+    let selectedColor = 'blue';
+
+    const ANNOUNCEMENT_ICONS_SVG = {
+      announcement: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 13v-2z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg>`,
+      info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`,
+      warning: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>`,
+      update: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>`
+    };
+
+    async function loadAnnouncements() {
+      const tbody = document.getElementById('announcements-list');
+      if (!tbody) return;
+
+      try {
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_announcements?order=order_index.asc,created_at.asc', { headers: sbHeaders });
+        let announcements = [];
+        if (res.ok) {
+          announcements = await res.json();
+        }
+        currentAnnouncements = Array.isArray(announcements) ? announcements : [];
+        renderAnnouncementsTable();
+      } catch (err) {
+        console.error("Failed to load announcements:", err);
+      }
+    }
+
+    function renderAnnouncementsTable() {
+      const tbody = document.getElementById('announcements-list');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (currentAnnouncements.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--muted); padding: 30px;">No announcements created yet. Click <strong>+ New Announcement</strong> to create one!</td></tr>`;
+        return;
+      }
+
+      currentAnnouncements.forEach((a, index) => {
+        const tr = document.createElement('tr');
+        tr.className = 'drag-handle-row';
+        tr.draggable = true;
+        tr.dataset.index = index;
+        tr.dataset.id = a.id;
+
+        const color = (a.color || 'blue').toLowerCase();
+        const type = (a.type || 'announcement').toLowerCase();
+        const iconSvg = ANNOUNCEMENT_ICONS_SVG[type] || ANNOUNCEMENT_ICONS_SVG.announcement;
+        const isEnabled = a.enabled !== false;
+
+        tr.innerHTML = `
+          <td style="text-align: center;">
+            <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+              <span class="drag-grip" title="Drag to reorder">
+                <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none"><circle cx="9" cy="5" r="1"></circle><circle cx="9" cy="12" r="1"></circle><circle cx="9" cy="19" r="1"></circle><circle cx="15" cy="5" r="1"></circle><circle cx="15" cy="12" r="1"></circle><circle cx="15" cy="19" r="1"></circle></svg>
+              </span>
+              <span style="font-weight: 800; font-size: 11px; color: var(--muted);">#${index + 1}</span>
+            </div>
+          </td>
+          <td>
+            <span class="badge" style="background: rgba(255,255,255,0.06); border: 1px solid var(--border); color: #cbd5e1; display: inline-flex; align-items: center; gap: 6px;">
+              <span style="width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center;">${iconSvg}</span>
+              ${type.toUpperCase()}
+            </span>
+          </td>
+          <td>
+            <span class="color-pill pill-${color}">
+              <span class="color-pill-dot"></span>
+              ${color}
+            </span>
+          </td>
+          <td>
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              ${a.title ? `<strong style="color: #ffffff; font-size: 13px;">${a.title}</strong>` : ''}
+              <span style="color: #cbd5e1; font-size: 12.5px; line-height: 1.4; word-break: break-word;">${a.message}</span>
+            </div>
+          </td>
+          <td>
+            <label class="dev-switch">
+              <input type="checkbox" ${isEnabled ? 'checked' : ''} onchange="toggleAnnouncementEnabled('${a.id}', this.checked)">
+              <span class="dev-slider"></span>
+            </label>
+          </td>
+          <td style="text-align: right; padding-right: 20px;">
+            <div class="action-group" style="justify-content: flex-end;">
+              <button class="btn-action btn-accent" title="Move Up" onclick="moveAnnouncement('${a.id}', -1)" ${index === 0 ? 'disabled style="opacity:0.3;cursor:default;"' : ''}>▲</button>
+              <button class="btn-action btn-accent" title="Move Down" onclick="moveAnnouncement('${a.id}', 1)" ${index === currentAnnouncements.length - 1 ? 'disabled style="opacity:0.3;cursor:default;"' : ''}>▼</button>
+              <button class="btn-action btn-purple" onclick="openEditAnnouncementModal('${a.id}')">Edit</button>
+              <button class="btn-action btn-error" onclick="deleteAnnouncement('${a.id}')">Delete</button>
+            </div>
+          </td>
+        `;
+
+        // Drag and Drop Event Listeners
+        tr.addEventListener('dragstart', handleDragStart);
+        tr.addEventListener('dragover', handleDragOver);
+        tr.addEventListener('dragleave', handleDragLeave);
+        tr.addEventListener('drop', handleDrop);
+        tr.addEventListener('dragend', handleDragEnd);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    let draggedRowIndex = null;
+
+    function handleDragStart(e) {
+      draggedRowIndex = parseInt(this.dataset.index);
+      this.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    }
+    function handleDragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      this.classList.add('drag-over');
+    }
+    function handleDragLeave(e) {
+      this.classList.remove('drag-over');
+    }
+    function handleDrop(e) {
+      e.preventDefault();
+      this.classList.remove('drag-over');
+      const targetIndex = parseInt(this.dataset.index);
+      if (draggedRowIndex !== null && draggedRowIndex !== targetIndex) {
+        const item = currentAnnouncements.splice(draggedRowIndex, 1)[0];
+        currentAnnouncements.splice(targetIndex, 0, item);
+        renderAnnouncementsTable();
+        saveAnnouncementsOrder();
+      }
+    }
+    function handleDragEnd() {
+      this.classList.remove('dragging');
+      document.querySelectorAll('#announcements-list tr').forEach(r => r.classList.remove('drag-over'));
+      draggedRowIndex = null;
+    }
+
+    async function moveAnnouncement(id, delta) {
+      const idx = currentAnnouncements.findIndex(a => a.id === id);
+      if (idx === -1) return;
+      const targetIdx = idx + delta;
+      if (targetIdx < 0 || targetIdx >= currentAnnouncements.length) return;
+      
+      const item = currentAnnouncements.splice(idx, 1)[0];
+      currentAnnouncements.splice(targetIdx, 0, item);
+      renderAnnouncementsTable();
+      saveAnnouncementsOrder();
+    }
+
+    async function saveAnnouncementsOrder() {
+      try {
+        const updates = currentAnnouncements.map((a, i) => {
+          a.order_index = i;
+          return fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_announcements?id=eq.${a.id}`, {
+            method: 'PATCH',
+            headers: sbHeaders,
+            body: JSON.stringify({ order_index: i, updated_at: new Date().toISOString() })
+          });
+        });
+        await Promise.all(updates);
+      } catch (err) {
+        console.error("Failed to update announcement order:", err);
+      }
+    }
+
+    async function toggleAnnouncementEnabled(id, enabled) {
+      try {
+        await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_announcements?id=eq.${id}`, {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({ enabled, updated_at: new Date().toISOString() })
+        });
+        const item = currentAnnouncements.find(a => a.id === id);
+        if (item) item.enabled = enabled;
+      } catch (err) {
+        console.error("Failed to toggle announcement:", err);
+      }
+    }
+
+    async function deleteAnnouncement(id) {
+      if (!confirm("Are you sure you want to DELETE this announcement?")) return;
+      try {
+        await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_announcements?id=eq.${id}`, {
+          method: 'DELETE',
+          headers: sbHeaders
+        });
+        currentAnnouncements = currentAnnouncements.filter(a => a.id !== id);
+        renderAnnouncementsTable();
+        saveAnnouncementsOrder();
+      } catch (err) {
+        console.error("Failed to delete announcement:", err);
+      }
+    }
+
+    // Modal Create / Edit Logic
+    const announcementModal = document.getElementById('announcement-modal');
+    const announcementModalTitle = document.getElementById('announcement-modal-title');
+    const modalTitleInput = document.getElementById('modal-announcement-title');
+    const modalMsgInput = document.getElementById('modal-announcement-msg');
+    const modalEnabledInput = document.getElementById('modal-announcement-enabled');
+    const modalPreview = document.getElementById('modal-announcement-preview');
+
+    function updateAnnouncementPreview() {
+      const type = selectedType;
+      const color = selectedColor;
+      const title = modalTitleInput.value.trim();
+      const msg = modalMsgInput.value.trim() || 'Announcement preview text will appear here...';
+      const iconSvg = ANNOUNCEMENT_ICONS_SVG[type] || ANNOUNCEMENT_ICONS_SVG.announcement;
+
+      const colorMap = {
+        red: { bg: 'rgba(239, 68, 68, 0.1)', border: 'rgba(239, 68, 68, 0.35)', text: '#fca5a5', badgeBg: 'rgba(239, 68, 68, 0.25)', badgeText: '#f87171', iconColor: '#ef4444' },
+        orange: { bg: 'rgba(249, 115, 22, 0.1)', border: 'rgba(249, 115, 22, 0.35)', text: '#fdba74', badgeBg: 'rgba(249, 115, 22, 0.25)', badgeText: '#fb923c', iconColor: '#f97316' },
+        yellow: { bg: 'rgba(234, 179, 8, 0.1)', border: 'rgba(234, 179, 8, 0.35)', text: '#fde047', badgeBg: 'rgba(234, 179, 8, 0.25)', badgeText: '#facc15', iconColor: '#eab308' },
+        green: { bg: 'rgba(34, 197, 94, 0.1)', border: 'rgba(34, 197, 94, 0.35)', text: '#86efac', badgeBg: 'rgba(34, 197, 94, 0.25)', badgeText: '#4ade80', iconColor: '#22c55e' },
+        blue: { bg: 'rgba(59, 130, 246, 0.1)', border: 'rgba(59, 130, 246, 0.35)', text: '#93c5fd', badgeBg: 'rgba(59, 130, 246, 0.25)', badgeText: '#60a5fa', iconColor: '#3b82f6' }
+      };
+
+      const c = colorMap[color] || colorMap.blue;
+
+      modalPreview.innerHTML = `
+        <div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: 8px; background: ${c.bg}; border: 1px solid ${c.border}; color: ${c.text}; font-family: var(--font-main);">
+          <div style="width: 22px; height: 22px; border-radius: 6px; background: ${c.badgeBg}; color: ${c.iconColor}; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;">
+            <span style="width: 14px; height: 14px; display: inline-flex; align-items: center; justify-content: center;">${iconSvg}</span>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 3px;">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="background: ${c.badgeBg}; color: ${c.badgeText}; font-size: 9.5px; font-weight: 800; text-transform: uppercase; padding: 1px 6px; border-radius: 4px; letter-spacing: 0.05em;">${type.toUpperCase()}</span>
+              ${title ? `<span style="font-size: 12px; font-weight: 750; color: #ffffff;">${title}</span>` : ''}
+            </div>
+            <div style="font-size: 11.5px; line-height: 1.45; word-break: break-word;">${msg}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    modalTitleInput.addEventListener('input', updateAnnouncementPreview);
+    modalMsgInput.addEventListener('input', updateAnnouncementPreview);
+
+    document.querySelectorAll('#modal-type-picker .type-picker-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('#modal-type-picker .type-picker-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedType = btn.dataset.type;
+        updateAnnouncementPreview();
+      };
+    });
+
+    document.querySelectorAll('#modal-color-picker .color-picker-btn').forEach(btn => {
+      btn.onclick = () => {
+        document.querySelectorAll('#modal-color-picker .color-picker-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selectedColor = btn.dataset.color;
+        updateAnnouncementPreview();
+      };
+    });
+
+    function openCreateAnnouncementModal() {
+      editingAnnouncementId = null;
+      announcementModalTitle.textContent = "Create Announcement";
+      modalTitleInput.value = '';
+      modalMsgInput.value = '';
+      modalEnabledInput.checked = true;
+      selectedType = 'announcement';
+      selectedColor = 'blue';
+
+      document.querySelectorAll('#modal-type-picker .type-picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === selectedType));
+      document.querySelectorAll('#modal-color-picker .color-picker-btn').forEach(b => b.classList.toggle('active', b.dataset.color === selectedColor));
+      
+      updateAnnouncementPreview();
+      announcementModal.classList.add('active');
+    }
+
+    function openEditAnnouncementModal(id) {
+      const a = currentAnnouncements.find(item => item.id === id);
+      if (!a) return;
+
+      editingAnnouncementId = id;
+      announcementModalTitle.textContent = "Edit Announcement";
+      modalTitleInput.value = a.title || '';
+      modalMsgInput.value = a.message || '';
+      modalEnabledInput.checked = a.enabled !== false;
+      selectedType = (a.type || 'announcement').toLowerCase();
+      selectedColor = (a.color || 'blue').toLowerCase();
+
+      document.querySelectorAll('#modal-type-picker .type-picker-btn').forEach(b => b.classList.toggle('active', b.dataset.type === selectedType));
+      document.querySelectorAll('#modal-color-picker .color-picker-btn').forEach(b => b.classList.toggle('active', b.dataset.color === selectedColor));
+
+      updateAnnouncementPreview();
+      announcementModal.classList.add('active');
+    }
+
+    document.getElementById('btn-announcement-cancel').onclick = () => {
+      announcementModal.classList.remove('active');
+    };
+
+    document.getElementById('btn-announcement-save').onclick = async () => {
+      const message = modalMsgInput.value.trim();
+      const title = modalTitleInput.value.trim() || null;
+      const enabled = modalEnabledInput.checked;
+
+      if (!message) {
+        alert("Please enter message content for the announcement.");
+        return;
+      }
+
+      const payload = {
+        title: title,
+        message: message,
+        type: selectedType,
+        color: selectedColor,
+        enabled: enabled,
+        updated_at: new Date().toISOString()
+      };
+
+      try {
+        if (editingAnnouncementId) {
+          // Update existing
+          await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_announcements?id=eq.${editingAnnouncementId}`, {
+            method: 'PATCH',
+            headers: sbHeaders,
+            body: JSON.stringify(payload)
+          });
+        } else {
+          // Insert new
+          payload.order_index = currentAnnouncements.length;
+          payload.created_at = new Date().toISOString();
+          await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_announcements`, {
+            method: 'POST',
+            headers: sbHeaders,
+            body: JSON.stringify(payload)
+          });
+        }
+
+        announcementModal.classList.remove('active');
+        loadAnnouncements();
+
+      } catch (err) {
+        console.error("Failed to save announcement:", err);
+        alert("Failed to save announcement: " + err.message);
+      }
+    };
   </script>
 </body>
 </html>
