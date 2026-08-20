@@ -606,6 +606,98 @@
       opacity: 0.95;
       box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
     }
+
+    /* Top Action Buttons */
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-top-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 6px;
+      font-family: var(--font-main);
+      font-size: 11.5px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      user-select: none;
+    }
+
+    .btn-purple-glow {
+      background: rgba(168, 85, 247, 0.12);
+      border-color: rgba(168, 85, 247, 0.3);
+      color: #c084fc;
+    }
+    .btn-purple-glow:hover {
+      background: rgba(168, 85, 247, 0.22);
+      border-color: rgba(168, 85, 247, 0.5);
+      box-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    .btn-cyan-glow {
+      background: rgba(6, 182, 212, 0.12);
+      border-color: rgba(6, 182, 212, 0.3);
+      color: #22d3ee;
+    }
+    .btn-cyan-glow:hover {
+      background: rgba(6, 182, 212, 0.22);
+      border-color: rgba(6, 182, 212, 0.5);
+      box-shadow: 0 0 16px rgba(6, 182, 212, 0.3);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Switch styling for features */
+    .dev-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 22px;
+    }
+    .dev-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .dev-slider {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: #1e293b;
+      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 22px;
+      border: 1px solid #334155;
+    }
+    .dev-slider::before {
+      position: absolute;
+      content: "";
+      height: 14px;
+      width: 14px;
+      left: 3px;
+      bottom: 3px;
+      background-color: #94a3b8;
+      transition: .25s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 50%;
+    }
+    .dev-switch input:checked + .dev-slider {
+      background-color: var(--success);
+      border-color: var(--success);
+    }
+    .dev-switch input:checked + .dev-slider::before {
+      transform: translateX(22px);
+      background-color: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -628,6 +720,10 @@
         <li class="nav-item active" data-tab="users">
           <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           Registered Students
+        </li>
+        <li class="nav-item" data-tab="features">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+          Feature Controls
         </li>
         <li class="nav-item" data-tab="blacklist">
           <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
@@ -652,9 +748,19 @@
     <!-- Topbar -->
     <div class="top-bar">
       <div class="page-title" id="page-title-label">Registered Students</div>
-      <div class="search-wrapper">
-        <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" class="search-input" id="search-input" placeholder="Search student by name or ID..." />
+      <div class="top-actions">
+        <button class="btn-top-action btn-purple-glow" id="btn-reset-all-cooldowns" onclick="resetAllCooldowns()">
+          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+          Reset ALL Cooldowns
+        </button>
+        <button class="btn-top-action btn-cyan-glow" id="btn-reset-all-limits" onclick="resetAllDailyLimits()">
+          <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+          Reset ALL Daily Limits
+        </button>
+        <div class="search-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" class="search-input" id="search-input" placeholder="Search student or feature..." />
+        </div>
       </div>
     </div>
 
@@ -669,12 +775,12 @@
         <span class="widget-value" id="stat-active-cooldowns">0</span>
       </div>
       <div class="widget-card">
-        <span class="widget-label">Blacklisted</span>
-        <span class="widget-value" id="stat-total-blacklist">0</span>
+        <span class="widget-label">Features Enabled</span>
+        <span class="widget-value" id="stat-features-active" style="color: var(--cyan);">0 / 7</span>
       </div>
       <div class="widget-card">
-        <span class="widget-label">Log Violations</span>
-        <span class="widget-value" id="stat-total-violations">0</span>
+        <span class="widget-label">Blacklisted</span>
+        <span class="widget-value" id="stat-total-blacklist">0</span>
       </div>
     </div>
 
@@ -693,6 +799,35 @@
           </tr>
         </thead>
         <tbody id="users-list">
+          <!-- Dynamic -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Feature Controls Panel -->
+    <div class="panel-container" id="tab-features">
+      <div style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #070b13;">
+        <div>
+          <div style="font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.02em;">EP Hub Feature Flagging</div>
+          <div style="font-size: 11.5px; color: var(--muted); margin-top: 2px;">Toggling any feature instantly notifies and halts all active EP Hub clients.</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-action btn-success" onclick="enableAllFeatures()">Enable All</button>
+          <button class="btn-action btn-error" onclick="disableAllFeatures()">Disable All</button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature Name</th>
+            <th>Library ID</th>
+            <th>Category</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th style="text-align: right; padding-right: 28px;">Control</th>
+          </tr>
+        </thead>
+        <tbody id="features-list">
           <!-- Dynamic -->
         </tbody>
       </table>
@@ -886,6 +1021,8 @@
 
     async function loadData() {
       try {
+        loadFeatures();
+
         const [usersRes, limitsRes, violationsRes, blacklistRes] = await Promise.all([
           fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/verified_students', { headers: sbHeaders }),
           fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits', { headers: sbHeaders }),
@@ -901,7 +1038,6 @@
         // Update stats widgets values
         document.getElementById('stat-total-users').textContent = users.length;
         document.getElementById('stat-total-blacklist').textContent = blacklisted.length;
-        document.getElementById('stat-total-violations').textContent = violations.length;
         
         let activeCooldowns = 0;
         limits.forEach(l => {
@@ -991,6 +1127,191 @@
 
       } catch (err) {
         console.error("Failed to load dashboard data:", err);
+      }
+    }
+
+    // ─── Features Management System ───
+    const DEFAULT_FEATURES = [
+      { id: "complete_task", name: "Complete Task", category: "Tasks", description: "Instantly completes the currently active task with 100% score", enabled: true },
+      { id: "give_credits", name: "Give Credits", category: "Credits", description: "Awards credits to the user account up to daily pool limit", enabled: true },
+      { id: "set_credits", name: "Set Credits", category: "Credits", description: "Sets the user account credits to a specified target balance", enabled: true },
+      { id: "check_cheers", name: "Check Cheers", category: "Cheers", description: "Retrieves real-time cheers and credit stats from EP servers", enabled: true },
+      { id: "send_cheer", name: "Send Cheer", category: "Cheers", description: "Sends customizable cheers and stickers to classmates", enabled: true },
+      { id: "auto_slides", name: "Auto Info Slides", category: "Automation", description: "Automatically advances through lesson informational slides", enabled: true },
+      { id: "always_correct", name: "Always Correct", category: "Automation", description: "Automatically validates and fills correct answers in exercises", enabled: true }
+    ];
+
+    async function loadFeatures() {
+      const tbody = document.getElementById('features-list');
+      if (!tbody) return;
+      try {
+        let features = [];
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_features?order=category.asc,id.asc', { headers: sbHeaders });
+        if (res.ok) {
+          features = await res.json();
+        }
+        if (!features || features.length === 0) {
+          const fRes = await fetch('/features.json');
+          if (fRes.ok) features = await fRes.json();
+        }
+        if (!features || features.length === 0) {
+          features = DEFAULT_FEATURES;
+        }
+
+        const enabledCount = features.filter(f => f.enabled !== false).length;
+        const featActiveEl = document.getElementById('stat-features-active');
+        if (featActiveEl) {
+          featActiveEl.textContent = `${enabledCount} / ${features.length}`;
+        }
+
+        tbody.innerHTML = '';
+        features.forEach(f => {
+          const isEnabled = f.enabled !== false;
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><strong style="color: #ffffff; font-size: 14px;">${f.name}</strong></td>
+            <td><code style="background: rgba(255,255,255,0.05); border: 1px solid var(--border); padding: 3px 7px; border-radius: 4px; font-family: var(--font-mono); font-size: 11.5px; color: #a855f7;">${f.id}</code></td>
+            <td><span class="badge" style="background: rgba(59,130,246,0.12); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25);">${f.category || 'General'}</span></td>
+            <td style="color: var(--muted); font-size: 12.5px; max-width: 280px;">${f.description || '—'}</td>
+            <td>
+              <span class="badge ${isEnabled ? 'badge-ready' : 'badge-cooldown'}" id="status-badge-${f.id}">
+                ${isEnabled ? 'ACTIVE' : 'DISABLED'}
+              </span>
+            </td>
+            <td style="text-align: right; padding-right: 28px;">
+              <label class="dev-switch">
+                <input type="checkbox" id="toggle-${f.id}" ${isEnabled ? 'checked' : ''} onchange="toggleFeature('${f.id}', this.checked)">
+                <span class="dev-slider"></span>
+              </label>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+      } catch (err) {
+        console.error("Failed to load features:", err);
+      }
+    }
+
+    async function toggleFeature(id, newStatus) {
+      const badge = document.getElementById(`status-badge-${id}`);
+      if (badge) {
+        badge.textContent = newStatus ? 'ACTIVE' : 'DISABLED';
+        badge.className = `badge ${newStatus ? 'badge-ready' : 'badge-cooldown'}`;
+      }
+
+      try {
+        // Update Supabase ep_features table directly
+        await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/ep_features?id=eq.${id}`, {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            enabled: newStatus,
+            updated_at: new Date().toISOString()
+          })
+        });
+
+        // Refresh stats
+        const enabledCount = document.querySelectorAll('#features-list input[type="checkbox"]:checked').length;
+        const total = document.querySelectorAll('#features-list input[type="checkbox"]').length;
+        const featActiveEl = document.getElementById('stat-features-active');
+        if (featActiveEl) featActiveEl.textContent = `${enabledCount} / ${total}`;
+
+      } catch (err) {
+        console.error(`Failed to update feature ${id}:`, err);
+      }
+    }
+
+    async function enableAllFeatures() {
+      if (!confirm("Enable ALL EP Hub features?")) return;
+      const checkboxes = document.querySelectorAll('#features-list input[type="checkbox"]');
+      for (const cb of checkboxes) {
+        if (!cb.checked) {
+          cb.checked = true;
+          const id = cb.id.replace('toggle-', '');
+          toggleFeature(id, true);
+        }
+      }
+    }
+
+    async function disableAllFeatures() {
+      if (!confirm("Disable ALL EP Hub features? This will halt active clients immediately.")) return;
+      const checkboxes = document.querySelectorAll('#features-list input[type="checkbox"]');
+      for (const cb of checkboxes) {
+        if (cb.checked) {
+          cb.checked = false;
+          const id = cb.id.replace('toggle-', '');
+          toggleFeature(id, false);
+        }
+      }
+    }
+
+    // ─── Bulk Admin Controls ───
+    async function resetAllCooldowns() {
+      if (!confirm("Are you sure you want to RESET the 48h Set Credits cooldown for ALL registered students?")) return;
+      try {
+        const btn = document.getElementById('btn-reset-all-cooldowns');
+        btn.innerHTML = `<span>Resetting...</span>`;
+        btn.disabled = true;
+
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=neq.placeholder_null_safe', {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            last_used_set: null
+          })
+        });
+
+        if (res.ok) {
+          alert("✓ All student cooldowns have been successfully reset!");
+          loadData();
+        } else {
+          throw new Error("Supabase error: " + res.status);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to reset cooldowns: " + err.message);
+      } finally {
+        const btn = document.getElementById('btn-reset-all-cooldowns');
+        if (btn) {
+          btn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg> Reset ALL Cooldowns`;
+          btn.disabled = false;
+        }
+      }
+    }
+
+    async function resetAllDailyLimits() {
+      if (!confirm("Are you sure you want to RESET daily credits pool (500cr) and tasks (3 left) for ALL registered students?")) return;
+      try {
+        const btn = document.getElementById('btn-reset-all-limits');
+        btn.innerHTML = `<span>Resetting...</span>`;
+        btn.disabled = true;
+
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_usage_limits?id=neq.placeholder_null_safe', {
+          method: 'PATCH',
+          headers: sbHeaders,
+          body: JSON.stringify({
+            cheers_pool_remaining: 500,
+            complete_task_remaining: 3,
+            last_pool_reset: new Date().toISOString()
+          })
+        });
+
+        if (res.ok) {
+          alert("✓ All daily pools and task limits have been reset for all students!");
+          loadData();
+        } else {
+          throw new Error("Supabase error: " + res.status);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Failed to reset daily limits: " + err.message);
+      } finally {
+        const btn = document.getElementById('btn-reset-all-limits');
+        if (btn) {
+          btn.innerHTML = `<svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg> Reset ALL Daily Limits`;
+          btn.disabled = false;
+        }
       }
     }
 
