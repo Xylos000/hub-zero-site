@@ -1639,58 +1639,34 @@
   let carouselTimer = null;
   let gallerySlides = [];
 
-  // Default gallery images found in the /gallery repository directory
-  const defaultGalleryImages = [
-    'Student_Search.png',
-    'Realm-Search.png',
-    'Realm-Student-Profile.png',
-    'Realm-Yeargroup.png',
-    'Student_Profile.png',
-    'Year_Browse.png',
-    'Main_EP_UI.png',
-    'EP-Hub.png',
-    'Always_Correct.png',
-    'Send_Cheer.png',
-    'Send_Cheer2.png'
-  ];
+  const GITHUB_GALLERY_API = 'https://api.github.com/repos/Xylos000/hub-zero-site/contents/gallery';
 
   async function fetchGalleryFromRepo() {
-    // 1. If hosted on GitHub Pages, dynamically query GitHub contents API for /gallery
+    // Dynamically query GitHub API for all files in /gallery of the repository
     try {
-      const hostname = window.location.hostname;
-      if (hostname.includes('github.io')) {
-        const user = hostname.split('.')[0];
-        const pathParts = window.location.pathname.split('/').filter(Boolean);
-        const repo = pathParts.length > 0 ? pathParts[0] : '';
-        if (user && repo) {
-          const res = await fetch(`https://api.github.com/repos/${user}/${repo}/contents/gallery`);
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data)) {
-              const images = data
-                .filter(item => item.type === 'file' && /\.(png|jpe?g|webp|gif|svg|avif|bmp)$/i.test(item.name))
-                .map(item => item.name);
-              if (images.length > 0) return images;
-            }
-          }
-        }
-      }
-    } catch (e) {}
-
-    // 2. If web server provides a directory listing for /gallery/
-    try {
-      const res = await fetch('gallery/');
+      const res = await fetch(GITHUB_GALLERY_API, {
+        headers: { 'Accept': 'application/vnd.github.v3+json' }
+      });
       if (res.ok) {
-        const text = await res.text();
-        const matches = text.match(/href=["']([^"']+\.(png|jpe?g|webp|gif|svg|avif|bmp))["']/gi);
-        if (matches) {
-          const names = Array.from(new Set(matches.map(m => m.replace(/href=["']|\/?gallery\/?|["']/gi, '')))).filter(Boolean);
-          if (names.length > 0) return names;
+        const data = await res.json();
+        if (Array.isArray(data)) {
+          const images = data
+            .filter(item => item.type === 'file' && /\.(png|jpe?g|webp|gif|svg|avif|bmp)$/i.test(item.name))
+            .map(item => ({
+              name: item.name,
+              url: item.download_url || `https://raw.githubusercontent.com/Xylos000/hub-zero-site/main/gallery/${encodeURIComponent(item.name)}`
+            }));
+          if (images.length > 0) return images;
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.warn('[Gallery] GitHub API query error:', e);
+    }
 
-    return defaultGalleryImages;
+    // Local / relative fallback
+    return [
+      { name: 'Screenshot 2025-12-17 090146.png', url: 'https://raw.githubusercontent.com/Xylos000/hub-zero-site/main/gallery/Screenshot%202025-12-17%20090146.png' }
+    ];
   }
 
   function formatImageAlt(filename) {
@@ -1705,7 +1681,10 @@
     
     // Clear and dynamically render all slides from /gallery
     galleryTrack.innerHTML = '';
-    images.forEach((imgName, i) => {
+    images.forEach((item, i) => {
+      const imgName = typeof item === 'string' ? item : item.name;
+      const imgUrl = typeof item === 'string' ? `gallery/${item}` : item.url;
+
       const slide = document.createElement('div');
       slide.className = 'gallery-slide';
       slide.setAttribute('data-index', i);
@@ -1714,10 +1693,18 @@
       card.className = 'gallery-card';
       
       const img = document.createElement('img');
-      img.src = `gallery/${imgName}`;
+      img.src = imgUrl;
       img.alt = formatImageAlt(imgName);
       img.loading = 'lazy';
       
+      // Fallback in case raw link fails
+      img.onerror = () => {
+        if (!img.dataset.fallbackTried) {
+          img.dataset.fallbackTried = "true";
+          img.src = `gallery/${encodeURIComponent(imgName)}`;
+        }
+      };
+
       // Lightbox click handler for dynamically loaded images
       img.addEventListener('click', (e) => {
         e.stopPropagation();
