@@ -1668,7 +1668,7 @@
             const data = await res.json();
             if (Array.isArray(data)) {
               const images = data
-                .filter(item => item.type === 'file' && /\.(png|jpe?g|webp|gif|svg)$/i.test(item.name))
+                .filter(item => item.type === 'file' && /\.(png|jpe?g|webp|gif|svg|avif|bmp)$/i.test(item.name))
                 .map(item => item.name);
               if (images.length > 0) return images;
             }
@@ -1682,7 +1682,7 @@
       const res = await fetch('gallery/');
       if (res.ok) {
         const text = await res.text();
-        const matches = text.match(/href=["']([^"']+\.(png|jpe?g|webp|gif|svg))["']/gi);
+        const matches = text.match(/href=["']([^"']+\.(png|jpe?g|webp|gif|svg|avif|bmp))["']/gi);
         if (matches) {
           const names = Array.from(new Set(matches.map(m => m.replace(/href=["']|\/?gallery\/?|["']/gi, '')))).filter(Boolean);
           if (names.length > 0) return names;
@@ -1695,7 +1695,7 @@
 
   function formatImageAlt(filename) {
     return filename
-      .replace(/\.(png|jpe?g|webp|gif|svg)$/i, '')
+      .replace(/\.(png|jpe?g|webp|gif|svg|avif|bmp)$/i, '')
       .replace(/[-_]/g, ' ')
       .replace(/\b\w/g, c => c.toUpperCase());
   }
