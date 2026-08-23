@@ -835,6 +835,8 @@
       box-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
       transform: translateY(-1px);
     }
+    .btn-action-force { color: #38bdf8; }
+    .btn-action-force:hover { border-color: #38bdf8; background: rgba(56, 189, 248, 0.15); color: #7dd3fc; }
     .btn-action-edit:hover { border-color: #c084fc; color: #c084fc; }
     .btn-action-reset:hover { border-color: var(--accent); color: var(--accent); }
     .btn-action-softban:hover { border-color: var(--amber); color: var(--amber); }
@@ -1287,6 +1289,10 @@
           <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           Registered Students
         </li>
+        <li class="nav-item" data-tab="directives">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+          Directives
+        </li>
         <li class="nav-item" data-tab="features">
           <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
           Feature Controls
@@ -1414,6 +1420,36 @@
           </tr>
         </thead>
         <tbody id="users-list">
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ─── TAB: DIRECTIVES ─── -->
+    <div class="panel-container" id="tab-directives">
+      <div style="padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #080c14;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #cbd5e1;">Force Directives</span>
+          <span id="directives-count-badge" style="font-size: 11px; padding: 2px 8px; border-radius: 10px; background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 700;">0 Directives</span>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-action btn-accent" onclick="loadDirectives()" style="padding: 5px 12px; font-size: 11px;">
+            <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.4" fill="none"><path d="M23 4v6h-6"></path><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+            Refresh
+          </button>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 220px;">Target Student</th>
+            <th style="width: 140px;">Action / Amount</th>
+            <th>Reason / Message</th>
+            <th style="width: 120px;">Status</th>
+            <th style="width: 160px;">Created</th>
+            <th style="text-align: right; padding-right: 16px; width: 110px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="directives-list">
         </tbody>
       </table>
     </div>
@@ -1559,6 +1595,80 @@
       <div class="modal-actions">
         <button class="btn-modal btn-modal-cancel" id="btn-blacklist-cancel">Cancel</button>
         <button class="btn-modal btn-modal-red" id="btn-blacklist-save">Blacklist User</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── FORCE DIRECTIVE MODAL ─── -->
+  <div class="modal-overlay" id="force-directive-modal">
+    <div class="modal-card" style="max-width: 480px; width: 95%;">
+      <div class="modal-title" id="force-directive-title">Force Apply Directive</div>
+      <div style="font-size: 13.5px; color: #f8fafc; font-weight: 750; margin-bottom: 14px;" id="force-directive-target-name"></div>
+
+      <div class="form-group">
+        <label class="form-label">Directive Action</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button type="button" class="btn-picker active" id="btn-directive-type-give" onclick="selectDirectiveType('GIVE')" style="padding: 10px; font-size: 13px; font-weight: 750; border-radius: 6px; border: 1px solid var(--accent); background: rgba(56, 189, 248, 0.15); color: #7dd3fc; cursor: pointer;">
+            Give
+          </button>
+          <button type="button" class="btn-picker" id="btn-directive-type-set" onclick="selectDirectiveType('SET')" style="padding: 10px; font-size: 13px; font-weight: 750; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--muted); cursor: pointer;">
+            Set
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="force-directive-amount" id="force-directive-amount-label">Credits Amount to Give</label>
+        <input type="number" class="form-input" id="force-directive-amount" placeholder="e.g. 500" min="1" value="500">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="force-directive-reason">Reason / Message from Developer</label>
+        <textarea class="form-input" id="force-directive-reason" rows="4" placeholder="Enter reason / message for student..." style="margin-bottom: 20px; resize: vertical; line-height: 1.45; font-size: 13px;"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" onclick="closeForceDirectiveModal()">Cancel</button>
+        <button class="btn-modal btn-modal-save" id="btn-force-directive-submit" onclick="submitForceDirective()" style="background: #38bdf8; border-color: #38bdf8; color: #000; font-weight: 800;">
+          Force Apply Directive
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── EDIT DIRECTIVE MODAL ─── -->
+  <div class="modal-overlay" id="edit-directive-modal">
+    <div class="modal-card" style="max-width: 480px; width: 95%;">
+      <div class="modal-title">Edit Directive</div>
+      <div style="font-size: 13.5px; color: #f8fafc; font-weight: 750; margin-bottom: 14px;" id="edit-directive-target-name"></div>
+
+      <div class="form-group">
+        <label class="form-label">Directive Action</label>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <button type="button" class="btn-picker active" id="btn-edit-directive-type-give" onclick="selectEditDirectiveType('GIVE')" style="padding: 10px; font-size: 13px; font-weight: 750; border-radius: 6px; border: 1px solid var(--accent); background: rgba(56, 189, 248, 0.15); color: #7dd3fc; cursor: pointer;">
+            Give
+          </button>
+          <button type="button" class="btn-picker" id="btn-edit-directive-type-set" onclick="selectEditDirectiveType('SET')" style="padding: 10px; font-size: 13px; font-weight: 750; border-radius: 6px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: var(--muted); cursor: pointer;">
+            Set
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="edit-directive-amount" id="edit-directive-amount-label">Credits Amount to Give</label>
+        <input type="number" class="form-input" id="edit-directive-amount" placeholder="e.g. 500" min="1">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="edit-directive-reason">Reason / Message from Developer</label>
+        <textarea class="form-input" id="edit-directive-reason" rows="4" placeholder="Reason..." style="margin-bottom: 20px; resize: vertical; line-height: 1.45; font-size: 13px;"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal btn-modal-cancel" onclick="closeEditDirectiveModal()">Cancel</button>
+        <button class="btn-modal btn-modal-save" id="btn-edit-directive-save" onclick="saveEditedDirective()" style="background: #38bdf8; border-color: #38bdf8; color: #000; font-weight: 800;">
+          Save Changes
+        </button>
       </div>
     </div>
   </div>
@@ -1922,6 +2032,10 @@
         if (filterChips) filterChips.style.display = tab === 'users' ? 'flex' : 'none';
         if (manageBtn) manageBtn.style.display = tab === 'users' ? 'inline-flex' : 'none';
 
+        if (tab === 'directives') {
+          loadDirectives();
+        }
+
         searchInput.value = '';
         filterTable();
       });
@@ -2043,6 +2157,7 @@
 
         updateMetricsStrip();
         renderStudentsTable();
+        loadDirectives();
         fetchVisibleAvatars();
 
         // Blacklist Registry
@@ -2262,6 +2377,9 @@
             ${adminExecHtml}
             <td style="text-align: right;">
               <div class="actions-group">
+                <button class="btn-action-icon btn-action-force" onclick="handleOpenForceDirectiveModal(event, '${u.id}', '${(u.name || '').replace(/'/g, "\\'")}')" title="Force Apply Directive">
+                  <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.2" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </button>
                 <button class="btn-action-revoke" onclick="handleToggleAdmin(event, '${u.id}', '${(u.name || '').replace(/'/g, "\\'")}')" title="Revoke Admin Access">
                   <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   Remove Admin
@@ -2322,6 +2440,9 @@
           const actionsHtml = `
             <td>
               <div class="actions-group">
+                <button class="btn-action-icon btn-action-force" onclick="handleOpenForceDirectiveModal(event, '${u.id}', '${(u.name || '').replace(/'/g, "\\'")}')" title="Force Apply Directive">
+                  <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" stroke-width="2.2" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </button>
                 <button class="btn-action-icon btn-action-admin" onclick="handleToggleAdmin(event, '${u.id}', '${(u.name || '').replace(/'/g, "\\'")}')" title="Promote to Admin">
                   <svg viewBox="0 0 24 24"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14v2H5v-2z"></path></svg>
                 </button>
@@ -2686,6 +2807,318 @@
       } catch (err) {
         console.error(err);
         alert("Failed to reset daily limits: " + err.message);
+      }
+    }
+
+    let currentDirectiveType = 'GIVE';
+    let directiveTargetStudentId = '';
+    let directiveTargetStudentName = '';
+
+    function selectDirectiveType(type) {
+      currentDirectiveType = type;
+      const btnGive = document.getElementById('btn-directive-type-give');
+      const btnSet = document.getElementById('btn-directive-type-set');
+      const labelAmount = document.getElementById('force-directive-amount-label');
+      const inputAmount = document.getElementById('force-directive-amount');
+
+      if (type === 'GIVE') {
+        btnGive.style.borderColor = 'var(--accent)';
+        btnGive.style.background = 'rgba(56, 189, 248, 0.15)';
+        btnGive.style.color = '#7dd3fc';
+        btnSet.style.borderColor = 'var(--border)';
+        btnSet.style.background = 'rgba(255,255,255,0.03)';
+        btnSet.style.color = 'var(--muted)';
+        labelAmount.textContent = 'Credits Amount to Give';
+        if (!inputAmount.value || inputAmount.value === '1250') inputAmount.value = '500';
+      } else {
+        btnSet.style.borderColor = 'var(--accent)';
+        btnSet.style.background = 'rgba(56, 189, 248, 0.15)';
+        btnSet.style.color = '#7dd3fc';
+        btnGive.style.borderColor = 'var(--border)';
+        btnGive.style.background = 'rgba(255,255,255,0.03)';
+        btnGive.style.color = 'var(--muted)';
+        labelAmount.textContent = 'Exact Total Credits to Set';
+        if (!inputAmount.value || inputAmount.value === '500') inputAmount.value = '1250';
+      }
+    }
+
+    function handleOpenForceDirectiveModal(e, id, name) {
+      if (e) e.stopPropagation();
+      directiveTargetStudentId = id;
+      directiveTargetStudentName = name;
+      const targetNameEl = document.getElementById('force-directive-target-name');
+      if (targetNameEl) targetNameEl.textContent = name || 'Unknown';
+      selectDirectiveType('GIVE');
+      document.getElementById('force-directive-modal').classList.add('active');
+    }
+
+    function closeForceDirectiveModal() {
+      document.getElementById('force-directive-modal').classList.remove('active');
+    }
+
+    async function submitForceDirective() {
+      const submitBtn = document.getElementById('btn-force-directive-submit');
+      const amountVal = parseInt(document.getElementById('force-directive-amount').value, 10);
+      const reasonVal = document.getElementById('force-directive-reason').value.trim();
+
+      if (isNaN(amountVal) || amountVal < 0) {
+        alert("Please enter a valid credit amount.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Dispatching...";
+
+      try {
+        // Prevent duplicate pending directive for same student
+        const checkRes = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_directives?student_id=eq.${encodeURIComponent(directiveTargetStudentId)}&status=eq.pending`, {
+          headers: sbHeaders
+        });
+        if (checkRes.ok) {
+          const existingList = await checkRes.json();
+          if (Array.isArray(existingList) && existingList.length > 0) {
+            alert(`A pending directive is already active for ${directiveTargetStudentName}!\nPlease edit or delete the existing directive in the "Directives" tab.`);
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Force Apply Directive";
+            return;
+          }
+        }
+
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_directives', {
+          method: 'POST',
+          headers: {
+            ...sbHeaders,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            student_id: directiveTargetStudentId,
+            student_name: directiveTargetStudentName,
+            type: currentDirectiveType,
+            amount: amountVal,
+            reason: reasonVal,
+            status: 'pending',
+            created_at: new Date().toISOString()
+          })
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(errText || "Failed to dispatch directive.");
+        }
+
+        closeForceDirectiveModal();
+        alert(`✓ Force directive successfully dispatched for ${directiveTargetStudentName}!`);
+        loadDirectives();
+      } catch (err) {
+        console.error(err);
+        alert("Error dispatching force directive: " + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Force Apply Directive";
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    let allDirectives = [];
+    let editingDirectiveId = null;
+    let editingDirectiveType = 'GIVE';
+
+    async function loadDirectives() {
+      const tbody = document.getElementById('directives-list');
+      const badge = document.getElementById('directives-count-badge');
+      if (!tbody) return;
+
+      try {
+        const res = await fetch('https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_directives?order=created_at.desc', {
+          headers: sbHeaders
+        });
+        if (!res.ok) throw new Error("Supabase error: " + res.status);
+        allDirectives = await res.json();
+
+        tbody.innerHTML = '';
+        let pendingCount = 0;
+
+        if (!allDirectives || allDirectives.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--muted); padding: 32px;">
+                None
+              </td>
+            </tr>
+          `;
+          if (badge) badge.textContent = '0 Directives';
+          return;
+        }
+
+        allDirectives.forEach(d => {
+          if (d.status === 'pending') pendingCount++;
+          const tr = document.createElement('tr');
+
+          let actionBadge = '';
+          if (d.type === 'GIVE') {
+            actionBadge = `<span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; background: rgba(56, 189, 248, 0.15); color: #7dd3fc; border: 1px solid rgba(56, 189, 248, 0.3);">+ ${d.amount} cr</span>`;
+          } else {
+            actionBadge = `<span style="display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; border-radius: 4px; font-weight: 800; font-size: 11px; background: rgba(192, 132, 252, 0.15); color: #c084fc; border: 1px solid rgba(192, 132, 252, 0.3);">= ${d.amount} cr</span>`;
+          }
+
+          let statusBadge = '';
+          if (d.status === 'completed') {
+            statusBadge = `<span class="badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 4px; font-weight: 700; font-size: 11px; background: rgba(52, 211, 153, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3);">✓ Done</span>`;
+          } else if (d.status === 'pending') {
+            statusBadge = `<span class="badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 4px; font-weight: 700; font-size: 11px; background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3);">⏳ Pending</span>`;
+          } else {
+            statusBadge = `<span class="badge" style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 4px; font-weight: 700; font-size: 11px; background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3);">${escapeHtml(d.status || 'unknown')}</span>`;
+          }
+
+          const createdDate = d.created_at ? new Date(d.created_at).toLocaleString() : '-';
+
+          tr.innerHTML = `
+            <td>
+              <div style="font-weight: 750; color: #ffffff;">${escapeHtml(d.student_name || 'Unknown')}</div>
+              <div style="font-size: 11px; color: var(--muted); font-family: var(--font-mono);">${escapeHtml(d.student_id)}</div>
+            </td>
+            <td>${actionBadge}</td>
+            <td>
+              <div style="font-size: 12.5px; color: #cbd5e1; max-width: 420px; line-height: 1.4; word-break: break-word; white-space: pre-wrap;">${escapeHtml(d.reason || '-')}</div>
+            </td>
+            <td>${statusBadge}</td>
+            <td style="font-size: 11.5px; color: var(--muted);">${createdDate}</td>
+            <td style="text-align: right;">
+              <div class="actions-group" style="justify-content: flex-end;">
+                <button class="btn-action-icon btn-action-edit" onclick="openEditDirectiveModal('${d.id}')" title="Edit Directive">
+                  <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                </button>
+                <button class="btn-action-icon btn-action-blacklist" onclick="deleteDirective('${d.id}')" title="Delete Directive">
+                  <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        if (badge) {
+          badge.textContent = `${pendingCount} Pending · ${allDirectives.length} Total`;
+        }
+      } catch (err) {
+        console.error("[Directives Load Error]", err);
+      }
+    }
+
+    function selectEditDirectiveType(type) {
+      editingDirectiveType = type;
+      const btnGive = document.getElementById('btn-edit-directive-type-give');
+      const btnSet = document.getElementById('btn-edit-directive-type-set');
+      const labelAmount = document.getElementById('edit-directive-amount-label');
+      const inputAmount = document.getElementById('edit-directive-amount');
+
+      if (type === 'GIVE') {
+        btnGive.style.borderColor = 'var(--accent)';
+        btnGive.style.background = 'rgba(56, 189, 248, 0.15)';
+        btnGive.style.color = '#7dd3fc';
+        btnSet.style.borderColor = 'var(--border)';
+        btnSet.style.background = 'rgba(255,255,255,0.03)';
+        btnSet.style.color = 'var(--muted)';
+        labelAmount.textContent = 'Credits Amount to Give';
+      } else {
+        btnSet.style.borderColor = 'var(--accent)';
+        btnSet.style.background = 'rgba(56, 189, 248, 0.15)';
+        btnSet.style.color = '#7dd3fc';
+        btnGive.style.borderColor = 'var(--border)';
+        btnGive.style.background = 'rgba(255,255,255,0.03)';
+        btnGive.style.color = 'var(--muted)';
+        labelAmount.textContent = 'Exact Total Credits to Set';
+      }
+    }
+
+    function openEditDirectiveModal(directiveId) {
+      const directive = allDirectives.find(d => d.id === directiveId);
+      if (!directive) return;
+
+      editingDirectiveId = directiveId;
+      document.getElementById('edit-directive-target-name').textContent = (directive.student_name || 'Unknown') + ' (' + directive.student_id + ')';
+      selectEditDirectiveType((directive.type || 'GIVE').toUpperCase());
+      document.getElementById('edit-directive-amount').value = directive.amount || 0;
+      document.getElementById('edit-directive-reason').value = directive.reason || '';
+
+      document.getElementById('edit-directive-modal').classList.add('active');
+    }
+
+    function closeEditDirectiveModal() {
+      document.getElementById('edit-directive-modal').classList.remove('active');
+      editingDirectiveId = null;
+    }
+
+    async function saveEditedDirective() {
+      if (!editingDirectiveId) return;
+      const saveBtn = document.getElementById('btn-edit-directive-save');
+      const amountVal = parseInt(document.getElementById('edit-directive-amount').value, 10);
+      const reasonVal = document.getElementById('edit-directive-reason').value.trim();
+
+      if (isNaN(amountVal) || amountVal < 0) {
+        alert("Please enter a valid credit amount.");
+        return;
+      }
+
+      saveBtn.disabled = true;
+      saveBtn.textContent = "Saving...";
+
+      try {
+        const res = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_directives?id=eq.${encodeURIComponent(editingDirectiveId)}`, {
+          method: 'PATCH',
+          headers: {
+            ...sbHeaders,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify({
+            type: editingDirectiveType,
+            amount: amountVal,
+            reason: reasonVal
+          })
+        });
+
+        if (!res.ok) {
+          const errText = await res.text();
+          throw new Error(errText || "Failed to update directive.");
+        }
+
+        closeEditDirectiveModal();
+        loadDirectives();
+      } catch (err) {
+        console.error(err);
+        alert("Failed to save directive: " + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = "Save Changes";
+      }
+    }
+
+    async function deleteDirective(directiveId) {
+      if (!confirm("Are you sure you want to delete this directive?")) return;
+      try {
+        const res = await fetch(`https://inolfvjpiktmrhqyvnsh.supabase.co/rest/v1/student_directives?id=eq.${encodeURIComponent(directiveId)}`, {
+          method: 'DELETE',
+          headers: sbHeaders
+        });
+        if (res.ok) {
+          loadDirectives();
+        } else {
+          throw new Error("Failed to delete directive: " + res.status);
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error deleting directive: " + err.message);
       }
     }
 
