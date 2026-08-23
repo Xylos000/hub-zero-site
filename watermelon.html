@@ -619,21 +619,22 @@
     .exec-chip {
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       padding: 3px 8px;
       border-radius: 5px;
       font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 750;
+      letter-spacing: 0.02em;
     }
     .exec-chip-ep {
       background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      border: 1px solid rgba(56, 189, 248, 0.22);
       color: #38bdf8;
     }
     .exec-chip-ss {
       background: rgba(192, 132, 252, 0.08);
-      border: 1px solid rgba(192, 132, 252, 0.25);
+      border: 1px solid rgba(192, 132, 252, 0.22);
       color: #c084fc;
     }
 
@@ -644,28 +645,46 @@
       gap: 4px;
     }
 
-    .quota-item {
+    .quota-item-row {
       display: flex;
       align-items: center;
       gap: 8px;
+    }
+
+    .quota-number {
       font-family: var(--font-mono);
-      font-size: 11.5px;
-      color: #cbd5e1;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
     }
 
     .quota-bar-track {
-      width: 70px;
-      height: 5px;
-      background: #11182c;
-      border-radius: 3px;
+      width: 65px;
+      height: 4px;
+      background: #111827;
+      border-radius: 2px;
       overflow: hidden;
-      border: 1px solid var(--border);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
     }
 
     .quota-bar-fill {
       height: 100%;
-      border-radius: 3px;
-      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.3s ease, background-color 0.3s ease;
+    }
+
+    .quota-tasks-sub {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .quota-tasks-sub strong {
+      color: #e2e8f0;
     }
 
     /* ─── COOLDOWN STATUS CELL ─── */
@@ -728,56 +747,35 @@
     .btn-action-admin { color: #eab308; }
     .btn-action-admin:hover, .btn-action-admin.active { border-color: #facc15; background: rgba(234, 179, 8, 0.15); color: #facc15; }
 
-    /* ─── COOL GOLDEN ADMIN ROW THEME ─── */
-    @keyframes adminRowShimmer {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes adminGlowPulse {
-      0%, 100% {
-        box-shadow: inset 0 0 20px rgba(234, 179, 8, 0.08), inset 3px 0 0 #facc15;
-      }
-      50% {
-        box-shadow: inset 0 0 35px rgba(234, 179, 8, 0.2), inset 3px 0 0 #fef08a, 0 0 16px rgba(234, 179, 8, 0.15);
-      }
-    }
-
-    @keyframes bannerShimmer {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes avatarPulse {
-      0%, 100% {
-        box-shadow: 0 0 10px rgba(234, 179, 8, 0.3);
-        border-color: rgba(250, 204, 21, 0.65);
-      }
-      50% {
-        box-shadow: 0 0 22px rgba(234, 179, 8, 0.65);
-        border-color: #fef08a;
-      }
-    }
-
+    /* ─── ELITE ADMIN ROW ─── */
     .admin-row {
-      background: rgba(234, 179, 8, 0.035) !important;
-      border-left: 3px solid #eab308 !important;
+      position: relative;
     }
 
     .admin-row td {
-      border-bottom: 1px solid rgba(234, 179, 8, 0.12) !important;
+      background: rgba(255, 255, 255, 0.02) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.07) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07) !important;
+      transition: background 0.15s ease;
+    }
+
+    .admin-row td:first-child {
+      border-left: 2.5px solid #eab308 !important;
+    }
+
+    .admin-row td:last-child {
+      border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
     }
 
     .admin-row:hover td {
-      background: rgba(234, 179, 8, 0.06) !important;
+      background: rgba(255, 255, 255, 0.04) !important;
     }
 
     .admin-row .student-avatar {
       background: #0f1523;
       border: 1.5px solid #ca8a04;
-      color: #facc15;
+      color: #fde047;
+      box-shadow: 0 0 10px rgba(234, 179, 8, 0.2);
     }
 
     .admin-row .student-name {
@@ -785,39 +783,57 @@
       font-weight: 750;
     }
 
-    .admin-row .badge-admin {
-      background: rgba(234, 179, 8, 0.14);
-      color: #facc15;
-      border: 1px solid rgba(234, 179, 8, 0.35);
-      font-size: 10px;
+    .admin-inf-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 16px;
       font-weight: 800;
-      padding: 1px 6px;
-      border-radius: 4px;
+      color: #facc15;
+      line-height: 1;
+      text-shadow: 0 0 10px rgba(250, 204, 21, 0.35);
+    }
+
+    .admin-runs-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 9px;
+      border-radius: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 750;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #e2e8f0;
     }
 
     .btn-action-revoke {
       background: rgba(244, 63, 94, 0.1) !important;
-      border: 1px solid rgba(244, 63, 94, 0.3) !important;
-      color: #fda4af !important;
+      border: 1px solid rgba(244, 63, 94, 0.35) !important;
+      color: #fca5a5 !important;
       font-family: var(--font-main);
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 750;
       text-transform: uppercase;
-      padding: 5px 11px;
+      letter-spacing: 0.03em;
+      padding: 6px 12px;
       border-radius: 5px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      gap: 6px;
       transition: all 0.15s ease;
       white-space: nowrap;
     }
 
     .btn-action-revoke:hover {
-      background: rgba(244, 63, 94, 0.22) !important;
+      background: rgba(244, 63, 94, 0.25) !important;
       border-color: #f43f5e !important;
       color: #ffffff !important;
-      box-shadow: 0 0 10px rgba(244, 63, 94, 0.3);
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.35);
+      transform: translateY(-1px);
     }
     .btn-action-edit:hover { border-color: #c084fc; color: #c084fc; }
     .btn-action-reset:hover { border-color: var(--accent); color: var(--accent); }
@@ -853,17 +869,15 @@
     }
 
     .badge-admin {
-      background: linear-gradient(135deg, rgba(234, 179, 8, 0.25), rgba(202, 138, 4, 0.12));
+      background: rgba(234, 179, 8, 0.12);
       color: #facc15;
-      border: 1px solid rgba(234, 179, 8, 0.45);
-      box-shadow: 0 0 10px rgba(234, 179, 8, 0.15);
-      font-size: 10px;
+      border: 1px solid rgba(234, 179, 8, 0.3);
+      font-size: 9.5px;
       font-weight: 800;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       display: inline-flex;
       align-items: center;
-      gap: 3px;
       padding: 1px 6px;
       border-radius: 4px;
     }
@@ -2077,6 +2091,13 @@
       }
     }
 
+    function getPoolColor(val) {
+      if (val === 0) return '#f87171'; // red
+      if (val < 150) return '#fb923c'; // orange (< 150)
+      if (val < 300) return '#facc15'; // yellow (< 300)
+      return '#34d399'; // green (>= 300)
+    }
+
     function renderStudentsTable() {
       const usersList = document.getElementById('users-list');
       const thead = document.getElementById('users-table-header');
@@ -2092,29 +2113,29 @@
         if (isCooldownFilter) {
           thead.innerHTML = `
             <tr>
-              <th style="width: 360px;">Student Profile</th>
-              <th style="width: 220px;">Script Executions</th>
-              <th style="width: 240px;">Set Credits Status</th>
-              <th style="text-align: right; width: 140px;">Actions</th>
+              <th style="width: 340px;">Student Profile</th>
+              <th style="width: 220px;">Set Credits Status</th>
+              <th style="width: 200px;">Script Executions</th>
+              <th style="text-align: right; width: 150px;">Actions</th>
             </tr>
           `;
         } else if (isLowCreditsFilter) {
           thead.innerHTML = `
             <tr>
-              <th style="width: 360px;">Student Profile</th>
-              <th style="width: 220px;">Script Executions</th>
-              <th style="width: 240px;">Daily Quotas Balance</th>
-              <th style="text-align: right; width: 140px;">Actions</th>
+              <th style="width: 340px;">Student Profile</th>
+              <th style="width: 220px;">Daily Quotas Balance</th>
+              <th style="width: 200px;">Script Executions</th>
+              <th style="text-align: right; width: 150px;">Actions</th>
             </tr>
           `;
         } else {
           thead.innerHTML = `
             <tr>
-              <th style="width: 320px;">Student Profile</th>
-              <th style="width: 200px;">Script Executions</th>
-              <th style="width: 220px;">Daily Quotas Balance</th>
+              <th style="width: 300px;">Student Profile</th>
+              <th style="width: 210px;">Daily Quotas Balance</th>
               <th style="width: 190px;">Set Credits Status</th>
-              <th style="text-align: right; width: 140px;">Actions</th>
+              <th style="width: 190px;">Script Executions</th>
+              <th style="text-align: right; width: 150px;">Actions</th>
             </tr>
           `;
         }
@@ -2138,6 +2159,15 @@
           return pool < 100;
         });
       }
+
+      // Always pin admins to the top of the registered students list
+      displayedUsers = [...displayedUsers].sort((a, b) => {
+        const aAdmin = adminUserIds.has(a.id);
+        const bAdmin = adminUserIds.has(b.id);
+        if (aAdmin && !bAdmin) return -1;
+        if (!aAdmin && bAdmin) return 1;
+        return 0;
+      });
 
       const colCount = isCooldownFilter || isLowCreditsFilter ? 4 : 5;
       if (displayedUsers.length === 0) {
@@ -2187,7 +2217,7 @@
                 <span class="student-name">${u.name || 'Unknown'}</span>
                 <div class="student-subline">
                   <span class="id-tag">ID: ${u.id}</span>
-                  ${isAdmin ? `<span class="badge badge-admin">👑 Admin</span>` : ''}
+                  ${isAdmin ? `<span class="badge badge-admin">ADMIN</span>` : ''}
                 </div>
               </div>
             </div>
@@ -2195,33 +2225,25 @@
         `;
 
         if (isAdmin) {
-          const adminExecHtml = `
-            <td>
-              <div class="exec-cell">
-                <span class="exec-chip" style="background: rgba(234, 179, 8, 0.08); border: 1px solid rgba(234, 179, 8, 0.25); color: #facc15;">
-                  EP: ${epRuns} · SS: ${ssRuns}
-                </span>
-              </div>
-            </td>
-          `;
-
           const adminQuotasHtml = `
             <td>
-              <div class="quota-cell">
-                <div class="quota-item" style="color: #facc15; font-size: 11.5px;">
-                  <strong>Unlimited Quota</strong>
-                </div>
-              </div>
+              <span class="admin-inf-badge">∞</span>
             </td>
           `;
 
           const adminCooldownHtml = `
             <td>
-              <div>
-                <span class="cooldown-badge cooldown-ready" style="border-color: rgba(234, 179, 8, 0.35); background: rgba(234, 179, 8, 0.1); color: #facc15;">
-                  No Cooldown
-                </span>
-              </div>
+              <span class="admin-inf-badge">∞</span>
+            </td>
+          `;
+
+          const totalRuns = epRuns + ssRuns;
+          const adminExecHtml = `
+            <td>
+              <span class="admin-runs-badge">
+                <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                ${totalRuns} runs
+              </span>
             </td>
           `;
 
@@ -2236,11 +2258,11 @@
 
           row.innerHTML = `
             ${profileCellHtml}
-            ${adminExecHtml}
             ${adminMidHtml}
+            ${adminExecHtml}
             <td style="text-align: right;">
               <div class="actions-group">
-                <button class="btn-action-revoke" onclick="handleToggleAdmin(event, '${u.id}', '${(u.name || '').replace(/'/g, "\\'")}')" title="Revoke Admin Role">
+                <button class="btn-action-revoke" onclick="handleToggleAdmin(event, '${u.id}', '${(u.name || '').replace(/'/g, "\\'")}')" title="Revoke Admin Access">
                   <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                   Remove Admin
                 </button>
@@ -2248,15 +2270,16 @@
             </td>
           `;
         } else {
+          const poolColor = getPoolColor(poolVal);
           const quotasHtml = `
             <td>
               <div class="quota-cell">
-                <div class="quota-item" title="Cheers Daily Pool Balance">
-                  <strong style="color: #ffffff;">${poolVal}</strong><span style="color: var(--muted); font-size: 10px;">/ 500 cr</span>
-                  <div class="quota-bar-track"><div class="quota-bar-fill" style="width: ${poolPct}%;"></div></div>
+                <div class="quota-item-row" title="Cheers Daily Pool Balance">
+                  <span class="quota-number" style="color: ${poolColor};">${poolVal} cr</span>
+                  <div class="quota-bar-track"><div class="quota-bar-fill" style="width: ${poolPct}%; background: ${poolColor};"></div></div>
                 </div>
-                <div class="quota-item" style="font-size: 11px;" title="Task Completions Available">
-                  <strong style="color: #cbd5e1;">${remainingTasks} / 3 left</strong>
+                <div class="quota-tasks-sub" title="Task Completions Available">
+                  <strong>${remainingTasks}</strong> <span>/ 3 tasks left</span>
                 </div>
               </div>
             </td>
@@ -2272,6 +2295,21 @@
             </td>
           `;
 
+          const execCellHtml = `
+            <td>
+              <div class="exec-cell">
+                <span class="exec-chip exec-chip-ep" title="EP Hub Runs">
+                  <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                  EP ${epRuns}
+                </span>
+                <span class="exec-chip exec-chip-ss" title="Student Searcher Runs">
+                  <svg viewBox="0 0 24 24" width="11" height="11" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                  SS ${ssRuns}
+                </span>
+              </div>
+            </td>
+          `;
+
           let midColumnsHtml = '';
           if (isCooldownFilter) {
             midColumnsHtml = cooldownHtml;
@@ -2280,21 +2318,6 @@
           } else {
             midColumnsHtml = quotasHtml + cooldownHtml;
           }
-
-          const execCellHtml = `
-            <td>
-              <div class="exec-cell">
-                <span class="exec-chip exec-chip-ep" title="EP Hub Runs">
-                  <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                  EP: ${epRuns}
-                </span>
-                <span class="exec-chip exec-chip-ss" title="Student Searcher Runs">
-                  <svg viewBox="0 0 24 24" width="12" height="12" stroke="currentColor" stroke-width="2.5" fill="none"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                  SS: ${ssRuns}
-                </span>
-              </div>
-            </td>
-          `;
 
           const actionsHtml = `
             <td>
@@ -2320,8 +2343,8 @@
 
           row.innerHTML = `
             ${profileCellHtml}
-            ${execCellHtml}
             ${midColumnsHtml}
+            ${execCellHtml}
             ${actionsHtml}
           `;
         }
