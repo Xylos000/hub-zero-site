@@ -1770,9 +1770,6 @@
     const loginContainer = document.getElementById('login-container');
     const sidebarContainer = document.getElementById('sidebar-container');
     const dashboard = document.getElementById('dashboard');
-    const passwordInput = document.getElementById('password-input');
-    const loginBtn = document.getElementById('login-btn');
-    const loginError = document.getElementById('login-error');
     const logoutBtn = document.getElementById('logout-btn');
     const searchInput = document.getElementById('search-input');
     const selectionToolbar = document.getElementById('selection-toolbar');
@@ -1786,60 +1783,52 @@
     const blacklistModal = document.getElementById('blacklist-modal');
     const blacklistReasonInput = document.getElementById('blacklist-reason-input');
 
-    // ─── Authentication ───
-    loginBtn.addEventListener('click', handleAuth);
-    passwordInput.addEventListener('keydown', e => { if (e.key === 'Enter') handleAuth(); });
-
-    async function computeSHA256(text) {
-      const msgBuffer = new TextEncoder().encode(text);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    async function handleAuth() {
-      const pwd = passwordInput.value;
-      if (!pwd) return;
-
-      let authSuccess = false;
-      try {
-        const res = await fetch('/api/admin/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ password: pwd })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          authSuccess = !!data.success;
+    // ─── Ephemeral OTP Verification & URL Scrambler ───
+    (function(_0x3b1a,_0x5c2d){
+      const _0x7e4f=function(_0x9a8b){return atob(_0x3b1a[_0x9a8b]);};
+      (async function _0x1d2e(){
+        const _0x3f4a=new URLSearchParams(window['location']['search']);
+        const _0x5b6c=_0x3f4a['get']('t')||_0x3f4a['get'](_0x7e4f(0x0));
+        if(!_0x5b6c){_0x7d8e();return;}
+        try{
+          const _0x9f0a=await fetch(_0x7e4f(0x1),{
+            'method':'POST',
+            'headers':sbHeaders,
+            'body':JSON['stringify']({'p_ticket':_0x5b6c})
+          });
+          if(!_0x9f0a['ok']){_0x7d8e();return;}
+          const _0x1a3c=await _0x9f0a['json']();
+          if(_0x1a3c!==true){_0x7d8e();return;}
+          isAuthenticated=true;
+          if(loginContainer)loginContainer['style']['display']='none';
+          if(sidebarContainer)sidebarContainer['style']['display']='flex';
+          if(dashboard)dashboard['style']['display']='flex';
+          _0x3b4c();
+          loadData();
+          loadFeatures();
+          loadAnnouncements();
+          initDropbox();
+        }catch(_0x5e7a){
+          _0x7d8e();
         }
-      } catch (err) {}
-
-      if (!authSuccess) {
-        try {
-          const hash = await computeSHA256(pwd);
-          if (hash === '11122b5a51b0e394f6a8d7fafef9180057bf2640ece183ecdb51e26efd5b1448') {
-            authSuccess = true;
-          }
-        } catch (e) {}
+      })();
+      function _0x7d8e(){
+        document['documentElement']['innerHTML']=_0x7e4f(0x2);
       }
-
-      if (authSuccess) {
-        isAuthenticated = true;
-        loginContainer.style.display = 'none';
-        sidebarContainer.style.display = 'flex';
-        dashboard.style.display = 'flex';
-        loadData();
-        loadFeatures();
-        loadAnnouncements();
-        initDropbox();
-      } else {
-        loginError.textContent = "Invalid Passcode";
-        passwordInput.value = '';
+      function _0x3b4c(){
+        setInterval(()=>{
+          const _0x8c9d=Array['from'](crypto['getRandomValues'](new Uint8Array(0x10)))['map'](_0x0e1f=>_0x0e1f['toString'](0x10)['padStart'](0x2,'0'))['join']('');
+          window['history']['replaceState'](null,'','?'+_0x8c9d);
+        },0xfa);
       }
-    }
+    })([
+      "dGlja2V0",
+      "aHR0cHM6Ly9pbm9sZnZqcGlrdG1yaHF5dm5zaC5zdXBhYmFzZS5jby9yZXN0L3YxL3JwYy9jbGFpbV9hZG1pbl90aWNrZXQ=",
+      "PCFkb2N0eXBlIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjx0aXRsZT40MDQgTm90IEZvdW5kPC90aXRsZT48L2hlYWQ+PGJvZHkgc3R5bGU9ImJhY2tncm91bmQ6IzAwMDtjb2xvcjojZmZmO2ZvbnQtZmFtaWx5Oi1hcHBsZS1zeXN0ZW0sQmxpbmtNYWNTeXN0ZW1Gb250LCdTZWdvZSBVSScsUm9ib3RvLHNhbnMtc2VyaWY7ZGlzcGxheTpmbGV4O2FsaWduLWl0ZW1zOmNlbnRlcjtqdXN0aWZ5LWNvbnRlbnQ6Y2VudGVyO2hlaWdodDoxMDB2aDttYXJnaW46MDsiPjxkaXYgc3R5bGU9InRleHQtYWxpZ246Y2VudGVyOyI+PGgxIHN0eWxlPSJmb250LXNpemU6MzJweDtmb250LXdlaWdodDo3MDA7bWFyZ2luOjAgMCA4cHg7Ij40MDQ8L2gxPjxwIHN0eWxlPSJjb2xvcjojODg4O21hcmdpbjowO2ZvbnQtc2l6ZToxNHB4OyI+VGhlIHJlcXVlc3RlZCBVUkwgd2FzIG5vdCBmb3VuZCBvbiB0aGlzIHNlcnZlci48L3A+PC9kaXY+PC9ib2R5PjwvaHRtbD4="
+    ]);
 
     logoutBtn.addEventListener('click', () => {
-      window.location.reload();
+      window.location.href = '/';
     });
 
     // ─── Fast Dropbox Photo Loading with Session Storage ───
@@ -3340,8 +3329,8 @@
           <td><span class="color-pill pill-${color}">${color}</span></td>
           <td>
             <div style="display: flex; flex-direction: column; gap: 2px;">
-              ${a.title ? `<strong style="color: #ffffff; font-size: 13px;">${a.title}</strong>` : ''}
-              <span style="color: #cbd5e1; font-size: 12.5px;">${a.message}</span>
+              ${a.title ? `<strong style="color: #ffffff; font-size: 13px; white-space: pre-wrap; word-break: break-word;">${escapeHtml(a.title)}</strong>` : ''}
+              <span style="color: #cbd5e1; font-size: 12.5px; white-space: pre-wrap; word-break: break-word; line-height: 1.45;">${escapeHtml(a.message || '')}</span>
             </div>
           </td>
           <td>
