@@ -119,7 +119,7 @@
     .btn-header {
       background: rgba(255, 255, 255, 0.05); border: 1px solid var(--card-border); color: var(--text-muted);
       border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+      display: flex; align-items: center; gap: 6px; transition: all 0.2s; text-decoration: none;
     }
     .btn-header:hover { background: rgba(255, 255, 255, 0.09); color: #fff; border-color: var(--card-hover); }
 
@@ -256,36 +256,30 @@
     .btn-send:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 4px 20px rgba(56, 189, 248, 0.5); }
     .btn-send:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
 
+    /* ─── ACCESS DENIED MODAL ─── */
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px);
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.88); backdrop-filter: blur(14px);
       display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000;
       opacity: 0; pointer-events: none; transition: opacity 0.3s;
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
     .auth-card {
-      width: 100%; max-width: 400px; background: #0d121f; border: 1px solid rgba(56, 189, 248, 0.3);
-      border-radius: 16px; padding: 30px 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(56, 189, 248, 0.15);
+      width: 100%; max-width: 420px; background: #0d121f; border: 1px solid rgba(239, 68, 68, 0.4);
+      border-radius: 18px; padding: 32px 24px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(239, 68, 68, 0.15);
       text-align: center;
     }
     .auth-icon {
-      width: 52px; height: 52px; border-radius: 14px; background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent-cyan); display: flex; align-items: center;
+      width: 56px; height: 56px; border-radius: 16px; background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.35); color: #f87171; display: flex; align-items: center;
       justify-content: center; margin: 0 auto 16px;
     }
-    .auth-title { font-size: 19px; font-weight: 800; color: #fff; margin-bottom: 6px; }
-    .auth-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 22px; line-height: 1.5; }
-    .auth-input {
-      width: 100%; height: 46px; background: #070a12; border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 10px; padding: 0 16px; color: #fff; font-size: 15px; font-weight: 600;
-      text-align: center; letter-spacing: 0.05em; outline: none; margin-bottom: 14px;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .auth-input:focus { border-color: var(--accent-cyan); box-shadow: 0 0 14px rgba(56, 189, 248, 0.25); }
-    .auth-error { font-size: 12px; color: #f87171; font-weight: 600; margin-bottom: 14px; display: none; }
+    .auth-title { font-size: 20px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+    .auth-desc { font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.5; }
     .btn-auth-submit {
-      width: 100%; height: 44px; background: linear-gradient(135deg, #0284c7, #2563eb);
-      border: 1px solid rgba(56, 189, 248, 0.4); color: #fff; border-radius: 10px;
+      width: 100%; height: 46px; background: linear-gradient(135deg, #0284c7, #2563eb);
+      border: 1px solid rgba(56, 189, 248, 0.4); color: #fff; border-radius: 12px;
       font-size: 14px; font-weight: 700; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; text-decoration: none;
     }
     .btn-auth-submit:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4); }
   </style>
@@ -332,6 +326,14 @@
           </svg>
           <span>Purge</span>
         </button>
+
+        <a href="/" class="btn-header" title="Return to Dashboard">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+            <polyline points="9 22 9 12 15 12 15 22"></polyline>
+          </svg>
+          <span>Home</span>
+        </a>
       </div>
     </header>
 
@@ -386,26 +388,27 @@
     </footer>
   </div>
 
+  <!-- Locked Modal (If user is not logged in on Hub Zero) -->
   <div class="modal-overlay" id="auth-modal">
     <div class="auth-card">
       <div class="auth-icon">
-        <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-          <circle cx="12" cy="7" r="4"></circle>
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
       </div>
-      <h2 class="auth-title">Join Hub Zero Chat</h2>
-      <p class="auth-desc">Enter your 6-digit Student ID to synchronize your profile and join the conversation.</p>
-      <input type="text" class="auth-input" id="auth-student-id" placeholder="e.g. 089091" maxlength="10">
-      <div class="auth-error" id="auth-error-msg">Student ID not found in database.</div>
-      <button class="btn-auth-submit" id="btn-auth-submit">Join Chat</button>
+      <h2 class="auth-title">Access Restricted</h2>
+      <p class="auth-desc">Hub Zero Chat is exclusively available to signed-in and verified Hub Zero members. Please log in on the main site first.</p>
+      <a href="/" class="btn-auth-submit">Return to Hub Zero Login</a>
     </div>
   </div>
 
   <script>
     const SUPABASE_URL = "https://inolfvjpiktmrhqyvnsh.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc";
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    
+    // Use sbClient to avoid any global naming conflict with window.supabase
+    const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
     const DROPBOX_CONFIG = {
       refreshToken: 'TswY5VPKPZIAAAAAAAAAAexX6b7MNjI2vs73jevAw8ISqzSDtfz2Xand1JTjF4jP',
@@ -434,9 +437,6 @@
     const chkAdminTag = document.getElementById('chk-admin-tag');
     const btnAdminPurge = document.getElementById('btn-admin-purge');
     const authModal = document.getElementById('auth-modal');
-    const authStudentIdInput = document.getElementById('auth-student-id');
-    const authErrorMsg = document.getElementById('auth-error-msg');
-    const btnAuthSubmit = document.getElementById('btn-auth-submit');
 
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     function playBeep(isSend = true) {
@@ -603,28 +603,52 @@
     }
 
     async function resolveUserIdentity() {
-      let savedId = localStorage.getItem('ep_hub_verified_id') || sessionStorage.getItem('ep_hub_verified_id') || localStorage.getItem('hz_user_id') || '';
+      let savedId = "";
+      let savedName = "";
+
+      const signedInRaw = localStorage.getItem('Signed_in');
+      if (signedInRaw) {
+        try {
+          const parsed = JSON.parse(signedInRaw);
+          if (parsed && parsed.id) {
+            savedId = parsed.id;
+            savedName = parsed.name || "";
+          }
+        } catch (e) {}
+      }
+
+      if (!savedId) {
+        savedId = localStorage.getItem('ep_hub_verified_id') || sessionStorage.getItem('ep_hub_verified_id') || localStorage.getItem('hz_user_id') || "";
+        savedName = localStorage.getItem('hz_user_name') || "";
+      }
+
       if (!savedId) {
         authModal.classList.add('active');
-        authStudentIdInput.focus();
+        chatInput.disabled = true;
+        btnSend.disabled = true;
         return;
       }
-      await authenticateUserWithId(savedId);
+
+      await authenticateUserWithId(savedId, savedName);
     }
 
-    async function authenticateUserWithId(id) {
+    async function authenticateUserWithId(id, fallbackName = "") {
       id = id.trim();
       try {
-        const { data: studentData } = await supabase
-          .from('verified_students')
-          .select('id, name')
-          .eq('id', id)
-          .single();
+        let name = fallbackName;
+        if (!name && sbClient) {
+          const { data: studentData } = await sbClient
+            .from('verified_students')
+            .select('id, name')
+            .eq('id', id)
+            .single();
+          if (studentData) name = studentData.name;
+        }
+        if (!name) name = `Student ${id}`;
 
-        let name = studentData ? studentData.name : `Student ${id}`;
         let isAdmin = id === '089091';
-        if (!isAdmin) {
-          const { data: adminData } = await supabase
+        if (!isAdmin && sbClient) {
+          const { data: adminData } = await sbClient
             .from('admin_students')
             .select('id')
             .eq('id', id)
@@ -633,9 +657,6 @@
         }
 
         currentUser = { id, name, isAdmin };
-        localStorage.setItem('ep_hub_verified_id', id);
-        localStorage.setItem('hz_user_id', id);
-        localStorage.setItem('hz_user_name', name);
 
         document.getElementById('header-user-name').textContent = name;
         document.getElementById('header-user-id').textContent = `ID: ${id}`;
@@ -657,29 +678,13 @@
         resolveVisibleAvatars();
       } catch (err) {
         console.error('Auth error:', err);
-        authErrorMsg.style.display = 'block';
       }
     }
 
-    btnAuthSubmit.onclick = async () => {
-      const enteredId = authStudentIdInput.value.trim();
-      if (!enteredId) {
-        authErrorMsg.textContent = 'Please enter your Student ID.';
-        authErrorMsg.style.display = 'block';
-        return;
-      }
-      btnAuthSubmit.textContent = 'Verifying...';
-      await authenticateUserWithId(enteredId);
-      btnAuthSubmit.textContent = 'Join Chat';
-    };
-
-    authStudentIdInput.onkeydown = (e) => {
-      if (e.key === 'Enter') btnAuthSubmit.click();
-    };
-
     async function loadMessages() {
+      if (!sbClient) return;
       try {
-        const { data, error } = await supabase
+        const { data, error } = await sbClient
           .from('chat_messages')
           .select('*')
           .eq('is_deleted', false)
@@ -749,7 +754,7 @@
 
     async function sendMessage() {
       const text = chatInput.value.trim();
-      if (!text || !currentUser.id) return;
+      if (!text || !currentUser.id || !sbClient) return;
 
       if (!currentUser.isAdmin) {
         const now = Date.now();
@@ -769,7 +774,7 @@
       playBeep(true);
 
       try {
-        const { data, error } = await supabase
+        const { data, error } = await sbClient
           .from('chat_messages')
           .insert({
             student_id: currentUser.id,
@@ -793,10 +798,10 @@
     }
 
     window.deleteMessage = async function(id) {
-      if (!currentUser.isAdmin) return;
+      if (!currentUser.isAdmin || !sbClient) return;
       if (!confirm('Are you sure you want to delete this message?')) return;
       try {
-        await supabase
+        await sbClient
           .from('chat_messages')
           .update({ is_deleted: true })
           .eq('id', id);
@@ -809,10 +814,10 @@
     };
 
     btnAdminPurge.onclick = async () => {
-      if (!currentUser.isAdmin) return;
+      if (!currentUser.isAdmin || !sbClient) return;
       if (!confirm('⚠️ DANGER: Are you sure you want to PURGE all chat messages for everyone?')) return;
       try {
-        await supabase
+        await sbClient
           .from('chat_messages')
           .update({ is_deleted: true })
           .eq('is_deleted', false);
@@ -893,7 +898,8 @@
     }
 
     function setupRealtime() {
-      const channel = supabase
+      if (!sbClient) return;
+      const channel = sbClient
         .channel('public:chat_messages')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, payload => {
           if (payload.eventType === 'INSERT') {
