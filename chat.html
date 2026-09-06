@@ -52,7 +52,7 @@
 
     /* ─── HEADER : frequency strip ─── */
     .chat-header {
-      padding: 14px calc(50% - 460px);
+      padding: 14px clamp(20px, 6vw, 100px);
       border-bottom: 1px solid var(--border);
       background: var(--panel);
       display: flex;
@@ -60,9 +60,6 @@
       justify-content: space-between;
       gap: 16px;
       flex-shrink: 0;
-    }
-    @media (max-width: 960px) {
-      .chat-header { padding: 14px 22px; }
     }
 
     .header-left { display: flex; align-items: center; gap: 16px; }
@@ -73,13 +70,6 @@
     }
     .brand-mark em { font-style: normal; color: var(--amber); }
     .brand-sub { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.03em; }
-
-    .live-indicator { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 11px; color: var(--teal); }
-    .live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--teal); animation: pulse-live 2s infinite; }
-    @keyframes pulse-live {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.35; }
-    }
 
     .header-right { display: flex; align-items: center; gap: 10px; }
     .user-pill {
@@ -111,10 +101,7 @@
 
     /* ─── MESSAGE LOG ─── */
     .messages-container {
-      flex: 1; overflow-y: auto; padding: 22px calc(50% - 460px); display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth;
-    }
-    @media (max-width: 960px) {
-      .messages-container { padding: 22px; }
+      flex: 1; overflow-y: auto; padding: 22px clamp(20px, 6vw, 100px); display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth;
     }
     .messages-container::-webkit-scrollbar { width: 6px; }
     .messages-container::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
@@ -170,7 +157,7 @@
     .btn-msg-delete:hover { background: var(--rose); color: #fff; }
 
     .btn-scroll-bottom {
-      position: absolute; bottom: 92px; right: calc(50% - 460px + 22px); background: var(--panel-raised);
+      position: absolute; bottom: 92px; right: clamp(20px, 6vw, 100px); background: var(--panel-raised);
       border: 1px solid var(--border-strong); color: var(--teal); border-radius: 7px;
       padding: 8px 13px; font-size: 11.5px; font-family: var(--font-mono); font-weight: 500; display: flex; align-items: center;
       gap: 6px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
@@ -190,11 +177,8 @@
 
     /* ─── INPUT CONSOLE ─── */
     .chat-input-panel {
-      padding: 14px calc(50% - 460px) 18px; border-top: 1px solid var(--border); background: var(--panel);
+      padding: 14px clamp(20px, 6vw, 100px) 18px; border-top: 1px solid var(--border); background: var(--panel);
       display: flex; flex-direction: column; gap: 9px; flex-shrink: 0;
-    }
-    @media (max-width: 960px) {
-      .chat-input-panel { padding: 12px 14px 14px; }
     }
     .input-controls-row { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); }
 
@@ -261,14 +245,6 @@
     }
     .btn-auth-submit:hover { background: var(--teal); color: #06110d; }
 
-    @media (prefers-reduced-motion: reduce) {
-      .live-dot { animation: none; }
-    }
-
-    @media (max-width: 960px) {
-      .btn-scroll-bottom { right: 22px; }
-    }
-
     @media (max-width: 560px) {
       .chat-header { padding: 12px 14px; }
       .messages-container { padding: 14px; }
@@ -287,10 +263,6 @@
           <span class="brand-mark">HUB <em>ZERO</em></span>
           <span class="brand-sub">CHAT</span>
         </a>
-        <div class="live-indicator">
-          <span class="live-dot"></span>
-          <span>live</span>
-        </div>
       </div>
 
       <div class="header-right">
@@ -472,7 +444,7 @@
       const now = new Date();
       const isToday = now.toDateString() === date.toDateString();
       const timeStr = timeFormatter.format(date);
-      return isToday ? `Today, ${timeStr} AEST` : `${dateFormatter.format(date)}, ${timeStr} AEST`;
+      return isToday ? `Today, ${timeStr}` : `${dateFormatter.format(date)}, ${timeStr}`;
     }
 
     async function initDropbox() {
