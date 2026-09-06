@@ -45,18 +45,14 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
-      max-width: 900px;
-      margin: 0 auto;
       width: 100%;
-      border-left: 1px solid var(--border);
-      border-right: 1px solid var(--border);
       background: var(--bg);
       position: relative;
     }
 
     /* ─── HEADER : frequency strip ─── */
     .chat-header {
-      padding: 14px 22px;
+      padding: 14px calc(50% - 460px);
       border-bottom: 1px solid var(--border);
       background: var(--panel);
       display: flex;
@@ -64,6 +60,9 @@
       justify-content: space-between;
       gap: 16px;
       flex-shrink: 0;
+    }
+    @media (max-width: 960px) {
+      .chat-header { padding: 14px 22px; }
     }
 
     .header-left { display: flex; align-items: center; gap: 16px; }
@@ -112,7 +111,10 @@
 
     /* ─── MESSAGE LOG ─── */
     .messages-container {
-      flex: 1; overflow-y: auto; padding: 22px; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth;
+      flex: 1; overflow-y: auto; padding: 22px calc(50% - 460px); display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth;
+    }
+    @media (max-width: 960px) {
+      .messages-container { padding: 22px; }
     }
     .messages-container::-webkit-scrollbar { width: 6px; }
     .messages-container::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
@@ -168,7 +170,7 @@
     .btn-msg-delete:hover { background: var(--rose); color: #fff; }
 
     .btn-scroll-bottom {
-      position: absolute; bottom: 92px; right: 22px; background: var(--panel-raised);
+      position: absolute; bottom: 92px; right: calc(50% - 460px + 22px); background: var(--panel-raised);
       border: 1px solid var(--border-strong); color: var(--teal); border-radius: 7px;
       padding: 8px 13px; font-size: 11.5px; font-family: var(--font-mono); font-weight: 500; display: flex; align-items: center;
       gap: 6px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
@@ -188,8 +190,11 @@
 
     /* ─── INPUT CONSOLE ─── */
     .chat-input-panel {
-      padding: 14px 22px 18px; border-top: 1px solid var(--border); background: var(--panel);
+      padding: 14px calc(50% - 460px) 18px; border-top: 1px solid var(--border); background: var(--panel);
       display: flex; flex-direction: column; gap: 9px; flex-shrink: 0;
+    }
+    @media (max-width: 960px) {
+      .chat-input-panel { padding: 12px 14px 14px; }
     }
     .input-controls-row { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); }
 
@@ -258,6 +263,10 @@
 
     @media (prefers-reduced-motion: reduce) {
       .live-dot { animation: none; }
+    }
+
+    @media (max-width: 960px) {
+      .btn-scroll-bottom { right: 22px; }
     }
 
     @media (max-width: 560px) {
