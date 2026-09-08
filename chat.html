@@ -392,6 +392,21 @@
     .message-row { display: flex; gap: 11px; max-width: 78%; position: relative; }
     .message-row.outgoing { align-self: flex-end; flex-direction: row-reverse; }
 
+    .message-row.consecutive {
+      margin-top: -8px;
+    }
+    .message-row.consecutive .msg-avatar {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .message-row.consecutive .msg-meta {
+      display: none;
+    }
+    .message-row.consecutive .msg-bubble {
+      border-radius: 4px;
+    }
+
     .msg-avatar {
       width: 34px; height: 34px; border-radius: 8px; overflow: hidden; flex-shrink: 0;
       background: #1a212c; border: 1px solid var(--border-strong);
@@ -869,11 +884,37 @@
     }
 
     // ─── NOTIFICATION MANAGER ───
+    let originalDocTitle = document.title || "Hub Zero — Chat & DMs";
+    let titleFlashTimer = null;
+
+    window.addEventListener('focus', () => {
+      if (titleFlashTimer) {
+        clearInterval(titleFlashTimer);
+        titleFlashTimer = null;
+      }
+      document.title = originalDocTitle;
+    });
+
+    function flashTabTitle(text) {
+      if (document.hasFocus()) return;
+      if (titleFlashTimer) clearInterval(titleFlashTimer);
+      let toggle = false;
+      titleFlashTimer = setInterval(() => {
+        document.title = toggle ? text : originalDocTitle;
+        toggle = !toggle;
+      }, 1000);
+    }
+
     function updateNotifUI() {
-      if (notificationsEnabled && Notification.permission === 'granted') {
+      const hasSupport = "Notification" in window;
+      if (hasSupport && Notification.permission === 'granted' && notificationsEnabled) {
         notifIndicator.classList.add('on');
         notifToggleLabel.textContent = 'Alerts: ON';
         btnToggleNotifs.classList.add('active-notif');
+      } else if (hasSupport && Notification.permission === 'denied') {
+        notifIndicator.classList.remove('on');
+        notifToggleLabel.textContent = 'Alerts: BLOCKED';
+        btnToggleNotifs.classList.remove('active-notif');
       } else {
         notifIndicator.classList.remove('on');
         notifToggleLabel.textContent = 'Alerts: OFF';
@@ -886,16 +927,29 @@
         alert("This browser does not support desktop notifications.");
         return;
       }
+
+      if (Notification.permission === 'denied') {
+        alert("Desktop notifications are currently blocked in your browser site settings. Click the tune/padlock icon next to the URL bar to allow notifications.");
+        notificationsEnabled = false;
+        localStorage.setItem('hz_chat_notifications', 'false');
+        updateNotifUI();
+        return;
+      }
+
       if (!notificationsEnabled) {
-        const perm = await Notification.requestPermission();
-        if (perm === 'granted') {
-          notificationsEnabled = true;
-          localStorage.setItem('hz_chat_notifications', 'true');
-          triggerDesktopNotification("Hub Zero Notifications Enabled", "You will receive alerts for new messages when in other tabs!", "");
-        } else {
-          notificationsEnabled = false;
-          localStorage.setItem('hz_chat_notifications', 'false');
-          alert("Notification permission was denied in your browser settings.");
+        try {
+          const perm = await Notification.requestPermission();
+          if (perm === 'granted') {
+            notificationsEnabled = true;
+            localStorage.setItem('hz_chat_notifications', 'true');
+            triggerDesktopNotification("Hub Zero Notifications Enabled", "You'll be alerted whenever you receive a new chat message!", "");
+          } else {
+            notificationsEnabled = false;
+            localStorage.setItem('hz_chat_notifications', 'false');
+            alert("Notifications permission was not granted.");
+          }
+        } catch (err) {
+          console.error("Permission request error:", err);
         }
       } else {
         notificationsEnabled = false;
@@ -905,14 +959,18 @@
     };
 
     function triggerDesktopNotification(title, body, senderName) {
-      if (!notificationsEnabled || Notification.permission !== 'granted') return;
+      // 1. Tab title flash
+      flashTabTitle(`💬 ${title}`);
+
+      // 2. Desktop notification popup
+      if (!notificationsEnabled || !("Notification" in window) || Notification.permission !== 'granted') return;
       try {
         const path = findPhotoPath(senderName);
         let iconUrl = 'https://hub-zero.site/favicon.ico';
         if (path && photoCache[path]) iconUrl = photoCache[path];
 
         const notif = new Notification(title, {
-          body: body,
+          body: body || 'New message received',
           icon: iconUrl,
           tag: 'hz_chat_' + Date.now()
         });
@@ -920,7 +978,9 @@
           window.focus();
           notif.close();
         };
-      } catch (e) {}
+      } catch (e) {
+        console.warn("Desktop notification notice:", e);
+      }
     }
 
     // ─── STRICT AUTHENTICATION GATE ───
@@ -985,8 +1045,10 @@
       if (isAdmin) {
         document.getElementById('header-admin-badge').style.display = 'inline-flex';
         adminTagToggleWrap.classList.add('visible');
-        btnAdminPurge.style.display = 'flex';
+        btnAdminPurge.style.display = activeMode === 'global' ? 'flex' : 'none';
         tabBtnAdminDms.style.display = 'inline-flex';
+      } else {
+        btnAdminPurge.style.display = 'none';
       }
 
       chkAdminTag.checked = false;
@@ -1164,6 +1226,13 @@
       tabBtnDms.classList.toggle('active', mode === 'dms');
       if (tabBtnAdminDms) tabBtnAdminDms.classList.toggle('active', mode === 'admin-dms');
 
+      // Purge button ONLY appears on Global Chat for Admins
+      if (currentUser.isAdmin && mode === 'global') {
+        btnAdminPurge.style.display = 'flex';
+      } else {
+        btnAdminPurge.style.display = 'none';
+      }
+
       if (mode === 'global') {
         dmSidebar.classList.remove('active');
         channelSubHeader.classList.remove('active');
@@ -1188,14 +1257,17 @@
 
         if (activeDmContact) {
           selectDmContact(activeDmContact);
-        } else if (dmContacts.length > 0) {
-          selectDmContact(dmContacts[0]);
         } else {
-          dmTargetName.textContent = "Select a conversation";
-          dmTargetId.textContent = "";
-          dmTargetInitials.textContent = "?";
-          chatInput.placeholder = "Select or start a DM…";
-          renderMessages();
+          const visibleContacts = dmContacts.filter(c => !hiddenDmIds.has(c.id));
+          if (visibleContacts.length > 0) {
+            selectDmContact(visibleContacts[0]);
+          } else {
+            dmTargetName.textContent = "Select a conversation";
+            dmTargetId.textContent = "";
+            dmTargetInitials.textContent = "?";
+            chatInput.placeholder = "Select or start a DM…";
+            renderMessages();
+          }
         }
       } else if (mode === 'admin-dms') {
         // Master Admin All DMs Viewer
@@ -1592,7 +1664,7 @@
         );
       }
 
-      const html = activeList.map(m => {
+      const html = activeList.map((m, idx) => {
         const isMe = m.student_id === currentUser.id;
         const initials = (m.student_name || 'U').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
         const timeAest = formatAEST(m.created_at);
@@ -1600,17 +1672,26 @@
         // User can delete their OWN messages, admins can delete ANY message
         const canDelete = isMe || currentUser.isAdmin;
 
+        // Check if previous message was from the same sender in the exact same minute
+        const prevM = idx > 0 ? activeList[idx - 1] : null;
+        const isConsecutive = prevM && 
+          prevM.student_id === m.student_id && 
+          Boolean(prevM.is_admin) === Boolean(m.is_admin) &&
+          formatAEST(prevM.created_at) === timeAest;
+
         return `
-          <div class="message-row ${isMe ? 'outgoing' : 'incoming'} ${isAdminMsg ? 'is-admin-msg' : ''}" data-msg-id="${m.id}">
+          <div class="message-row ${isMe ? 'outgoing' : 'incoming'} ${isAdminMsg ? 'is-admin-msg' : ''} ${isConsecutive ? 'consecutive' : ''}" data-msg-id="${m.id}">
             <div class="msg-avatar" data-avatar-name="${escapeHtml(m.student_name || '')}">
               ${escapeHtml(initials)}
             </div>
             <div class="msg-body">
-              <div class="msg-meta">
-                <span class="msg-author">${escapeHtml(m.student_name || 'Student')}</span>
-                ${isAdminMsg ? '<span class="badge-admin-tag"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>Admin</span>' : ''}
-                <span class="msg-time">${timeAest}</span>
-              </div>
+              ${!isConsecutive ? `
+                <div class="msg-meta">
+                  <span class="msg-author">${escapeHtml(m.student_name || 'Student')}</span>
+                  ${isAdminMsg ? '<span class="badge-admin-tag"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>Admin</span>' : ''}
+                  <span class="msg-time">${timeAest}</span>
+                </div>
+              ` : ''}
               <div class="msg-bubble">
                 ${escapeHtml(m.content)}
               </div>
@@ -1828,10 +1909,9 @@
                       ? { id: newMsg.recipient_id, name: newMsg.recipient_name || `Student ${newMsg.recipient_id}` }
                       : { id: newMsg.student_id, name: newMsg.student_name || `Student ${newMsg.student_id}` };
                     
-                    hiddenDmIds.delete(otherUser.id);
-                    syncDmContactsFromHistory();
-
                     if (!isFromMe) {
+                      hiddenDmIds.delete(otherUser.id);
+                      saveDmContacts();
                       playBeep(false);
                       triggerDesktopNotification(`DM from ${newMsg.student_name}`, newMsg.content, newMsg.student_name);
 
@@ -1842,6 +1922,7 @@
                       }
                     }
 
+                    syncDmContactsFromHistory();
                     renderMessages();
                     if (activeMode === 'dms') renderDmContactsList();
                     if (activeMode === 'admin-dms') renderAdminAllDmPairsList();
