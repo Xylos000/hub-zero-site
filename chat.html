@@ -1,1989 +1,1332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Hub Zero — Chat & DMs</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <style>
-    :root {
-      --bg: #0a0e14;
-      --panel: #10151c;
-      --panel-raised: #151b24;
-      --panel-hover: #1b232e;
-      --border: rgba(255, 255, 255, 0.07);
-      --border-strong: rgba(255, 255, 255, 0.14);
-      --amber: #f5a623;
-      --amber-dim: rgba(245, 166, 35, 0.14);
-      --teal: #3fa98e;
-      --teal-dim: rgba(63, 169, 142, 0.14);
-      --blue: #38bdf8;
-      --blue-dim: rgba(56, 189, 248, 0.14);
-      --rose: #e5484d;
-      --rose-dim: rgba(229, 72, 77, 0.12);
-      --gold: #fbbf24;
-      --gold-dim: rgba(251, 191, 36, 0.15);
-      --text: #e7ecf3;
-      --text-muted: #7c8798;
-      --text-dim: #47505f;
-      --font-display: 'Space Grotesk', sans-serif;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-mono: 'IBM Plex Mono', monospace;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Hub Zero Messages</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#0a0e14; --panel:#10151c; --panel-raised:#151b24; --panel-hover:#1b232e;
+  --border:rgba(255,255,255,.07); --border-strong:rgba(255,255,255,.14);
+  --amber:#f5a623; --amber-dim:rgba(245,166,35,.14);
+  --teal:#3fa98e; --teal-dim:rgba(63,169,142,.14);
+  --blue:#38bdf8; --blue-dim:rgba(56,189,248,.14);
+  --rose:#e5484d; --rose-dim:rgba(229,72,77,.12);
+  --gold:#fbbf24; --gold-dim:rgba(251,191,36,.15);
+  --text:#e7ecf3; --text-muted:#7c8798; --text-dim:#47505f;
+  --font-display:'Space Grotesk',sans-serif; --font-body:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+button{font-family:inherit}
 
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+/* ══════════ HOME SCREEN ══════════ */
+.home-screen{
+  position:fixed; inset:0; background:
+    radial-gradient(ellipse 900px 500px at 15% 0%, rgba(63,169,142,.16), transparent 60%),
+    radial-gradient(ellipse 900px 600px at 85% 100%, rgba(56,189,248,.14), transparent 60%),
+    var(--bg);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:32px 20px; z-index:500; overflow-y:auto;
+}
+.home-brand{ display:flex; align-items:center; gap:10px; margin-bottom:34px; }
+.home-brand-mark{ font-family:var(--font-display); font-weight:800; font-size:20px; letter-spacing:-.01em; }
+.home-brand-mark em{ font-style:normal; color:var(--amber); }
+.home-title{
+  font-family:var(--font-display); font-weight:800; font-size:clamp(28px,5vw,44px);
+  text-align:center; line-height:1.15; margin-bottom:10px; letter-spacing:-.01em;
+}
+.home-title span{ color:var(--teal); }
+.home-subtitle{ color:var(--text-muted); font-size:14.5px; text-align:center; margin-bottom:40px; max-width:440px; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+.home-choices{ display:flex; gap:20px; width:100%; max-width:820px; flex-wrap:wrap; justify-content:center; }
+.home-choice-card{
+  flex:1 1 340px; max-width:390px; background:var(--panel); border:1px solid var(--border-strong);
+  border-radius:16px; padding:28px 26px; cursor:pointer; text-align:left; color:inherit;
+  display:flex; flex-direction:column; gap:12px; transition:transform .15s, border-color .15s, background .15s;
+  position:relative; overflow:hidden;
+}
+.home-choice-card:hover{ transform:translateY(-3px); background:var(--panel-hover); }
+.home-choice-card.global{ border-color:rgba(63,169,142,.35); }
+.home-choice-card.global:hover{ border-color:var(--teal); }
+.home-choice-card.dms{ border-color:rgba(56,189,248,.35); }
+.home-choice-card.dms:hover{ border-color:var(--blue); }
+.choice-icon-wrap{
+  width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.home-choice-card.global .choice-icon-wrap{ background:var(--teal-dim); color:var(--teal); }
+.home-choice-card.dms .choice-icon-wrap{ background:var(--blue-dim); color:var(--blue); }
+.choice-title{ font-family:var(--font-display); font-size:19px; font-weight:700; display:flex; align-items:center; gap:9px; }
+.choice-desc{ font-size:13px; color:var(--text-muted); line-height:1.5; }
+.choice-badge{
+  margin-left:auto; background:var(--rose); color:#fff; font-family:var(--font-mono); font-size:10.5px; font-weight:700;
+  padding:2px 7px; border-radius:10px; display:none;
+}
+.choice-badge.show{ display:inline-flex; }
+.choice-cta{
+  margin-top:auto; font-size:12.5px; font-weight:600; display:flex; align-items:center; gap:6px; padding-top:6px;
+}
+.home-choice-card.global .choice-cta{ color:var(--teal); }
+.home-choice-card.dms .choice-cta{ color:var(--blue); }
 
-    .chat-app {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      width: 100%;
-      background: var(--bg);
-      position: relative;
-    }
+.home-footer-note{
+  margin-top:44px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim);
+  border:1px dashed var(--border-strong); padding:7px 14px; border-radius:20px;
+}
 
-    /* ─── HEADER ─── */
-    .chat-header {
-      padding: 12px clamp(16px, 4vw, 36px);
-      border-bottom: 1px solid var(--border);
-      background: var(--panel);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-shrink: 0;
-      z-index: 10;
-    }
+/* ══════════ APP SHELL ══════════ */
+.chat-app{ display:none; flex-direction:column; height:100vh; width:100%; background:var(--bg); position:relative; }
+.chat-app.active{ display:flex; }
 
-    .header-left { display: flex; align-items: center; gap: 16px; }
-    .brand-logo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; color: inherit; }
-    .brand-mark {
-      font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.01em;
-      color: var(--text);
-    }
-    .brand-mark em { font-style: normal; color: var(--amber); }
-    .brand-sub { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); letter-spacing: 0.03em; }
+.chat-header{
+  padding:12px clamp(16px,4vw,36px); border-bottom:1px solid var(--border); background:var(--panel);
+  display:flex; align-items:center; justify-content:space-between; gap:16px; flex-shrink:0; z-index:10;
+}
+.header-left{ display:flex; align-items:center; gap:16px; }
+.brand-logo{ display:flex; align-items:baseline; gap:8px; text-decoration:none; color:inherit; background:none; border:none; cursor:pointer; }
+.brand-mark{ font-family:var(--font-display); font-weight:700; font-size:16px; letter-spacing:-.01em; color:var(--text); }
+.brand-mark em{ font-style:normal; color:var(--amber); }
+.brand-sub{ font-family:var(--font-mono); font-size:10px; color:var(--text-dim); letter-spacing:.03em; }
 
-    /* Switcher Tabs */
-    .chat-nav-tabs {
-      display: flex;
-      align-items: center;
-      background: var(--panel-raised);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 3px;
-      gap: 3px;
-    }
+.chat-nav-tabs{ display:flex; align-items:center; background:var(--panel-raised); border:1px solid var(--border); border-radius:8px; padding:3px; gap:3px; }
+.nav-tab-btn{
+  background:transparent; border:none; color:var(--text-muted); font-family:var(--font-display); font-size:12.5px; font-weight:600;
+  padding:6px 12px; border-radius:6px; cursor:pointer; display:flex; align-items:center; gap:7px; transition:all .15s;
+}
+.nav-tab-btn:hover{ color:var(--text); }
+.nav-tab-btn.active{ background:var(--bg); color:var(--text); box-shadow:0 2px 8px rgba(0,0,0,.4); }
+.nav-tab-btn.active.tab-global{ color:var(--teal); }
+.nav-tab-btn.active.tab-dms{ color:var(--blue); }
 
-    .nav-tab-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-family: var(--font-display);
-      font-size: 12.5px;
-      font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.15s;
-    }
+.badge-unread{ background:var(--rose); color:#fff; font-family:var(--font-mono); font-size:9.5px; font-weight:700; padding:1px 5px; border-radius:10px; display:none; }
+.badge-unread.active{ display:inline-flex; }
 
-    .nav-tab-btn:hover { color: var(--text); }
-    .nav-tab-btn.active {
-      background: var(--bg);
-      color: var(--text);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-    }
+.header-right{ display:flex; align-items:center; gap:9px; }
+.btn-header{
+  background:var(--panel-raised); border:1px solid var(--border); color:var(--text-muted); border-radius:7px; padding:7px 11px;
+  font-size:12px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:6px; transition:border-color .15s,color .15s; text-decoration:none;
+}
+.btn-header:hover{ color:var(--text); border-color:var(--border-strong); }
 
-    .nav-tab-btn.active.tab-global { color: var(--teal); }
-    .nav-tab-btn.active.tab-dms { color: var(--blue); }
-    .nav-tab-btn.tab-admin-dms { color: var(--gold); border: 1px solid rgba(251, 191, 36, 0.25); background: rgba(251, 191, 36, 0.05); }
-    .nav-tab-btn.active.tab-admin-dms { background: var(--gold-dim); border-color: var(--gold); }
+.user-pill{ display:flex; align-items:center; gap:9px; background:var(--panel-raised); border:1px solid var(--border); border-radius:8px; padding:5px 12px 5px 5px; }
+.avatar-sq{
+  width:30px; height:30px; border-radius:7px; overflow:hidden; flex-shrink:0; background:#1a212c; border:1px solid var(--border-strong);
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--text-muted);
+}
+.avatar-sq img{ width:100%; height:100%; object-fit:cover; display:block; }
+.user-info{ display:flex; flex-direction:column; line-height:1.25; }
+.user-name{ font-size:12.5px; font-weight:600; color:var(--text); display:flex; align-items:center; gap:6px; }
+.user-id-tag{ font-size:10px; font-family:var(--font-mono); color:var(--text-dim); }
+.admin-chip{ display:inline-flex; align-items:center; gap:3px; color:var(--amber); font-size:9.5px; font-weight:600; letter-spacing:.02em; }
 
-    .badge-unread {
-      background: var(--rose);
-      color: #fff;
-      font-family: var(--font-mono);
-      font-size: 9.5px;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 10px;
-      display: none;
-    }
-    .badge-unread.active { display: inline-flex; }
+/* ══════════ WORKSPACE ══════════ */
+.chat-workspace{ flex:1; display:flex; overflow:hidden; position:relative; }
 
-    .header-right { display: flex; align-items: center; gap: 9px; }
-    
-    .btn-header {
-      background: var(--panel-raised); border: 1px solid var(--border); color: var(--text-muted);
-      border-radius: 7px; padding: 7px 11px; font-size: 12px; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: border-color 0.15s, color 0.15s; text-decoration: none;
-    }
-    .btn-header:hover { color: var(--text); border-color: var(--border-strong); }
-    .btn-header.active-notif { color: var(--teal); border-color: rgba(63, 169, 142, 0.4); background: var(--teal-dim); }
+.dm-sidebar{ width:305px; background:var(--panel); border-right:1px solid var(--border); display:none; flex-direction:column; flex-shrink:0; }
+.dm-sidebar.active{ display:flex; }
+.dm-slogan-banner{
+  font-family:var(--font-display); font-size:10.5px; font-weight:700; color:var(--blue);
+  background:linear-gradient(90deg, rgba(56,189,248,.12), rgba(192,132,252,.08));
+  border-bottom:1px solid rgba(56,189,248,.22); padding:9px 14px; line-height:1.4; letter-spacing:.02em;
+  display:flex; align-items:center; gap:7px;
+}
+.dm-sidebar-header{ padding:12px 14px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.dm-sidebar-title{ font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--text); }
+.btn-new-dm{
+  background:var(--blue-dim); border:1px solid rgba(56,189,248,.35); color:var(--blue); border-radius:6px; padding:5px 10px;
+  font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
+}
+.btn-new-dm:hover{ background:var(--blue); color:#061019; }
 
-    .notif-dot {
-      width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim);
-    }
-    .notif-dot.on { background: var(--teal); box-shadow: 0 0 8px var(--teal); }
+.dm-list{ flex:1; overflow-y:auto; padding:8px; display:flex; flex-direction:column; gap:4px; }
+.dm-item{
+  display:flex; align-items:center; gap:10px; padding:9px 11px; border-radius:8px; background:transparent; border:1px solid transparent;
+  cursor:pointer; transition:all .15s; text-align:left; position:relative;
+}
+.dm-item:hover{ background:var(--panel-raised); border-color:var(--border); }
+.dm-item.active{ background:var(--panel-raised); border-color:var(--blue); border-left:3px solid var(--blue); }
+.dm-item.has-unread{ background:rgba(56,189,248,.08); border-color:rgba(56,189,248,.3); }
+.dm-item.has-unread .dm-item-name{ color:#fff; font-weight:700; }
+.dm-item.has-unread .dm-item-last{ color:#93c5fd; font-weight:500; }
+.dm-item-info{ flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.25; }
+.dm-item-name-row{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.dm-item-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dm-item-time{ font-size:9.5px; font-family:var(--font-mono); color:var(--text-dim); flex-shrink:0; }
+.dm-item-last{ font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+.btn-dm-close{ opacity:0; background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:3px 5px; border-radius:4px; font-size:12px; line-height:1; transition:all .15s; }
+.dm-item:hover .btn-dm-close{ opacity:1; }
+.btn-dm-close:hover{ color:var(--rose); background:var(--rose-dim); }
+.unread-indicator-dot{ width:7px; height:7px; border-radius:50%; background:var(--blue); box-shadow:0 0 8px var(--blue); display:none; }
+.dm-item.has-unread .unread-indicator-dot{ display:inline-block; }
 
-    .user-pill {
-      display: flex; align-items: center; gap: 9px; background: var(--panel-raised);
-      border: 1px solid var(--border); border-radius: 8px; padding: 5px 12px 5px 5px;
-    }
-    .avatar-sq {
-      width: 30px; height: 30px; border-radius: 7px; overflow: hidden; flex-shrink: 0;
-      background: #1a212c; border: 1px solid var(--border-strong);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-size: 11px; font-weight: 600; color: var(--text-muted);
-    }
-    .avatar-sq img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .user-info { display: flex; flex-direction: column; line-height: 1.25; }
-    .user-name { font-size: 12.5px; font-weight: 600; color: var(--text); display: flex; align-items: center; gap: 6px; }
-    .user-id-tag { font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); }
-    .admin-chip {
-      display: inline-flex; align-items: center; gap: 3px;
-      color: var(--amber); font-size: 9.5px; font-weight: 600;
-      letter-spacing: 0.02em;
-    }
+.chat-main-stage{ flex:1; display:flex; flex-direction:column; background:var(--bg); min-width:0; position:relative; }
+.channel-sub-header{ padding:10px clamp(16px,4vw,36px); background:var(--panel-raised); border-bottom:1px solid var(--border); display:none; align-items:center; justify-content:space-between; font-size:12.5px; }
+.channel-sub-header.active{ display:flex; }
+.channel-info-left{ display:flex; align-items:center; gap:10px; }
+.channel-target-name{ font-weight:700; color:var(--blue); font-family:var(--font-display); }
+.channel-target-name.gold-admin{ color:var(--gold); }
+.channel-target-id{ font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
 
-    /* ─── WORKSPACE ─── */
-    .chat-workspace {
-      flex: 1;
-      display: flex;
-      overflow: hidden;
-      position: relative;
-    }
+.messages-container{ flex:1; overflow-y:auto; padding:20px clamp(16px,4vw,36px); display:flex; flex-direction:column; gap:14px; scroll-behavior:smooth; }
+.messages-container::-webkit-scrollbar{ width:6px; }
+.messages-container::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:4px; }
 
-    /* ─── DM & ADMIN SIDEBAR ─── */
-    .dm-sidebar {
-      width: 305px;
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      display: none;
-      flex-direction: column;
-      flex-shrink: 0;
-    }
+.message-row{ display:flex; gap:11px; max-width:78%; position:relative; }
+.message-row.outgoing{ align-self:flex-end; flex-direction:row-reverse; }
+.message-row.consecutive{ margin-top:-8px; }
+.message-row.consecutive .msg-avatar{ visibility:hidden; opacity:0; pointer-events:none; }
+.message-row.consecutive .msg-meta{ display:none; }
+.message-row.consecutive .msg-bubble{ border-radius:4px; }
+.msg-avatar{
+  width:34px; height:34px; border-radius:8px; overflow:hidden; flex-shrink:0; background:#1a212c; border:1px solid var(--border-strong);
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11.5px; font-weight:600; color:var(--text-muted); margin-top:2px;
+}
+.msg-avatar img{ width:100%; height:100%; object-fit:cover; }
+.msg-body{ display:flex; flex-direction:column; gap:5px; min-width:0; }
+.msg-meta{ display:flex; align-items:baseline; gap:8px; padding:0 2px; }
+.message-row.outgoing .msg-meta{ justify-content:flex-end; }
+.msg-author{ font-family:var(--font-display); font-weight:600; font-size:13px; color:var(--text); }
+.msg-time{ font-size:10.5px; font-family:var(--font-mono); color:var(--text-dim); }
+.msg-bubble{
+  padding:10px 14px; border-radius:4px; font-size:13.5px; line-height:1.55; word-break:break-word;
+  background:var(--panel); border:1px solid var(--border); border-left:2px solid var(--border-strong); color:var(--text);
+}
+.message-row.outgoing .msg-bubble{ border-left:2px solid var(--teal); background:var(--teal-dim); }
+.message-row.is-admin-msg .msg-bubble{ border-left:2px solid var(--amber); background:var(--amber-dim); }
+.badge-admin-tag{ display:inline-flex; align-items:center; gap:4px; color:var(--amber); font-size:10px; font-weight:600; letter-spacing:.02em; }
+.msg-actions{ opacity:0; display:flex; align-items:center; gap:4px; transition:opacity .15s; position:absolute; top:4px; }
+.message-row.incoming .msg-actions{ right:-34px; }
+.message-row.outgoing .msg-actions{ left:-34px; }
+.message-row:hover .msg-actions{ opacity:1; }
+.btn-msg-delete{
+  width:26px; height:26px; border-radius:6px; background:var(--rose-dim); border:1px solid rgba(229,72,77,.3); color:var(--rose);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .15s,color .15s;
+}
+.btn-msg-delete:hover{ background:var(--rose); color:#fff; }
 
-    .dm-sidebar.active { display: flex; }
+.btn-scroll-bottom{
+  position:absolute; bottom:92px; right:clamp(16px,4vw,36px); background:var(--panel-raised); border:1px solid var(--border-strong); color:var(--teal);
+  border-radius:7px; padding:8px 13px; font-size:11.5px; font-family:var(--font-mono); font-weight:500; display:flex; align-items:center; gap:6px;
+  cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.5); transition:opacity .15s,transform .15s; opacity:0; transform:translateY(8px); pointer-events:none; z-index:5;
+}
+.btn-scroll-bottom.visible{ opacity:1; transform:translateY(0); pointer-events:auto; }
+.btn-scroll-bottom:hover{ border-color:var(--teal); }
 
-    .dm-slogan-banner {
-      font-family: var(--font-display);
-      font-size: 10.5px;
-      font-weight: 700;
-      color: #38bdf8;
-      background: linear-gradient(90deg, rgba(56, 189, 248, 0.12), rgba(192, 132, 252, 0.08));
-      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
-      padding: 9px 14px;
-      line-height: 1.4;
-      letter-spacing: 0.02em;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
+.rate-limit-banner{
+  display:none; padding:9px 16px; background:var(--rose-dim); border-top:1px solid rgba(229,72,77,.3); border-bottom:1px solid rgba(229,72,77,.3);
+  color:#f3a3a6; font-size:12px; font-weight:500; text-align:center; align-items:center; justify-content:center; gap:8px; font-family:var(--font-mono);
+}
+.rate-limit-banner.active{ display:flex; }
 
-    .dm-sidebar-header {
-      padding: 12px 14px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-    }
+.chat-input-panel{ padding:12px clamp(16px,4vw,36px) 16px; border-top:1px solid var(--border); background:var(--panel); display:flex; flex-direction:column; gap:8px; flex-shrink:0; }
+.input-controls-row{ display:flex; align-items:center; justify-content:space-between; font-family:var(--font-mono); font-size:10.5px; color:var(--text-dim); min-height:16px; }
+.sending-as-admin-flag{ display:none; align-items:center; gap:5px; color:var(--amber); font-weight:600; font-family:var(--font-body); font-size:11px; }
+.sending-as-admin-flag.show{ display:flex; }
+.input-box-wrapper{ display:flex; align-items:center; gap:10px; background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:5px 6px 5px 15px; transition:border-color .15s; }
+.input-box-wrapper:focus-within{ border-color:var(--teal); }
+.chat-input{ flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--font-body); font-size:14px; font-weight:400; padding:9px 0; }
+.chat-input::placeholder{ color:var(--text-dim); }
+.btn-send{
+  background:var(--teal-dim); border:1px solid rgba(63,169,142,.4); color:var(--teal); width:38px; height:38px; border-radius:7px;
+  display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .15s,color .15s; flex-shrink:0;
+}
+.btn-send:hover:not(:disabled){ background:var(--teal); color:#06110d; }
+.btn-send:disabled{ opacity:.35; cursor:not-allowed; }
 
-    .dm-sidebar-title {
-      font-family: var(--font-display);
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--text);
-    }
+/* ══════════ ADMIN CORNER ══════════ */
+.admin-corner-btn{
+  position:fixed; bottom:18px; right:18px; width:46px; height:46px; border-radius:50%; z-index:200;
+  background:var(--gold-dim); border:1px solid rgba(251,191,36,.5); color:var(--gold); cursor:pointer;
+  display:none; align-items:center; justify-content:center; box-shadow:0 6px 20px rgba(0,0,0,.5); transition:transform .15s;
+}
+.admin-corner-btn.show{ display:flex; }
+.admin-corner-btn:hover{ transform:scale(1.06); }
+.admin-corner-panel{
+  position:fixed; bottom:74px; right:18px; width:250px; background:var(--panel); border:1px solid rgba(251,191,36,.35);
+  border-radius:12px; padding:14px; z-index:200; box-shadow:0 20px 50px rgba(0,0,0,.7);
+  display:none; flex-direction:column; gap:10px;
+}
+.admin-corner-panel.open{ display:flex; }
+.admin-corner-title{ font-family:var(--font-display); font-size:12px; font-weight:700; color:var(--gold); display:flex; align-items:center; gap:6px; letter-spacing:.02em; }
+.admin-corner-item{
+  display:flex; align-items:center; justify-content:space-between; gap:8px; background:var(--panel-raised); border:1px solid var(--border);
+  border-radius:8px; padding:9px 10px; cursor:pointer; font-size:12px; color:var(--text); transition:border-color .15s;
+}
+.admin-corner-item:hover{ border-color:rgba(251,191,36,.4); }
+.admin-corner-item.danger{ color:#f3a3a6; }
+.admin-corner-item.danger:hover{ border-color:var(--rose); }
+.tag-switch{ position:relative; width:30px; height:17px; flex-shrink:0; }
+.tag-switch input{ opacity:0; width:0; height:0; }
+.tag-slider{ position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#26303e; transition:.2s; border-radius:9px; border:1px solid var(--border-strong); }
+.tag-slider:before{ position:absolute; content:""; height:11px; width:11px; left:2px; bottom:2px; background-color:#8792a3; transition:.2s; border-radius:50%; }
+.tag-switch input:checked + .tag-slider{ background-color:var(--amber-dim); border-color:var(--amber); }
+.tag-switch input:checked + .tag-slider:before{ transform:translateX(13px); background-color:var(--amber); }
 
-    .btn-new-dm {
-      background: var(--blue-dim);
-      border: 1px solid rgba(56, 189, 248, 0.35);
-      color: var(--blue);
-      border-radius: 6px;
-      padding: 5px 10px;
-      font-size: 11.5px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      transition: all 0.15s;
-    }
-    .btn-new-dm:hover { background: var(--blue); color: #061019; }
+/* ══════════ SEARCH MODAL ══════════ */
+.modal-overlay{ position:fixed; inset:0; background:rgba(6,8,12,.88); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:20px; z-index:1000; opacity:0; pointer-events:none; transition:opacity .2s; }
+.modal-overlay.active{ opacity:1; pointer-events:auto; }
+.search-card{ width:100%; max-width:480px; background:var(--panel); border:1px solid var(--border-strong); border-radius:12px; padding:22px; box-shadow:0 20px 50px rgba(0,0,0,.7); display:flex; flex-direction:column; gap:14px; max-height:85vh; }
+.search-card-header{ display:flex; align-items:center; justify-content:space-between; }
+.search-card-title{ font-family:var(--font-display); font-size:15px; font-weight:700; color:var(--text); }
+.btn-modal-close{ background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:4px; }
+.btn-modal-close:hover{ color:#fff; }
+.search-input-wrap{ display:flex; align-items:center; gap:10px; background:var(--bg); border:1px solid var(--border-strong); border-radius:8px; padding:8px 12px; }
+.search-input-wrap:focus-within{ border-color:var(--blue); }
+.search-input{ flex:1; background:transparent; border:none; outline:none; color:#fff; font-family:inherit; font-size:13.5px; }
+.search-results-list{ flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:6px; max-height:320px; }
+.search-results-list::-webkit-scrollbar{ width:5px; }
+.search-results-list::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:4px; }
+.search-user-item{ display:flex; align-items:center; gap:12px; padding:9px 12px; border-radius:8px; background:var(--panel-raised); border:1px solid var(--border); cursor:pointer; transition:all .15s; }
+.search-user-item:hover{ border-color:var(--blue); background:var(--panel-hover); }
+.search-user-info{ flex:1; min-width:0; }
+.search-user-name{ font-size:13px; font-weight:600; color:var(--text); display:flex; align-items:center; justify-content:space-between; }
+.search-user-id{ font-size:10.5px; font-family:var(--font-mono); color:var(--text-dim); }
+.search-user-badge-active{ font-size:10px; font-family:var(--font-mono); color:var(--blue); background:var(--blue-dim); padding:1px 6px; border-radius:4px; border:1px solid rgba(56,189,248,.3); font-weight:600; }
 
-    .dm-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+/* ══════════ UNAUTH ══════════ */
+.unauth-screen{ position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; padding:20px; z-index:9999; }
+.unauth-card{ width:100%; max-width:400px; background:var(--panel); border:1px solid var(--border-strong); border-left:3px solid var(--rose); border-radius:10px; padding:32px 26px; text-align:left; box-shadow:0 20px 50px rgba(0,0,0,.8); }
+.unauth-icon{ color:var(--rose); margin-bottom:18px; }
+.unauth-title{ font-family:var(--font-display); font-size:20px; font-weight:700; color:var(--text); margin-bottom:10px; }
+.unauth-desc{ font-size:13.5px; color:var(--text-muted); margin-bottom:24px; line-height:1.6; }
+.btn-login-redirect{ display:inline-flex; align-items:center; justify-content:center; width:100%; height:44px; background:var(--teal-dim); border:1px solid rgba(63,169,142,.4); color:var(--teal); border-radius:7px; font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; transition:background .15s,color .15s; }
+.btn-login-redirect:hover{ background:var(--teal); color:#06110d; }
 
-    .dm-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 11px;
-      border-radius: 8px;
-      background: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s;
-      text-align: left;
-      position: relative;
-    }
-
-    .dm-item:hover {
-      background: var(--panel-raised);
-      border-color: var(--border);
-    }
-
-    .dm-item.active {
-      background: var(--panel-raised);
-      border-color: var(--blue);
-      border-left: 3px solid var(--blue);
-    }
-
-    .dm-item.has-unread {
-      background: rgba(56, 189, 248, 0.08);
-      border-color: rgba(56, 189, 248, 0.3);
-    }
-    .dm-item.has-unread .dm-item-name { color: #fff; font-weight: 700; }
-    .dm-item.has-unread .dm-item-last { color: #93c5fd; font-weight: 500; }
-
-    .dm-item-info {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      line-height: 1.25;
-    }
-
-    .dm-item-name-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .dm-item-name {
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--text);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .dm-item-time {
-      font-size: 9.5px;
-      font-family: var(--font-mono);
-      color: var(--text-dim);
-      flex-shrink: 0;
-    }
-
-    .dm-item-last {
-      font-size: 11px;
-      color: var(--text-dim);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      margin-top: 2px;
-    }
-
-    .btn-dm-close {
-      opacity: 0;
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 3px 5px;
-      border-radius: 4px;
-      font-size: 12px;
-      line-height: 1;
-      transition: all 0.15s;
-    }
-    .dm-item:hover .btn-dm-close { opacity: 1; }
-    .btn-dm-close:hover { color: var(--rose); background: var(--rose-dim); }
-
-    .unread-indicator-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--blue);
-      box-shadow: 0 0 8px var(--blue);
-      display: none;
-    }
-    .dm-item.has-unread .unread-indicator-dot { display: inline-block; }
-
-    /* ─── CHAT MAIN STAGE ─── */
-    .chat-main-stage {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-      min-width: 0;
-      position: relative;
-    }
-
-    .channel-sub-header {
-      padding: 10px clamp(16px, 4vw, 36px);
-      background: var(--panel-raised);
-      border-bottom: 1px solid var(--border);
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 12.5px;
-    }
-    .channel-sub-header.active { display: flex; }
-
-    .channel-info-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .channel-target-name {
-      font-weight: 700;
-      color: var(--blue);
-      font-family: var(--font-display);
-    }
-    .channel-target-name.gold-admin { color: var(--gold); }
-
-    .channel-target-id {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      color: var(--text-dim);
-    }
-
-    /* ─── MESSAGES ─── */
-    .messages-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 20px clamp(16px, 4vw, 36px);
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      scroll-behavior: smooth;
-    }
-    .messages-container::-webkit-scrollbar { width: 6px; }
-    .messages-container::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
-
-    .message-row { display: flex; gap: 11px; max-width: 78%; position: relative; }
-    .message-row.outgoing { align-self: flex-end; flex-direction: row-reverse; }
-
-    .message-row.consecutive {
-      margin-top: -8px;
-    }
-    .message-row.consecutive .msg-avatar {
-      visibility: hidden;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .message-row.consecutive .msg-meta {
-      display: none;
-    }
-    .message-row.consecutive .msg-bubble {
-      border-radius: 4px;
-    }
-
-    .msg-avatar {
-      width: 34px; height: 34px; border-radius: 8px; overflow: hidden; flex-shrink: 0;
-      background: #1a212c; border: 1px solid var(--border-strong);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; color: var(--text-muted); margin-top: 2px;
-    }
-    .msg-avatar img { width: 100%; height: 100%; object-fit: cover; }
-
-    .msg-body { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-    .msg-meta { display: flex; align-items: baseline; gap: 8px; padding: 0 2px; }
-    .message-row.outgoing .msg-meta { justify-content: flex-end; }
-    .msg-author { font-family: var(--font-display); font-weight: 600; font-size: 13px; color: var(--text); }
-    .msg-time { font-size: 10.5px; font-family: var(--font-mono); color: var(--text-dim); }
-
-    .msg-bubble {
-      padding: 10px 14px; border-radius: 4px; font-size: 13.5px; line-height: 1.55; word-break: break-word;
-      background: var(--panel); border: 1px solid var(--border); border-left: 2px solid var(--border-strong);
-      color: var(--text);
-    }
-    .message-row.outgoing .msg-bubble {
-      border-left: 2px solid var(--teal); background: var(--teal-dim);
-    }
-    .message-row.is-admin-msg .msg-bubble {
-      border-left: 2px solid var(--amber); background: var(--amber-dim);
-    }
-
-    .badge-admin-tag {
-      display: inline-flex; align-items: center; gap: 4px;
-      color: var(--amber); font-size: 10px; font-weight: 600; letter-spacing: 0.02em;
-    }
-
-    .msg-actions {
-      opacity: 0; display: flex; align-items: center; gap: 4px; transition: opacity 0.15s;
-      position: absolute; top: 4px;
-    }
-    .message-row.incoming .msg-actions { right: -34px; }
-    .message-row.outgoing .msg-actions { left: -34px; }
-    .message-row:hover .msg-actions { opacity: 1; }
-
-    .btn-msg-delete {
-      width: 26px; height: 26px; border-radius: 6px; background: var(--rose-dim);
-      border: 1px solid rgba(229, 72, 77, 0.3); color: var(--rose); display: flex; align-items: center;
-      justify-content: center; cursor: pointer; transition: background 0.15s, color 0.15s;
-    }
-    .btn-msg-delete:hover { background: var(--rose); color: #fff; }
-
-    .btn-scroll-bottom {
-      position: absolute; bottom: 92px; right: clamp(16px, 4vw, 36px); background: var(--panel-raised);
-      border: 1px solid var(--border-strong); color: var(--teal); border-radius: 7px;
-      padding: 8px 13px; font-size: 11.5px; font-family: var(--font-mono); font-weight: 500; display: flex; align-items: center;
-      gap: 6px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      transition: opacity 0.15s, transform 0.15s; opacity: 0; transform: translateY(8px); pointer-events: none; z-index: 5;
-    }
-    .btn-scroll-bottom.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-    .btn-scroll-bottom:hover { border-color: var(--teal); }
-
-    .rate-limit-banner {
-      display: none; padding: 9px 16px;
-      background: var(--rose-dim);
-      border-top: 1px solid rgba(229, 72, 77, 0.3); border-bottom: 1px solid rgba(229, 72, 77, 0.3);
-      color: #f3a3a6; font-size: 12px; font-weight: 500; text-align: center;
-      align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono);
-    }
-    .rate-limit-banner.active { display: flex; }
-
-    /* ─── INPUT PANEL ─── */
-    .chat-input-panel {
-      padding: 12px clamp(16px, 4vw, 36px) 16px; border-top: 1px solid var(--border); background: var(--panel);
-      display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;
-    }
-    .input-controls-row { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-dim); }
-
-    .admin-tag-toggle-wrap {
-      display: none; align-items: center; gap: 8px; padding: 3px 0;
-      cursor: pointer; user-select: none;
-    }
-    .admin-tag-toggle-wrap.visible { display: inline-flex; }
-    .tag-switch-label { font-size: 11px; font-weight: 500; color: var(--amber); font-family: var(--font-body); display: flex; align-items: center; gap: 5px; }
-    .tag-switch { position: relative; width: 30px; height: 17px; flex-shrink: 0; }
-    .tag-switch input { opacity: 0; width: 0; height: 0; }
-    .tag-slider {
-      position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #26303e; transition: 0.2s; border-radius: 3px; border: 1px solid var(--border-strong);
-    }
-    .tag-slider:before {
-      position: absolute; content: ""; height: 11px; width: 11px; left: 2px; bottom: 2px;
-      background-color: #8792a3; transition: 0.2s; border-radius: 2px;
-    }
-    .tag-switch input:checked + .tag-slider { background-color: var(--amber-dim); border-color: var(--amber); }
-    .tag-switch input:checked + .tag-slider:before { transform: translateX(13px); background-color: var(--amber); }
-
-    .input-box-wrapper {
-      display: flex; align-items: center; gap: 10px; background: var(--bg);
-      border: 1px solid var(--border); border-radius: 8px;
-      padding: 5px 6px 5px 15px; transition: border-color 0.15s;
-    }
-    .input-box-wrapper:focus-within { border-color: var(--teal); }
-    .chat-input {
-      flex: 1; background: transparent; border: none; outline: none; color: var(--text);
-      font-family: var(--font-body); font-size: 14px; font-weight: 400; padding: 9px 0;
-    }
-    .chat-input::placeholder { color: var(--text-dim); }
-
-    .btn-send {
-      background: var(--teal-dim); border: 1px solid rgba(63, 169, 142, 0.4);
-      color: var(--teal); width: 38px; height: 38px; border-radius: 7px; display: flex; align-items: center;
-      justify-content: center; cursor: pointer; transition: background 0.15s, color 0.15s; flex-shrink: 0;
-    }
-    .btn-send:hover:not(:disabled) { background: var(--teal); color: #06110d; }
-    .btn-send:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    /* ─── SEARCH MODAL ─── */
-    .modal-overlay {
-      position: fixed; inset: 0; background: rgba(6, 8, 12, 0.88); backdrop-filter: blur(8px);
-      display: flex; align-items: center; justify-content: center; padding: 20px; z-index: 1000;
-      opacity: 0; pointer-events: none; transition: opacity 0.2s;
-    }
-    .modal-overlay.active { opacity: 1; pointer-events: auto; }
-    
-    .search-card {
-      width: 100%; max-width: 480px; background: var(--panel); border: 1px solid var(--border-strong);
-      border-radius: 12px; padding: 22px; box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-      display: flex; flex-direction: column; gap: 14px; max-height: 85vh;
-    }
-
-    .search-card-header {
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    .search-card-title {
-      font-family: var(--font-display); font-size: 15px; font-weight: 700; color: var(--text);
-    }
-    .btn-modal-close {
-      background: transparent; border: none; color: var(--text-muted); cursor: pointer; padding: 4px;
-    }
-    .btn-modal-close:hover { color: #fff; }
-
-    .search-input-wrap {
-      display: flex; align-items: center; gap: 10px; background: var(--bg);
-      border: 1px solid var(--border-strong); border-radius: 8px; padding: 8px 12px;
-    }
-    .search-input-wrap:focus-within { border-color: var(--blue); }
-    .search-input {
-      flex: 1; background: transparent; border: none; outline: none; color: #fff; font-family: inherit; font-size: 13.5px;
-    }
-
-    .search-results-list {
-      flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; max-height: 320px;
-    }
-    .search-results-list::-webkit-scrollbar { width: 5px; }
-    .search-results-list::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 4px; }
-
-    .search-user-item {
-      display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 8px;
-      background: var(--panel-raised); border: 1px solid var(--border); cursor: pointer; transition: all 0.15s;
-    }
-    .search-user-item:hover {
-      border-color: var(--blue); background: var(--panel-hover);
-    }
-    .search-user-info { flex: 1; min-width: 0; }
-    .search-user-name { font-size: 13px; font-weight: 600; color: var(--text); display: flex; align-items: center; justify-content: space-between; }
-    .search-user-id { font-size: 10.5px; font-family: var(--font-mono); color: var(--text-dim); }
-    .search-user-badge-active {
-      font-size: 10px; font-family: var(--font-mono); color: var(--blue); background: var(--blue-dim);
-      padding: 1px 6px; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3); font-weight: 600;
-    }
-
-    /* ─── UNAUTHORIZED SCREEN ─── */
-    .unauth-screen {
-      position: fixed; inset: 0; background: var(--bg); display: flex; align-items: center; justify-content: center;
-      padding: 20px; z-index: 9999;
-    }
-    .unauth-card {
-      width: 100%; max-width: 400px; background: var(--panel); border: 1px solid var(--border-strong);
-      border-left: 3px solid var(--rose); border-radius: 10px; padding: 32px 26px; text-align: left;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
-    }
-    .unauth-icon { color: var(--rose); margin-bottom: 18px; }
-    .unauth-title { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
-    .unauth-desc { font-size: 13.5px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
-    .btn-login-redirect {
-      display: inline-flex; align-items: center; justify-content: center; width: 100%; height: 44px;
-      background: var(--teal-dim); border: 1px solid rgba(63, 169, 142, 0.4); color: var(--teal);
-      border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none;
-      transition: background 0.15s, color 0.15s;
-    }
-    .btn-login-redirect:hover { background: var(--teal); color: #06110d; }
-
-    @media (max-width: 768px) {
-      .dm-sidebar { width: 230px; }
-      .chat-header { padding: 12px 14px; }
-      .messages-container { padding: 14px; }
-      .chat-input-panel { padding: 12px 14px 14px; }
-      .message-row { max-width: 92%; }
-      .brand-sub { display: none; }
-    }
-  </style>
+@media (max-width:768px){
+  .dm-sidebar{ width:230px; }
+  .chat-header{ padding:12px 14px; }
+  .messages-container{ padding:14px; }
+  .chat-input-panel{ padding:12px 14px 14px; }
+  .message-row{ max-width:92%; }
+  .brand-sub{ display:none; }
+  .home-choices{ flex-direction:column; }
+}
+</style>
 </head>
 <body>
 
-  <div class="chat-app" id="chat-app-root">
-    <!-- Header -->
-    <header class="chat-header">
-      <div class="header-left">
-        <a href="/" class="brand-logo">
-          <span class="brand-mark">HUB <em>ZERO</em></span>
-          <span class="brand-sub">CHAT</span>
-        </a>
+<!-- ══════════ HOME SCREEN ══════════ -->
+<div class="home-screen" id="home-screen">
+  <div class="home-brand"><span class="home-brand-mark">HUB <em>ZERO</em></span></div>
+  <h1 class="home-title">Welcome to <span>Hub Zero MESSAGES</span></h1>
+  <p class="home-subtitle" id="home-user-line">Loading your account…</p>
 
-        <!-- Switcher Tabs -->
-        <div class="chat-nav-tabs">
-          <button class="nav-tab-btn tab-global active" id="tab-btn-global" onclick="switchMode('global')">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            <span>Global</span>
-            <span class="badge-unread" id="global-unread-count">0</span>
-          </button>
-          <button class="nav-tab-btn tab-dms" id="tab-btn-dms" onclick="switchMode('dms')">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-            <span>Direct Messages</span>
-            <span class="badge-unread" id="dms-unread-count">0</span>
-          </button>
-          <!-- Admin Master DMs Spy Tab -->
-          <button class="nav-tab-btn tab-admin-dms" id="tab-btn-admin-dms" onclick="switchMode('admin-dms')" style="display: none;">
-            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"></path></svg>
-            <span>👑 ALL DMs</span>
-          </button>
-        </div>
+  <div class="home-choices">
+    <button class="home-choice-card global" onclick="enterApp('global')">
+      <div class="choice-icon-wrap">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path></svg>
       </div>
+      <div class="choice-title">Global Chat <span class="choice-badge" id="home-global-badge">0</span></div>
+      <div class="choice-desc">Chat with every Hub Zero user in a global general.</div>
+      <div class="choice-cta">Open Global Chat →</div>
+    </button>
 
-      <div class="header-right">
-        <!-- Notification Permission Toggle -->
-        <button class="btn-header" id="btn-toggle-notifs" onclick="toggleNotifications()" title="Desktop notification alerts">
-          <span class="notif-dot" id="notif-indicator"></span>
-          <span id="notif-toggle-label">Alerts: OFF</span>
+    <button class="home-choice-card dms" onclick="enterApp('dms')">
+      <div class="choice-icon-wrap">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+      </div>
+      <div class="choice-title">Direct Message <span class="choice-badge" id="home-dms-badge">0</span></div>
+      <div class="choice-desc">Directly and privately chat with any Hub Zero user.</div>
+      <div class="choice-cta">Open Direct Messages →</div>
+    </button>
+  </div>
+
+  <div class="home-footer-note">+ Group DM's coming soon</div>
+</div>
+
+<!-- ══════════ APP SHELL ══════════ -->
+<div class="chat-app" id="chat-app-root">
+  <header class="chat-header">
+    <div class="header-left">
+      <button class="brand-logo" onclick="goHome()">
+        <span class="brand-mark">HUB <em>ZERO</em></span>
+        <span class="brand-sub">MESSAGES</span>
+      </button>
+
+      <div class="chat-nav-tabs">
+        <button class="nav-tab-btn tab-global active" id="tab-btn-global" onclick="switchMode('global')">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+          <span>Global</span>
+          <span class="badge-unread" id="global-unread-count">0</span>
         </button>
+        <button class="nav-tab-btn tab-dms" id="tab-btn-dms" onclick="switchMode('dms')">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+          <span>Direct Messages</span>
+          <span class="badge-unread" id="dms-unread-count">0</span>
+        </button>
+      </div>
+    </div>
 
-        <div class="user-pill" id="current-user-pill">
-          <div class="avatar-sq" id="header-avatar">
-            <span id="header-avatar-initials">?</span>
-          </div>
-          <div class="user-info">
-            <span class="user-name">
-              <span id="header-user-name">Connecting…</span>
-              <span class="admin-chip" id="header-admin-badge" style="display: none;">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
-                ADMIN
-              </span>
+    <div class="header-right">
+      <div class="user-pill" id="current-user-pill">
+        <div class="avatar-sq" id="header-avatar"><span id="header-avatar-initials">?</span></div>
+        <div class="user-info">
+          <span class="user-name">
+            <span id="header-user-name">Connecting…</span>
+            <span class="admin-chip" id="header-admin-badge" style="display:none;">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
+              ADMIN
             </span>
-            <span class="user-id-tag" id="header-user-id">ID ----</span>
-          </div>
+          </span>
+          <span class="user-id-tag" id="header-user-id">ID ----</span>
         </div>
-
-        <button class="btn-header" id="btn-admin-purge" style="display: none;" title="Admin: purge messages">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="3 6 5 6 21 6"></polyline>
-            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-          </svg>
-          <span>Purge</span>
-        </button>
-
-        <a href="/" class="btn-header" title="Return to dashboard">
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-            <polyline points="9 22 9 12 15 12 15 22"></polyline>
-          </svg>
-          <span>Home</span>
-        </a>
       </div>
-    </header>
+      <a href="/" class="btn-header" title="Return to Hub Zero dashboard">
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+        <span>Dashboard</span>
+      </a>
+    </div>
+  </header>
 
-    <!-- Workspace -->
-    <div class="chat-workspace">
-      <!-- DM & Admin Sidebar -->
-      <aside class="dm-sidebar" id="dm-sidebar">
-        <div class="dm-slogan-banner" id="dm-slogan-banner">
-          <span>🔒</span>
-          <span>Secure &amp; private DMs your school CAN'T read &rarr; SCREW EMAILS</span>
+  <div class="chat-workspace">
+    <aside class="dm-sidebar" id="dm-sidebar">
+      <div class="dm-slogan-banner" id="dm-slogan-banner">
+        <span>💬</span>
+        <span>Direct messages are visible to you and the recipient (and Hub Zero moderators)</span>
+      </div>
+      <div class="dm-sidebar-header">
+        <span class="dm-sidebar-title" id="dm-sidebar-title">Direct Messages</span>
+        <button class="btn-new-dm" id="btn-open-search" onclick="openSearchModal()">
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>New DM</span>
+        </button>
+      </div>
+      <div class="dm-list" id="dm-contacts-list"></div>
+    </aside>
+
+    <main class="chat-main-stage">
+      <div class="channel-sub-header" id="channel-sub-header">
+        <div class="channel-info-left">
+          <div class="avatar-sq" id="dm-target-avatar" style="width:26px;height:26px;border-radius:6px;"><span id="dm-target-initials">?</span></div>
+          <span><span id="channel-target-prefix">Chatting with</span> <strong class="channel-target-name" id="dm-target-name">Select a conversation</strong></span>
+          <span class="channel-target-id" id="dm-target-id"></span>
         </div>
+      </div>
 
-        <div class="dm-sidebar-header">
-          <span class="dm-sidebar-title" id="dm-sidebar-title">Direct Messages</span>
-          <button class="btn-new-dm" id="btn-open-search" onclick="openSearchModal()">
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            <span>New DM</span>
+      <div class="messages-container" id="messages-container"></div>
+
+      <button class="btn-scroll-bottom" id="btn-scroll-bottom">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        <span>new messages</span>
+      </button>
+
+      <div class="rate-limit-banner" id="rate-limit-banner">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        <span id="rate-limit-text">rate limit hit — cooling down 5s…</span>
+      </div>
+
+      <footer class="chat-input-panel" id="chat-input-panel">
+        <div class="input-controls-row">
+          <span class="sending-as-admin-flag" id="sending-as-admin-flag">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
+            Sending as Admin
+          </span>
+          <span style="margin-left:auto;" id="char-counter">0 / 500</span>
+        </div>
+        <div class="input-box-wrapper">
+          <input type="text" class="chat-input" id="chat-input" placeholder="Message everyone…" maxlength="500" autocomplete="off">
+          <button class="btn-send" id="btn-send" disabled>
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
           </button>
         </div>
-        <div class="dm-list" id="dm-contacts-list"></div>
-      </aside>
-
-      <!-- Main Stage -->
-      <main class="chat-main-stage">
-        <!-- DM Target Sub-Header -->
-        <div class="channel-sub-header" id="channel-sub-header">
-          <div class="channel-info-left">
-            <div class="avatar-sq" id="dm-target-avatar" style="width: 26px; height: 26px; border-radius: 6px;">
-              <span id="dm-target-initials">?</span>
-            </div>
-            <span><span id="channel-target-prefix">Chatting with</span> <strong class="channel-target-name" id="dm-target-name">Select a conversation</strong></span>
-            <span class="channel-target-id" id="dm-target-id"></span>
-          </div>
-        </div>
-
-        <div class="messages-container" id="messages-container"></div>
-
-        <button class="btn-scroll-bottom" id="btn-scroll-bottom">
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <polyline points="19 12 12 19 5 12"></polyline>
-          </svg>
-          <span>new messages</span>
-        </button>
-
-        <div class="rate-limit-banner" id="rate-limit-banner">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-          <span id="rate-limit-text">rate limit hit — cooling down 5s…</span>
-        </div>
-
-        <!-- Input Console -->
-        <footer class="chat-input-panel" id="chat-input-panel">
-          <div class="input-controls-row">
-            <label class="admin-tag-toggle-wrap" id="admin-tag-toggle-wrap">
-              <div class="tag-switch">
-                <input type="checkbox" id="chk-admin-tag">
-                <span class="tag-slider"></span>
-              </div>
-              <span class="tag-switch-label">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
-                <span>Send as admin</span>
-              </span>
-            </label>
-            <span style="margin-left: auto;" id="char-counter">0 / 500</span>
-          </div>
-
-          <div class="input-box-wrapper">
-            <input
-              type="text"
-              class="chat-input"
-              id="chat-input"
-              placeholder="Message everyone…"
-              maxlength="500"
-              autocomplete="off"
-            />
-            <button class="btn-send" id="btn-send" disabled>
-              <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.3">
-                <line x1="12" y1="19" x2="12" y2="5"></line>
-                <polyline points="5 12 12 5 19 12"></polyline>
-              </svg>
-            </button>
-          </div>
-        </footer>
-      </main>
-    </div>
+      </footer>
+    </main>
   </div>
+</div>
 
-  <!-- User Search Modal for New DMs -->
-  <div class="modal-overlay" id="search-modal">
-    <div class="search-card">
-      <div class="search-card-header">
-        <span class="search-card-title">Start a Direct Message <span style="color: var(--teal); font-size: 12.5px; font-weight: 600;">(Hub Zero Verified Users)</span></span>
-        <button class="btn-modal-close" onclick="closeSearchModal()">
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-        </button>
-      </div>
-      <div class="search-input-wrap">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" class="search-input" id="search-students-input" placeholder="Search by student name or 6-digit ID…" autocomplete="off">
-      </div>
-      <div class="search-results-list" id="search-results-list">
-        <div style="text-align: center; color: var(--text-dim); font-size: 12.5px; padding: 20px 0;">Type a name or ID to search Hub Zero students…</div>
+<!-- ══════════ ADMIN CORNER (visible only to admins) ══════════ -->
+<button class="admin-corner-btn" id="admin-corner-btn" onclick="toggleAdminPanel()" title="Admin tools">
+  <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
+</button>
+<div class="admin-corner-panel" id="admin-corner-panel">
+  <div class="admin-corner-title">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
+    Admin Tools
+  </div>
+  <div class="admin-corner-item" onclick="openAdminAllDms()">
+    <span>View All DMs</span>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
+  </div>
+  <div class="admin-corner-item">
+    <span>Send as Admin</span>
+    <label class="tag-switch">
+      <input type="checkbox" id="chk-admin-tag" onchange="onAdminTagToggle()">
+      <span class="tag-slider"></span>
+    </label>
+  </div>
+  <div class="admin-corner-item danger" onclick="purgeGlobalChat()">
+    <span>Purge Global Chat</span>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+  </div>
+</div>
+
+<!-- Admin All-DMs inspector modal -->
+<div class="modal-overlay" id="admin-dms-modal">
+  <div class="search-card" style="max-width:560px;">
+    <div class="search-card-header">
+      <span class="search-card-title" style="color:var(--gold);">👑 All Direct Message Threads</span>
+      <button class="btn-modal-close" onclick="closeAdminAllDms()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div id="admin-dms-body" style="display:flex; gap:14px; min-height:360px;">
+      <div style="width:190px; flex-shrink:0; overflow-y:auto; display:flex; flex-direction:column; gap:5px;" id="admin-pairs-list"></div>
+      <div style="flex:1; min-width:0; display:flex; flex-direction:column; border-left:1px solid var(--border); padding-left:14px;">
+        <div id="admin-thread-title" style="font-size:12px; color:var(--text-dim); margin-bottom:8px; font-family:var(--font-mono);">select a thread</div>
+        <div id="admin-thread-messages" style="flex:1; overflow-y:auto; display:flex; flex-direction:column; gap:8px;"></div>
       </div>
     </div>
   </div>
+</div>
 
-  <script>
-    const SUPABASE_URL = "https://inolfvjpiktmrhqyvnsh.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc";
-    const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+<!-- User Search Modal for New DMs -->
+<div class="modal-overlay" id="search-modal">
+  <div class="search-card">
+    <div class="search-card-header">
+      <span class="search-card-title">Start a Direct Message <span style="color:var(--teal); font-size:12.5px; font-weight:600;">(Hub Zero Verified Users)</span></span>
+      <button class="btn-modal-close" onclick="closeSearchModal()">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="search-input-wrap">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" class="search-input" id="search-students-input" placeholder="Search by student name or 6-digit ID…" autocomplete="off">
+    </div>
+    <div class="search-results-list" id="search-results-list">
+      <div style="text-align:center; color:var(--text-dim); font-size:12.5px; padding:20px 0;">Type a name or ID to search Hub Zero students…</div>
+    </div>
+  </div>
+</div>
 
-    const DROPBOX_CONFIG = {
-      refreshToken: 'TswY5VPKPZIAAAAAAAAAAexX6b7MNjI2vs73jevAw8ISqzSDtfz2Xand1JTjF4jP',
-      appKey: 'r9qwbhnn0w8cka7',
-      appSecret: 'zyr8py0krtvc7qh',
-      folderPath: '/Apps/Realm Student Search/School Photos'
-    };
+<script>
+const SUPABASE_URL = "https://inolfvjpiktmrhqyvnsh.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlub2xmdmpwaWt0bXJocXl2bnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ5MjU5NDUsImV4cCI6MjEwMDUwMTk0NX0.gurNKy0vtMfVMW-To_2kyvMpQhEPpq7bKkJnyNN2qAc";
+const sbClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-    // State
-    let currentUser = { id: "", name: "", isAdmin: false };
-    let activeMode = "global"; // "global" | "dms" | "admin-dms"
-    let activeDmContact = null; // { id: "...", name: "..." }
-    let activeAdminDmPair = null; // { userA: {id, name}, userB: {id, name} }
+// SECURITY WARNING: these Dropbox credentials are exposed to every visitor's browser.
+// Anyone who opens devtools can read this refresh token / app secret and use them
+// against your Dropbox account. Move this token exchange to a server-side endpoint
+// (e.g. a small serverless function) that the client calls instead — don't ship
+// secrets in client JS. Left functionally in place here only to preserve avatar sync.
+const DROPBOX_CONFIG = {
+  refreshToken: 'TswY5VPKPZIAAAAAAAAAAexX6b7MNjI2vs73jevAw8ISqzSDtfz2Xand1JTjF4jP',
+  appKey: 'r9qwbhnn0w8cka7',
+  appSecret: 'zyr8py0krtvc7qh',
+  folderPath: '/Apps/Realm Student Search/School Photos'
+};
 
-    let dmMessages = [];
-    let globalMessages = [];
-    let dmContacts = []; // List of active DM contacts [{ id, name, lastMessage, lastTime }]
-    let hiddenDmIds = new Set();
-    let verifiedStudentsDirectory = [];
+// ── State ──
+let currentUser = { id: "", name: "", isAdmin: false };
+let activeMode = "global";
+let activeDmContact = null;
+let dmMessages = [];
+let globalMessages = [];
+let dmContacts = [];
+let hiddenDmIds = new Set();
+let verifiedStudentsDirectory = [];
+let unreadGlobalCount = 0;
+let unreadDmsMap = {};
+let dropboxToken = null;
+let dropboxFiles = {};
+let photoCache = {};
+let recentSendTimestamps = [];
+let cooldownTimer = null;
+let isUserScrolledUp = false;
+let adminPairsCache = [];
+let activeAdminPairKey = null;
 
-    let unreadGlobalCount = 0;
-    let unreadDmsMap = {}; // contactId -> unreadCount
-    let notificationsEnabled = localStorage.getItem('hz_chat_notifications') === 'true';
+// ── DOM refs ──
+const homeScreen = document.getElementById('home-screen');
+const chatApp = document.getElementById('chat-app-root');
+const tabBtnGlobal = document.getElementById('tab-btn-global');
+const tabBtnDms = document.getElementById('tab-btn-dms');
+const globalUnreadBadge = document.getElementById('global-unread-count');
+const dmsUnreadBadge = document.getElementById('dms-unread-count');
+const homeGlobalBadge = document.getElementById('home-global-badge');
+const homeDmsBadge = document.getElementById('home-dms-badge');
+const dmSidebar = document.getElementById('dm-sidebar');
+const dmSidebarTitle = document.getElementById('dm-sidebar-title');
+const btnOpenSearch = document.getElementById('btn-open-search');
+const dmContactsList = document.getElementById('dm-contacts-list');
+const channelSubHeader = document.getElementById('channel-sub-header');
+const dmTargetName = document.getElementById('dm-target-name');
+const dmTargetId = document.getElementById('dm-target-id');
+const dmTargetAvatar = document.getElementById('dm-target-avatar');
+const dmTargetInitials = document.getElementById('dm-target-initials');
+const chatInputPanel = document.getElementById('chat-input-panel');
+const messagesContainer = document.getElementById('messages-container');
+const chatInput = document.getElementById('chat-input');
+const btnSend = document.getElementById('btn-send');
+const charCounter = document.getElementById('char-counter');
+const btnScrollBottom = document.getElementById('btn-scroll-bottom');
+const rateLimitBanner = document.getElementById('rate-limit-banner');
+const rateLimitText = document.getElementById('rate-limit-text');
+const sendingAsAdminFlag = document.getElementById('sending-as-admin-flag');
+const chkAdminTag = document.getElementById('chk-admin-tag');
+const adminCornerBtn = document.getElementById('admin-corner-btn');
+const adminCornerPanel = document.getElementById('admin-corner-panel');
+const searchModal = document.getElementById('search-modal');
+const searchStudentsInput = document.getElementById('search-students-input');
+const searchResultsList = document.getElementById('search-results-list');
+const adminDmsModal = document.getElementById('admin-dms-modal');
+const adminPairsList = document.getElementById('admin-pairs-list');
+const adminThreadTitle = document.getElementById('admin-thread-title');
+const adminThreadMessages = document.getElementById('admin-thread-messages');
 
-    let dropboxToken = null;
-    let dropboxFiles = {};
-    let photoCache = {};
-    let recentSendTimestamps = [];
-    let cooldownTimer = null;
-    let isUserScrolledUp = false;
+// ── Audio beep ──
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function playBeep(isSend=true){
+  try{
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    const osc=audioCtx.createOscillator(), gain=audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    const f0=isSend?540:750, f1=isSend?880:500;
+    osc.frequency.setValueAtTime(f0, audioCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(f1, audioCtx.currentTime+0.08);
+    gain.gain.setValueAtTime(isSend?0.06:0.04, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime+0.08);
+    osc.start(); osc.stop(audioCtx.currentTime+0.08);
+  }catch(e){}
+}
 
-    // DOM References
-    const tabBtnGlobal = document.getElementById('tab-btn-global');
-    const tabBtnDms = document.getElementById('tab-btn-dms');
-    const tabBtnAdminDms = document.getElementById('tab-btn-admin-dms');
-    const globalUnreadBadge = document.getElementById('global-unread-count');
-    const dmsUnreadBadge = document.getElementById('dms-unread-count');
-    const btnToggleNotifs = document.getElementById('btn-toggle-notifs');
-    const notifIndicator = document.getElementById('notif-indicator');
-    const notifToggleLabel = document.getElementById('notif-toggle-label');
+// ── Tab title flash (kept — desktop popup permission/toggle removed) ──
+let originalDocTitle = document.title || "Hub Zero Messages";
+let titleFlashTimer = null;
+window.addEventListener('focus', () => {
+  if(titleFlashTimer){ clearInterval(titleFlashTimer); titleFlashTimer=null; }
+  document.title = originalDocTitle;
+});
+function flashTabTitle(text){
+  if(document.hasFocus()) return;
+  if(titleFlashTimer) clearInterval(titleFlashTimer);
+  let toggle=false;
+  titleFlashTimer = setInterval(()=>{
+    document.title = toggle ? text : originalDocTitle;
+    toggle=!toggle;
+  }, 1000);
+}
 
-    const dmSidebar = document.getElementById('dm-sidebar');
-    const dmSidebarTitle = document.getElementById('dm-sidebar-title');
-    const dmSloganBanner = document.getElementById('dm-slogan-banner');
-    const btnOpenSearch = document.getElementById('btn-open-search');
-    const dmContactsList = document.getElementById('dm-contacts-list');
+// ── Auth ──
+async function resolveUserIdentity(){
+  let savedId="", savedName="";
+  const signedInRaw = localStorage.getItem('Signed_in');
+  if(signedInRaw){
+    try{
+      const parsed = JSON.parse(signedInRaw);
+      if(parsed && parsed.id){ savedId=parsed.id; savedName=parsed.name||""; }
+    }catch(e){}
+  }
+  if(!savedId){
+    savedId = localStorage.getItem('ep_hub_verified_id') || sessionStorage.getItem('ep_hub_verified_id') || localStorage.getItem('hz_user_id') || "";
+    savedName = localStorage.getItem('hz_user_name') || "";
+  }
+  if(!savedId || !sbClient){ renderUnauthorizedScreen(); return false; }
+  savedId = savedId.trim();
 
-    const channelSubHeader = document.getElementById('channel-sub-header');
-    const channelTargetPrefix = document.getElementById('channel-target-prefix');
-    const dmTargetName = document.getElementById('dm-target-name');
-    const dmTargetId = document.getElementById('dm-target-id');
-    const dmTargetAvatar = document.getElementById('dm-target-avatar');
-    const dmTargetInitials = document.getElementById('dm-target-initials');
-    const chatInputPanel = document.getElementById('chat-input-panel');
+  const { data: studentData, error } = await sbClient.from('verified_students').select('id, name').eq('id', savedId).single();
+  if(error || !studentData){ renderUnauthorizedScreen(); return false; }
 
-    const messagesContainer = document.getElementById('messages-container');
-    const chatInput = document.getElementById('chat-input');
-    const btnSend = document.getElementById('btn-send');
-    const charCounter = document.getElementById('char-counter');
-    const btnScrollBottom = document.getElementById('btn-scroll-bottom');
-    const rateLimitBanner = document.getElementById('rate-limit-banner');
-    const rateLimitText = document.getElementById('rate-limit-text');
-    const adminTagToggleWrap = document.getElementById('admin-tag-toggle-wrap');
-    const chkAdminTag = document.getElementById('chk-admin-tag');
-    const btnAdminPurge = document.getElementById('btn-admin-purge');
+  let name = studentData.name || savedName || `Student ${savedId}`;
+  let isAdmin = savedId === '089091';
+  if(!isAdmin){
+    const { data: adminData } = await sbClient.from('admin_students').select('id').eq('id', savedId).single();
+    if(adminData) isAdmin = true;
+  }
+  currentUser = { id: savedId, name, isAdmin };
 
-    const searchModal = document.getElementById('search-modal');
-    const searchStudentsInput = document.getElementById('search-students-input');
-    const searchResultsList = document.getElementById('search-results-list');
+  document.getElementById('header-user-name').textContent = name;
+  document.getElementById('header-user-id').textContent = `ID ${savedId}`;
+  const initials = name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+  document.getElementById('header-avatar-initials').textContent = initials;
+  document.getElementById('header-avatar').setAttribute('data-avatar-name', name);
+  document.getElementById('home-user-line').textContent = `Signed in as ${name} · ID ${savedId}`;
 
-    // ─── AUDIO SYNTHESIZER ───
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playBeep(isSend = true) {
-      try {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        if (isSend) {
-          osc.frequency.setValueAtTime(540, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.08);
-          gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.08);
-        } else {
-          osc.frequency.setValueAtTime(750, audioCtx.currentTime);
-          osc.frequency.exponentialRampToValueAtTime(500, audioCtx.currentTime + 0.08);
-          gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-          gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-          osc.start();
-          osc.stop(audioCtx.currentTime + 0.08);
-        }
-      } catch (e) {}
-    }
+  if(isAdmin){
+    document.getElementById('header-admin-badge').style.display = 'inline-flex';
+    adminCornerBtn.classList.add('show');
+  }
 
-    // ─── NOTIFICATION MANAGER ───
-    let originalDocTitle = document.title || "Hub Zero — Chat & DMs";
-    let titleFlashTimer = null;
+  chatInput.disabled = false;
+  btnSend.disabled = chatInput.value.trim().length === 0;
 
-    window.addEventListener('focus', () => {
-      if (titleFlashTimer) {
-        clearInterval(titleFlashTimer);
-        titleFlashTimer = null;
-      }
-      document.title = originalDocTitle;
+  loadSavedDmContacts();
+  resolveVisibleAvatars();
+  return true;
+}
+
+function renderUnauthorizedScreen(){
+  document.body.innerHTML = `
+    <div class="unauth-screen">
+      <div class="unauth-card">
+        <div class="unauth-icon">
+          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <h2 class="unauth-title">Access Restricted</h2>
+        <p class="unauth-desc">Hub Zero Messages is exclusively available to signed-in, verified Hub Zero members. Please log in on the main site first.</p>
+        <a href="/" class="btn-login-redirect">Go to Hub Zero Login</a>
+      </div>
+    </div>
+  `;
+}
+
+// ── Time formatting (AEST) ──
+function formatAEST(dateStr){
+  if(!dateStr) return '';
+  const date = new Date(dateStr);
+  const timeFormatter = new Intl.DateTimeFormat('en-AU', { timeZone:'Australia/Brisbane', hour:'numeric', minute:'2-digit', hour12:true });
+  const dateFormatter = new Intl.DateTimeFormat('en-AU', { timeZone:'Australia/Brisbane', day:'numeric', month:'short' });
+  const now = new Date();
+  const isToday = now.toDateString() === date.toDateString();
+  return isToday ? `Today, ${timeFormatter.format(date)}` : `${dateFormatter.format(date)}, ${timeFormatter.format(date)}`;
+}
+
+// ── Dropbox avatar sync ──
+async function initDropbox(){
+  try{
+    const cachedFiles = sessionStorage.getItem('hz_dropbox_files');
+    if(cachedFiles) dropboxFiles = JSON.parse(cachedFiles);
+    const r = await fetch('https://api.dropboxapi.com/oauth2/token', {
+      method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
+      body:new URLSearchParams({ grant_type:'refresh_token', refresh_token:DROPBOX_CONFIG.refreshToken, client_id:DROPBOX_CONFIG.appKey, client_secret:DROPBOX_CONFIG.appSecret })
     });
-
-    function flashTabTitle(text) {
-      if (document.hasFocus()) return;
-      if (titleFlashTimer) clearInterval(titleFlashTimer);
-      let toggle = false;
-      titleFlashTimer = setInterval(() => {
-        document.title = toggle ? text : originalDocTitle;
-        toggle = !toggle;
-      }, 1000);
-    }
-
-    function updateNotifUI() {
-      const hasSupport = "Notification" in window;
-      if (hasSupport && Notification.permission === 'granted' && notificationsEnabled) {
-        notifIndicator.classList.add('on');
-        notifToggleLabel.textContent = 'Alerts: ON';
-        btnToggleNotifs.classList.add('active-notif');
-      } else if (hasSupport && Notification.permission === 'denied') {
-        notifIndicator.classList.remove('on');
-        notifToggleLabel.textContent = 'Alerts: BLOCKED';
-        btnToggleNotifs.classList.remove('active-notif');
-      } else {
-        notifIndicator.classList.remove('on');
-        notifToggleLabel.textContent = 'Alerts: OFF';
-        btnToggleNotifs.classList.remove('active-notif');
-      }
-    }
-
-    window.toggleNotifications = async function() {
-      if (!("Notification" in window)) {
-        alert("This browser does not support desktop notifications.");
-        return;
-      }
-
-      if (Notification.permission === 'denied') {
-        alert("Desktop notifications are currently blocked in your browser site settings. Click the tune/padlock icon next to the URL bar to allow notifications.");
-        notificationsEnabled = false;
-        localStorage.setItem('hz_chat_notifications', 'false');
-        updateNotifUI();
-        return;
-      }
-
-      if (!notificationsEnabled) {
-        try {
-          const perm = await Notification.requestPermission();
-          if (perm === 'granted') {
-            notificationsEnabled = true;
-            localStorage.setItem('hz_chat_notifications', 'true');
-            triggerDesktopNotification("Hub Zero Notifications Enabled", "You'll be alerted whenever you receive a new chat message!", "");
-          } else {
-            notificationsEnabled = false;
-            localStorage.setItem('hz_chat_notifications', 'false');
-            alert("Notifications permission was not granted.");
-          }
-        } catch (err) {
-          console.error("Permission request error:", err);
-        }
-      } else {
-        notificationsEnabled = false;
-        localStorage.setItem('hz_chat_notifications', 'false');
-      }
-      updateNotifUI();
-    };
-
-    function triggerDesktopNotification(title, body, senderName) {
-      // 1. Tab title flash
-      flashTabTitle(`💬 ${title}`);
-
-      // 2. Desktop notification popup
-      if (!notificationsEnabled || !("Notification" in window) || Notification.permission !== 'granted') return;
-      try {
-        const path = findPhotoPath(senderName);
-        let iconUrl = 'https://hub-zero.site/favicon.ico';
-        if (path && photoCache[path]) iconUrl = photoCache[path];
-
-        const notif = new Notification(title, {
-          body: body || 'New message received',
-          icon: iconUrl,
-          tag: 'hz_chat_' + Date.now()
-        });
-        notif.onclick = function() {
-          window.focus();
-          notif.close();
-        };
-      } catch (e) {
-        console.warn("Desktop notification notice:", e);
-      }
-    }
-
-    // ─── STRICT AUTHENTICATION GATE ───
-    async function resolveUserIdentity() {
-      let savedId = "";
-      let savedName = "";
-
-      const signedInRaw = localStorage.getItem('Signed_in');
-      if (signedInRaw) {
-        try {
-          const parsed = JSON.parse(signedInRaw);
-          if (parsed && parsed.id) {
-            savedId = parsed.id;
-            savedName = parsed.name || "";
-          }
-        } catch (e) {}
-      }
-
-      if (!savedId) {
-        savedId = localStorage.getItem('ep_hub_verified_id') || sessionStorage.getItem('ep_hub_verified_id') || localStorage.getItem('hz_user_id') || "";
-        savedName = localStorage.getItem('hz_user_name') || "";
-      }
-
-      if (!savedId || !sbClient) {
-        renderUnauthorizedScreen();
-        return;
-      }
-
-      savedId = savedId.trim();
-
-      const { data: studentData, error } = await sbClient
-        .from('verified_students')
-        .select('id, name')
-        .eq('id', savedId)
-        .single();
-
-      if (error || !studentData) {
-        renderUnauthorizedScreen();
-        return;
-      }
-
-      let name = studentData.name || savedName || `Student ${savedId}`;
-      let isAdmin = savedId === '089091';
-      if (!isAdmin) {
-        const { data: adminData } = await sbClient
-          .from('admin_students')
-          .select('id')
-          .eq('id', savedId)
-          .single();
-        if (adminData) isAdmin = true;
-      }
-
-      currentUser = { id: savedId, name, isAdmin };
-
-      document.getElementById('header-user-name').textContent = name;
-      document.getElementById('header-user-id').textContent = `ID ${savedId}`;
-
-      const initials = name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
-      document.getElementById('header-avatar-initials').textContent = initials;
-      document.getElementById('header-avatar').setAttribute('data-avatar-name', name);
-
-      if (isAdmin) {
-        document.getElementById('header-admin-badge').style.display = 'inline-flex';
-        adminTagToggleWrap.classList.add('visible');
-        btnAdminPurge.style.display = activeMode === 'global' ? 'flex' : 'none';
-        tabBtnAdminDms.style.display = 'inline-flex';
-      } else {
-        btnAdminPurge.style.display = 'none';
-      }
-
-      chkAdminTag.checked = false;
-      chatInput.disabled = false;
-      btnSend.disabled = chatInput.value.trim().length === 0;
-
-      loadSavedDmContacts();
-      updateNotifUI();
+    const d = await r.json();
+    if(d.access_token){
+      dropboxToken = d.access_token;
+      if(Object.keys(dropboxFiles).length===0) await loadDropboxFiles(dropboxToken);
       resolveVisibleAvatars();
     }
-
-    function renderUnauthorizedScreen() {
-      document.body.innerHTML = `
-        <div class="unauth-screen">
-          <div class="unauth-card">
-            <div class="unauth-icon">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.2">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-              </svg>
-            </div>
-            <h2 class="unauth-title">Access Restricted</h2>
-            <p class="unauth-desc">Hub Zero Chat and Direct Messages are exclusively available to signed-in, verified Hub Zero members. Please log in on the main site first.</p>
-            <a href="/" class="btn-login-redirect">Go to Hub Zero Login</a>
-          </div>
-        </div>
-      `;
-    }
-
-    // ─── AEST TIME FORMATTER ───
-    function formatAEST(dateStr) {
-      if (!dateStr) return '';
-      const date = new Date(dateStr);
-      const timeFormatter = new Intl.DateTimeFormat('en-AU', {
-        timeZone: 'Australia/Brisbane',
-        hour: 'numeric',
-        minute: '2-digit',
-        hour12: true
-      });
-      const dateFormatter = new Intl.DateTimeFormat('en-AU', {
-        timeZone: 'Australia/Brisbane',
-        day: 'numeric',
-        month: 'short'
-      });
-      const now = new Date();
-      const isToday = now.toDateString() === date.toDateString();
-      const timeStr = timeFormatter.format(date);
-      return isToday ? `Today, ${timeStr}` : `${dateFormatter.format(date)}, ${timeStr}`;
-    }
-
-    // ─── DROPBOX PHOTO SYNC ───
-    async function initDropbox() {
-      try {
-        const cachedFiles = sessionStorage.getItem('hz_dropbox_files');
-        if (cachedFiles) dropboxFiles = JSON.parse(cachedFiles);
-
-        const r = await fetch('https://api.dropboxapi.com/oauth2/token', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-            grant_type: 'refresh_token',
-            refresh_token: DROPBOX_CONFIG.refreshToken,
-            client_id: DROPBOX_CONFIG.appKey,
-            client_secret: DROPBOX_CONFIG.appSecret
-          })
-        });
-        const d = await r.json();
-        if (d.access_token) {
-          dropboxToken = d.access_token;
-          if (Object.keys(dropboxFiles).length === 0) {
-            await loadDropboxFiles(dropboxToken);
-          }
-          resolveVisibleAvatars();
-        }
-      } catch (err) {
-        console.warn('Dropbox avatar notice:', err);
+  }catch(err){ console.warn('Dropbox avatar notice:', err); }
+}
+async function loadDropboxFiles(token){
+  try{
+    let cursor=null, hasMore=true; const map={};
+    while(hasMore){
+      const url = cursor ? 'https://api.dropboxapi.com/2/files/list_folder/continue' : 'https://api.dropboxapi.com/2/files/list_folder';
+      const r = await fetch(url, { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},
+        body: JSON.stringify(cursor ? { cursor } : { path: DROPBOX_CONFIG.folderPath, recursive:false, limit:2000 }) });
+      const d = await r.json();
+      if(!r.ok) break;
+      for(const e of d.entries||[]){
+        if(e['.tag']!=='file' || !/\.(jpe?g|png)$/i.test(e.name)) continue;
+        const norm = e.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]/g,'');
+        map[norm] = e.path_lower;
       }
+      hasMore = d.has_more; cursor = d.cursor;
     }
-
-    async function loadDropboxFiles(token) {
-      try {
-        let cursor = null, hasMore = true;
-        const map = {};
-        while (hasMore) {
-          const url = cursor ? 'https://api.dropboxapi.com/2/files/list_folder/continue' : 'https://api.dropboxapi.com/2/files/list_folder';
-          const r = await fetch(url, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify(cursor ? { cursor } : { path: DROPBOX_CONFIG.folderPath, recursive: false, limit: 2000 })
-          });
-          const d = await r.json();
-          if (!r.ok) break;
-          for (const e of d.entries || []) {
-            if (e['.tag'] !== 'file' || !/\.(jpe?g|png)$/i.test(e.name)) continue;
-            const norm = e.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]/g, '');
-            map[norm] = e.path_lower;
-          }
-          hasMore = d.has_more;
-          cursor = d.cursor;
-        }
-        dropboxFiles = map;
-        sessionStorage.setItem('hz_dropbox_files', JSON.stringify(map));
-      } catch (err) {
-        console.warn('Dropbox file listing notice:', err);
-      }
+    dropboxFiles = map;
+    sessionStorage.setItem('hz_dropbox_files', JSON.stringify(map));
+  }catch(err){ console.warn('Dropbox file listing notice:', err); }
+}
+function findPhotoPath(name){
+  if(!name) return null;
+  const norm = name.toLowerCase().replace(/[^a-z0-9]/g,'');
+  if(dropboxFiles[norm]) return dropboxFiles[norm];
+  for(const [k,p] of Object.entries(dropboxFiles)){
+    if(norm.length>5 && (k.includes(norm) || norm.includes(k))) return p;
+  }
+  return null;
+}
+async function getPhotoUrl(token, path){
+  if(!token || !path) return null;
+  if(photoCache[path]) return photoCache[path];
+  const sKey = `hz_photo_${path}`;
+  const cached = sessionStorage.getItem(sKey);
+  if(cached){ photoCache[path]=cached; return cached; }
+  try{
+    const lr = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({ path, direct_only:true }) });
+    const ld = await lr.json();
+    let url = ld.links && ld.links.length>0 ? ld.links[0].url : null;
+    if(!url){
+      const cr = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({ path, settings:{ requested_visibility:'public' } }) });
+      const cd = await cr.json();
+      url = cd.url;
     }
-
-    function findPhotoPath(name) {
-      if (!name) return null;
-      const norm = name.toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (dropboxFiles[norm]) return dropboxFiles[norm];
-      for (const [k, p] of Object.entries(dropboxFiles)) {
-        if (norm.length > 5 && (k.includes(norm) || norm.includes(k))) return p;
-      }
-      return null;
+    if(url){
+      url = url.replace('www.dropbox.com','dl.dropboxusercontent.com');
+      photoCache[path]=url;
+      try{ sessionStorage.setItem(sKey, url); }catch(e){}
+      return url;
     }
-
-    async function getPhotoUrl(token, path) {
-      if (!token || !path) return null;
-      if (photoCache[path]) return photoCache[path];
-      const sKey = `hz_photo_${path}`;
-      const cached = sessionStorage.getItem(sKey);
-      if (cached) {
-        photoCache[path] = cached;
-        return cached;
-      }
-      try {
-        const lr = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ path, direct_only: true })
-        });
-        const ld = await lr.json();
-        let url = ld.links && ld.links.length > 0 ? ld.links[0].url : null;
-        if (!url) {
-          const cr = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-            body: JSON.stringify({ path, settings: { requested_visibility: 'public' } })
-          });
-          const cd = await cr.json();
-          url = cd.url;
-        }
-        if (url) {
-          url = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
-          photoCache[path] = url;
-          try { sessionStorage.setItem(sKey, url); } catch (e) {}
-          return url;
-        }
-      } catch (e) {}
-      return null;
+  }catch(e){}
+  return null;
+}
+async function resolveVisibleAvatars(){
+  const avatarElements = document.querySelectorAll('[data-avatar-name]:not([data-avatar-loaded="true"])');
+  for(const el of avatarElements){
+    const name = el.getAttribute('data-avatar-name');
+    if(!name) continue;
+    const path = findPhotoPath(name);
+    if(path && dropboxToken){
+      const url = await getPhotoUrl(dropboxToken, path);
+      if(url){ el.innerHTML = `<img src="${url}" alt="${escapeHtml(name)}" onerror="this.remove()">`; el.setAttribute('data-avatar-loaded','true'); }
     }
+  }
+}
 
-    async function resolveVisibleAvatars() {
-      const avatarElements = document.querySelectorAll('[data-avatar-name]:not([data-avatar-loaded="true"])');
-      for (const el of avatarElements) {
-        const name = el.getAttribute('data-avatar-name');
-        if (!name) continue;
-        const path = findPhotoPath(name);
-        if (path && dropboxToken) {
-          const url = await getPhotoUrl(dropboxToken, path);
-          if (url) {
-            el.innerHTML = `<img src="${url}" alt="${name}" onerror="this.remove()">`;
-            el.setAttribute('data-avatar-loaded', 'true');
-          }
-        }
-      }
-    }
+// ── Home <-> App navigation ──
+window.goHome = function(){
+  chatApp.classList.remove('active');
+  homeScreen.style.display = 'flex';
+  closeAdminAllDms();
+  adminCornerPanel.classList.remove('open');
+};
+window.enterApp = function(mode){
+  homeScreen.style.display = 'none';
+  chatApp.classList.add('active');
+  switchMode(mode);
+};
 
-    // ─── MODE SWITCHING ───
-    window.switchMode = function(mode) {
-      activeMode = mode;
-      
-      tabBtnGlobal.classList.toggle('active', mode === 'global');
-      tabBtnDms.classList.toggle('active', mode === 'dms');
-      if (tabBtnAdminDms) tabBtnAdminDms.classList.toggle('active', mode === 'admin-dms');
+// ── Mode switching ──
+window.switchMode = function(mode){
+  activeMode = mode;
+  tabBtnGlobal.classList.toggle('active', mode==='global');
+  tabBtnDms.classList.toggle('active', mode==='dms');
 
-      // Purge button ONLY appears on Global Chat for Admins
-      if (currentUser.isAdmin && mode === 'global') {
-        btnAdminPurge.style.display = 'flex';
-      } else {
-        btnAdminPurge.style.display = 'none';
-      }
-
-      if (mode === 'global') {
-        dmSidebar.classList.remove('active');
-        channelSubHeader.classList.remove('active');
-        chatInputPanel.style.display = 'flex';
-        chatInput.placeholder = "Message everyone…";
-        
-        unreadGlobalCount = 0;
-        globalUnreadBadge.classList.remove('active');
-        globalUnreadBadge.textContent = '0';
-        
+  if(mode==='global'){
+    dmSidebar.classList.remove('active');
+    channelSubHeader.classList.remove('active');
+    chatInputPanel.style.display='flex';
+    chatInput.placeholder = "Message everyone…";
+    unreadGlobalCount = 0;
+    updateUnreadBadges();
+    renderMessages();
+  } else if(mode==='dms'){
+    dmSidebar.classList.add('active');
+    channelSubHeader.classList.add('active');
+    chatInputPanel.style.display='flex';
+    renderDmContactsList();
+    if(activeDmContact){
+      selectDmContact(activeDmContact);
+    } else {
+      const visible = dmContacts.filter(c=>!hiddenDmIds.has(c.id));
+      if(visible.length>0){ selectDmContact(visible[0]); }
+      else{
+        dmTargetName.textContent = "Select a conversation";
+        dmTargetId.textContent = "";
+        dmTargetInitials.textContent = "?";
+        chatInput.placeholder = "Select or start a DM…";
         renderMessages();
-      } else if (mode === 'dms') {
-        dmSidebar.classList.add('active');
-        channelSubHeader.classList.add('active');
-        dmSloganBanner.style.display = 'flex';
-        dmSidebarTitle.textContent = "Direct Messages";
-        btnOpenSearch.style.display = 'flex';
-        chatInputPanel.style.display = 'flex';
-        channelTargetPrefix.textContent = "Chatting with";
-
-        renderDmContactsList();
-
-        if (activeDmContact) {
-          selectDmContact(activeDmContact);
-        } else {
-          const visibleContacts = dmContacts.filter(c => !hiddenDmIds.has(c.id));
-          if (visibleContacts.length > 0) {
-            selectDmContact(visibleContacts[0]);
-          } else {
-            dmTargetName.textContent = "Select a conversation";
-            dmTargetId.textContent = "";
-            dmTargetInitials.textContent = "?";
-            chatInput.placeholder = "Select or start a DM…";
-            renderMessages();
-          }
-        }
-      } else if (mode === 'admin-dms') {
-        // Master Admin All DMs Viewer
-        dmSidebar.classList.add('active');
-        channelSubHeader.classList.add('active');
-        dmSloganBanner.style.display = 'none';
-        dmSidebarTitle.textContent = "👑 Master All DMs";
-        btnOpenSearch.style.display = 'none';
-        channelTargetPrefix.textContent = "Inspecting DMs between";
-
-        renderAdminAllDmPairsList();
-
-        if (activeAdminDmPair) {
-          selectAdminDmPair(activeAdminDmPair);
-        } else {
-          dmTargetName.textContent = "Select a student conversation pair";
-          dmTargetId.textContent = "";
-          dmTargetInitials.textContent = "👑";
-          chatInputPanel.style.display = 'none'; // Admin viewing only
-          renderMessages();
-        }
       }
-    };
+    }
+  }
+};
 
-    // ─── DM CONTACTS MANAGEMENT ───
-    function loadSavedDmContacts() {
-      try {
-        const saved = localStorage.getItem(`hz_dms_${currentUser.id}`);
-        if (saved) dmContacts = JSON.parse(saved);
-        const hidden = localStorage.getItem(`hz_hidden_dms_${currentUser.id}`);
-        if (hidden) hiddenDmIds = new Set(JSON.parse(hidden));
-      } catch (e) {}
+// ── DM contacts ──
+function loadSavedDmContacts(){
+  try{
+    const saved = localStorage.getItem(`hz_dms_${currentUser.id}`);
+    if(saved) dmContacts = JSON.parse(saved);
+    const hidden = localStorage.getItem(`hz_hidden_dms_${currentUser.id}`);
+    if(hidden) hiddenDmIds = new Set(JSON.parse(hidden));
+  }catch(e){}
+  syncDmContactsFromHistory();
+}
+function saveDmContacts(){
+  try{
+    localStorage.setItem(`hz_dms_${currentUser.id}`, JSON.stringify(dmContacts));
+    localStorage.setItem(`hz_hidden_dms_${currentUser.id}`, JSON.stringify(Array.from(hiddenDmIds)));
+  }catch(e){}
+}
+function syncDmContactsFromHistory(){
+  if(!currentUser.id) return;
+  const map = new Map();
+  dmContacts.forEach(c=>map.set(c.id,c));
+  dmMessages.forEach(m=>{
+    let otherId=null, otherName=null;
+    if(m.student_id===currentUser.id && m.recipient_id){ otherId=m.recipient_id; otherName=m.recipient_name || `Student ${m.recipient_id}`; }
+    else if(m.recipient_id===currentUser.id){ otherId=m.student_id; otherName=m.student_name || `Student ${m.student_id}`; }
+    if(otherId){
+      const existing = map.get(otherId) || { id:otherId, name:otherName };
+      existing.name = otherName || existing.name;
+      if(!existing.lastTime || new Date(m.created_at) > new Date(existing.lastTime)){
+        existing.lastMessage = m.content; existing.lastTime = m.created_at;
+      }
+      map.set(otherId, existing);
+    }
+  });
+  dmContacts = Array.from(map.values()).sort((a,b)=>{
+    const ta = a.lastTime ? new Date(a.lastTime).getTime() : 0;
+    const tb = b.lastTime ? new Date(b.lastTime).getTime() : 0;
+    return tb-ta;
+  });
+  saveDmContacts();
+}
+function renderDmContactsList(){
+  const visible = dmContacts.filter(c=>!hiddenDmIds.has(c.id));
+  if(visible.length===0){
+    dmContactsList.innerHTML = `<div style="text-align:center; color:var(--text-dim); font-size:12px; padding:24px 8px; font-family:var(--font-mono);">no active DMs yet.<br>click "+ New DM" to start!</div>`;
+    return;
+  }
+  dmContactsList.innerHTML = visible.map(c=>{
+    const isActive = activeDmContact && activeDmContact.id===c.id;
+    const unreadCount = unreadDmsMap[c.id] || 0;
+    const hasUnread = unreadCount > 0;
+    const initials = (c.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+    const timeStr = c.lastTime ? formatAEST(c.lastTime).replace('Today, ','') : '';
+    return `
+      <div class="dm-item ${isActive?'active':''} ${hasUnread?'has-unread':''}" data-contact-id="${escapeHtml(c.id)}" data-action="select-dm">
+        <div class="avatar-sq" data-avatar-name="${escapeHtml(c.name)}">${escapeHtml(initials)}</div>
+        <div class="dm-item-info">
+          <div class="dm-item-name-row">
+            <span class="dm-item-name">${escapeHtml(c.name)}</span>
+            <span class="dm-item-time">${escapeHtml(timeStr)}</span>
+          </div>
+          <div class="dm-item-last">${escapeHtml(c.lastMessage || `ID: ${c.id}`)}</div>
+        </div>
+        <span class="unread-indicator-dot"></span>
+        <button class="btn-dm-close" data-contact-id="${escapeHtml(c.id)}" data-action="close-dm" title="Close conversation">✕</button>
+      </div>
+    `;
+  }).join('');
+  resolveVisibleAvatars();
+}
+// Event delegation avoids broken inline-onclick strings on names with quotes/apostrophes
+dmContactsList.addEventListener('click', (e)=>{
+  const closeBtn = e.target.closest('[data-action="close-dm"]');
+  if(closeBtn){ e.stopPropagation(); closeDm(closeBtn.getAttribute('data-contact-id')); return; }
+  const item = e.target.closest('[data-action="select-dm"]');
+  if(item){
+    const id = item.getAttribute('data-contact-id');
+    const contact = dmContacts.find(c=>c.id===id);
+    if(contact) selectDmContact(contact);
+  }
+});
+function closeDm(contactId){
+  hiddenDmIds.add(contactId);
+  saveDmContacts();
+  if(activeDmContact && activeDmContact.id===contactId) activeDmContact=null;
+  renderDmContactsList();
+  renderMessages();
+}
+function selectDmContact(contact){
+  activeDmContact = contact;
+  hiddenDmIds.delete(contact.id);
+  saveDmContacts();
+  if(unreadDmsMap[contact.id]){ delete unreadDmsMap[contact.id]; updateUnreadBadges(); }
+  dmTargetName.textContent = contact.name;
+  dmTargetName.classList.remove('gold-admin');
+  dmTargetId.textContent = `ID ${contact.id}`;
+  dmTargetInitials.textContent = contact.name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+  dmTargetAvatar.setAttribute('data-avatar-name', contact.name);
+  chatInputPanel.style.display='flex';
+  chatInput.placeholder = `Message ${contact.name.split(' ')[0]}…`;
+  renderDmContactsList();
+  renderMessages();
+  scrollToBottom();
+  resolveVisibleAvatars();
+}
+
+// ── User search modal (new DM) ──
+window.openSearchModal = async function(){
+  searchModal.classList.add('active');
+  searchStudentsInput.value='';
+  searchStudentsInput.focus();
+  if(verifiedStudentsDirectory.length===0 && sbClient){
+    const { data } = await sbClient.from('verified_students').select('id, name').limit(1000);
+    if(data) verifiedStudentsDirectory = data;
+  }
+  renderSearchResults("");
+};
+window.closeSearchModal = function(){ searchModal.classList.remove('active'); };
+searchStudentsInput.oninput = () => renderSearchResults(searchStudentsInput.value.trim());
+function renderSearchResults(query){
+  const q = query.toLowerCase().replace(/[^a-z0-9]/g,'');
+  const filtered = verifiedStudentsDirectory.filter(s=>{
+    if(s.id===currentUser.id) return false;
+    if(!q) return true;
+    const normName = (s.name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    return normName.includes(q) || s.id.includes(q);
+  }).slice(0,30);
+  if(filtered.length===0){
+    searchResultsList.innerHTML = `<div style="text-align:center; color:var(--text-dim); font-size:12.5px; padding:20px 0;">No Hub Zero students found matching "${escapeHtml(query)}"</div>`;
+    return;
+  }
+  searchResultsList.innerHTML = filtered.map(s=>{
+    const hasExistingDm = dmContacts.some(c=>c.id===s.id && !hiddenDmIds.has(c.id));
+    const initials = (s.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+    return `
+      <div class="search-user-item" data-user-id="${escapeHtml(s.id)}" data-user-name="${escapeHtml(s.name)}">
+        <div class="avatar-sq" data-avatar-name="${escapeHtml(s.name)}">${escapeHtml(initials)}</div>
+        <div class="search-user-info">
+          <div class="search-user-name"><span>${escapeHtml(s.name)}</span>${hasExistingDm ? `<span class="search-user-badge-active">Active DM</span>` : ''}</div>
+          <div class="search-user-id">ID ${escapeHtml(s.id)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  resolveVisibleAvatars();
+}
+searchResultsList.addEventListener('click', (e)=>{
+  const item = e.target.closest('.search-user-item');
+  if(!item) return;
+  const id = item.getAttribute('data-user-id');
+  const name = item.getAttribute('data-user-name');
+  closeSearchModal();
+  hiddenDmIds.delete(id);
+  saveDmContacts();
+  enterApp('dms');
+  selectDmContact({ id, name });
+});
+
+// ── Unread badges ──
+function updateUnreadBadges(){
+  if(unreadGlobalCount>0){
+    globalUnreadBadge.textContent = unreadGlobalCount>99?'99+':unreadGlobalCount;
+    globalUnreadBadge.classList.add('active');
+    homeGlobalBadge.textContent = globalUnreadBadge.textContent;
+    homeGlobalBadge.classList.add('show');
+  } else {
+    globalUnreadBadge.classList.remove('active');
+    homeGlobalBadge.classList.remove('show');
+  }
+  const totalDmUnread = Object.values(unreadDmsMap).reduce((a,b)=>a+b,0);
+  if(totalDmUnread>0){
+    dmsUnreadBadge.textContent = totalDmUnread>99?'99+':totalDmUnread;
+    dmsUnreadBadge.classList.add('active');
+    homeDmsBadge.textContent = dmsUnreadBadge.textContent;
+    homeDmsBadge.classList.add('show');
+  } else {
+    dmsUnreadBadge.classList.remove('active');
+    homeDmsBadge.classList.remove('show');
+  }
+  if(activeMode==='dms') renderDmContactsList();
+}
+
+// ── Load & render messages ──
+async function loadMessages(){
+  if(!sbClient || !currentUser.id) return;
+  try{
+    const { data, error } = await sbClient.from('chat_messages').select('*').eq('is_deleted', false).order('created_at', { ascending:true }).limit(400);
+    if(error){ console.warn('Query note:', error); return; }
+    if(data){
+      const wasScrolledToBottom = !isUserScrolledUp;
+      globalMessages = data.filter(m=>!m.recipient_id);
+      dmMessages = data.filter(m=>m.recipient_id);
       syncDmContactsFromHistory();
-    }
-
-    function saveDmContacts() {
-      try {
-        localStorage.setItem(`hz_dms_${currentUser.id}`, JSON.stringify(dmContacts));
-        localStorage.setItem(`hz_hidden_dms_${currentUser.id}`, JSON.stringify(Array.from(hiddenDmIds)));
-      } catch (e) {}
-    }
-
-    function syncDmContactsFromHistory() {
-      if (!currentUser.id) return;
-      
-      const map = new Map();
-      dmContacts.forEach(c => map.set(c.id, c));
-
-      dmMessages.forEach(m => {
-        let otherId = null;
-        let otherName = null;
-        if (m.student_id === currentUser.id && m.recipient_id) {
-          otherId = m.recipient_id;
-          otherName = m.recipient_name || `Student ${m.recipient_id}`;
-        } else if (m.recipient_id === currentUser.id) {
-          otherId = m.student_id;
-          otherName = m.student_name || `Student ${m.student_id}`;
-        }
-
-        if (otherId) {
-          const existing = map.get(otherId) || { id: otherId, name: otherName };
-          existing.name = otherName || existing.name;
-          if (!existing.lastTime || new Date(m.created_at) > new Date(existing.lastTime)) {
-            existing.lastMessage = m.content;
-            existing.lastTime = m.created_at;
-          }
-          map.set(otherId, existing);
-        }
-      });
-
-      // Sort by latest message timestamp descending
-      dmContacts = Array.from(map.values()).sort((a, b) => {
-        const timeA = a.lastTime ? new Date(a.lastTime).getTime() : 0;
-        const timeB = b.lastTime ? new Date(b.lastTime).getTime() : 0;
-        return timeB - timeA;
-      });
-
-      saveDmContacts();
-    }
-
-    function renderDmContactsList() {
-      const visibleContacts = dmContacts.filter(c => !hiddenDmIds.has(c.id));
-
-      if (visibleContacts.length === 0) {
-        dmContactsList.innerHTML = `
-          <div style="text-align: center; color: var(--text-dim); font-size: 12px; padding: 24px 8px; font-family: var(--font-mono);">
-            no active DMs yet.<br>click "+ New DM" to start!
-          </div>
-        `;
-        return;
-      }
-
-      dmContactsList.innerHTML = visibleContacts.map(c => {
-        const isActive = activeDmContact && activeDmContact.id === c.id;
-        const unreadCount = unreadDmsMap[c.id] || 0;
-        const hasUnread = unreadCount > 0;
-        const initials = (c.name || 'U').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
-        const timeStr = c.lastTime ? formatAEST(c.lastTime).replace('Today, ', '') : '';
-
-        return `
-          <div class="dm-item ${isActive ? 'active' : ''} ${hasUnread ? 'has-unread' : ''}" onclick="selectDmContact({ id: '${c.id}', name: '${escapeHtml(c.name).replace(/'/g, "\\'")}' })">
-            <div class="avatar-sq" data-avatar-name="${escapeHtml(c.name)}">
-              ${escapeHtml(initials)}
-            </div>
-            <div class="dm-item-info">
-              <div class="dm-item-name-row">
-                <span class="dm-item-name">${escapeHtml(c.name)}</span>
-                <span class="dm-item-time">${timeStr}</span>
-              </div>
-              <div class="dm-item-last">${escapeHtml(c.lastMessage || `ID: ${c.id}`)}</div>
-            </div>
-            <span class="unread-indicator-dot"></span>
-            <button class="btn-dm-close" onclick="closeDm(event, '${c.id}')" title="Close conversation">✕</button>
-          </div>
-        `;
-      }).join('');
-
-      resolveVisibleAvatars();
-    }
-
-    window.closeDm = function(e, contactId) {
-      if (e) e.stopPropagation();
-      hiddenDmIds.add(contactId);
-      saveDmContacts();
-      if (activeDmContact && activeDmContact.id === contactId) {
-        activeDmContact = null;
-      }
-      renderDmContactsList();
+      if(activeMode==='dms') renderDmContactsList();
       renderMessages();
-    };
-
-    window.selectDmContact = function(contact) {
-      activeDmContact = contact;
-      hiddenDmIds.delete(contact.id);
-      saveDmContacts();
-
-      // Clear unread for this contact
-      if (unreadDmsMap[contact.id]) {
-        delete unreadDmsMap[contact.id];
-        updateUnreadBadges();
-      }
-
-      dmTargetName.textContent = contact.name;
-      dmTargetName.classList.remove('gold-admin');
-      dmTargetId.textContent = `ID ${contact.id}`;
-      const initials = contact.name.split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
-      dmTargetInitials.textContent = initials;
-      dmTargetAvatar.setAttribute('data-avatar-name', contact.name);
-      
-      chatInputPanel.style.display = 'flex';
-      chatInput.placeholder = `Message ${contact.name.split(' ')[0]}…`;
-      
-      renderDmContactsList();
-      renderMessages();
-      scrollToBottom();
-      resolveVisibleAvatars();
-    };
-
-    // ─── ADMIN MASTER ALL DMS VIEWER ───
-    function renderAdminAllDmPairsList() {
-      if (!currentUser.isAdmin) return;
-
-      // Group all DM messages into distinct pairs (excluding admin's own DMs)
-      const pairMap = new Map();
-
-      dmMessages.forEach(m => {
-        if (!m.recipient_id) return;
-        if (m.student_id === currentUser.id || m.recipient_id === currentUser.id) return; // Exclude admin's own
-
-        const pairKey = [m.student_id, m.recipient_id].sort().join('__');
-        if (!pairMap.has(pairKey)) {
-          pairMap.set(pairKey, {
-            userA: { id: m.student_id, name: m.student_name || `Student ${m.student_id}` },
-            userB: { id: m.recipient_id, name: m.recipient_name || `Student ${m.recipient_id}` },
-            lastMessage: m.content,
-            lastTime: m.created_at,
-            count: 1
-          });
-        } else {
-          const item = pairMap.get(pairKey);
-          item.count++;
-          if (new Date(m.created_at) > new Date(item.lastTime)) {
-            item.lastMessage = m.content;
-            item.lastTime = m.created_at;
-          }
-        }
-      });
-
-      const pairs = Array.from(pairMap.values()).sort((a, b) => new Date(b.lastTime) - new Date(a.lastTime));
-
-      if (pairs.length === 0) {
-        dmContactsList.innerHTML = `
-          <div style="text-align: center; color: var(--text-dim); font-size: 12px; padding: 24px 8px; font-family: var(--font-mono);">
-            no student-to-student DMs logged in database.
-          </div>
-        `;
-        return;
-      }
-
-      dmContactsList.innerHTML = pairs.map(p => {
-        const isActive = activeAdminDmPair && 
-          ((activeAdminDmPair.userA.id === p.userA.id && activeAdminDmPair.userB.id === p.userB.id) ||
-           (activeAdminDmPair.userA.id === p.userB.id && activeAdminDmPair.userB.id === p.userA.id));
-
-        return `
-          <div class="dm-item ${isActive ? 'active' : ''}" onclick='selectAdminDmPair(${JSON.stringify(p)})'>
-            <div class="avatar-sq" style="border-color: rgba(251, 191, 36, 0.4); color: var(--gold);">
-              👑
-            </div>
-            <div class="dm-item-info">
-              <div class="dm-item-name-row">
-                <span class="dm-item-name" style="color: var(--gold);">${escapeHtml(p.userA.name.split(' ')[0])} ↔ ${escapeHtml(p.userB.name.split(' ')[0])}</span>
-                <span class="dm-item-time">${p.count} msgs</span>
-              </div>
-              <div class="dm-item-last">${escapeHtml(p.lastMessage)}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
+      if(wasScrolledToBottom) scrollToBottom();
     }
+  }catch(e){ console.error('Load messages error:', e); }
+}
 
-    window.selectAdminDmPair = function(pair) {
-      activeAdminDmPair = pair;
-      dmTargetName.textContent = `${pair.userA.name} & ${pair.userB.name}`;
-      dmTargetName.classList.add('gold-admin');
-      dmTargetId.textContent = `(${pair.userA.id} ↔ ${pair.userB.id})`;
-      dmTargetInitials.textContent = "👑";
-      chatInputPanel.style.display = 'none'; // Admin inspect only
-
-      renderAdminAllDmPairsList();
-      renderMessages();
-      scrollToBottom();
-    };
-
-    // ─── USER DIRECTORY SEARCH MODAL ───
-    window.openSearchModal = async function() {
-      searchModal.classList.add('active');
-      searchStudentsInput.value = '';
-      searchStudentsInput.focus();
-      
-      if (verifiedStudentsDirectory.length === 0 && sbClient) {
-        const { data } = await sbClient
-          .from('verified_students')
-          .select('id, name')
-          .limit(1000);
-        if (data) verifiedStudentsDirectory = data;
-      }
-      renderSearchResults("");
-    };
-
-    window.closeSearchModal = function() {
-      searchModal.classList.remove('active');
-    };
-
-    searchStudentsInput.oninput = () => {
-      renderSearchResults(searchStudentsInput.value.trim());
-    };
-
-    function renderSearchResults(query) {
-      const q = query.toLowerCase().replace(/[^a-z0-9]/g, '');
-      const filtered = verifiedStudentsDirectory.filter(s => {
-        if (s.id === currentUser.id) return false;
-        if (!q) return true;
-        const normName = (s.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
-        return normName.includes(q) || s.id.includes(q);
-      }).slice(0, 30);
-
-      if (filtered.length === 0) {
-        searchResultsList.innerHTML = `<div style="text-align: center; color: var(--text-dim); font-size: 12.5px; padding: 20px 0;">No Hub Zero students found matching "${escapeHtml(query)}"</div>`;
-        return;
-      }
-
-      searchResultsList.innerHTML = filtered.map(s => {
-        const hasExistingDm = dmContacts.some(c => c.id === s.id && !hiddenDmIds.has(c.id));
-        const initials = (s.name || 'U').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
-        return `
-          <div class="search-user-item" onclick="startDmWithUser('${s.id}', '${escapeHtml(s.name).replace(/'/g, "\\'")}')">
-            <div class="avatar-sq" data-avatar-name="${escapeHtml(s.name)}">
-              ${escapeHtml(initials)}
-            </div>
-            <div class="search-user-info">
-              <div class="search-user-name">
-                <span>${escapeHtml(s.name)}</span>
-                ${hasExistingDm ? `<span class="search-user-badge-active">Active DM</span>` : ''}
-              </div>
-              <div class="search-user-id">ID ${s.id}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-
-      resolveVisibleAvatars();
+function renderMessages(){
+  let activeList = [];
+  if(activeMode==='global'){
+    activeList = globalMessages;
+  } else if(activeMode==='dms'){
+    if(!activeDmContact){
+      messagesContainer.innerHTML = `<div style="text-align:center; color:var(--text-dim); margin-top:60px; font-size:13px; font-family:var(--font-mono);">select a direct message conversation on the left to begin chatting</div>`;
+      return;
     }
+    activeList = dmMessages.filter(m =>
+      (m.student_id===currentUser.id && m.recipient_id===activeDmContact.id) ||
+      (m.student_id===activeDmContact.id && m.recipient_id===currentUser.id)
+    );
+  }
 
-    window.startDmWithUser = function(id, name) {
-      closeSearchModal();
-      hiddenDmIds.delete(id);
-      saveDmContacts();
-      switchMode('dms');
-      selectDmContact({ id, name });
-    };
+  const html = activeList.map((m, idx) => {
+    const isMe = m.student_id === currentUser.id;
+    const initials = (m.student_name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+    const timeAest = formatAEST(m.created_at);
+    const isAdminMsg = m.is_admin === true;
+    const canDelete = isMe || currentUser.isAdmin;
+    const prevM = idx>0 ? activeList[idx-1] : null;
+    const isConsecutive = prevM && prevM.student_id===m.student_id && Boolean(prevM.is_admin)===Boolean(m.is_admin) && formatAEST(prevM.created_at)===timeAest;
 
-    // ─── UNREAD BADGES ───
-    function updateUnreadBadges() {
-      if (unreadGlobalCount > 0) {
-        globalUnreadBadge.textContent = unreadGlobalCount > 99 ? '99+' : unreadGlobalCount;
-        globalUnreadBadge.classList.add('active');
-      } else {
-        globalUnreadBadge.classList.remove('active');
-      }
-
-      const totalDmUnread = Object.values(unreadDmsMap).reduce((a, b) => a + b, 0);
-      if (totalDmUnread > 0) {
-        dmsUnreadBadge.textContent = totalDmUnread > 99 ? '99+' : totalDmUnread;
-        dmsUnreadBadge.classList.add('active');
-      } else {
-        dmsUnreadBadge.classList.remove('active');
-      }
-
-      if (activeMode === 'dms') {
-        renderDmContactsList();
-      }
-    }
-
-    // ─── LOAD & RENDER MESSAGES ───
-    async function loadMessages() {
-      if (!sbClient || !currentUser.id) return;
-      try {
-        const { data, error } = await sbClient
-          .from('chat_messages')
-          .select('*')
-          .eq('is_deleted', false)
-          .order('created_at', { ascending: true })
-          .limit(400);
-
-        if (error) {
-          console.warn('Query note:', error);
-          return;
-        }
-
-        if (data) {
-          const wasScrolledToBottom = !isUserScrolledUp;
-          
-          globalMessages = data.filter(m => !m.recipient_id);
-          dmMessages = data.filter(m => m.recipient_id);
-
-          syncDmContactsFromHistory();
-
-          if (activeMode === 'dms') renderDmContactsList();
-          if (activeMode === 'admin-dms') renderAdminAllDmPairsList();
-
-          renderMessages();
-          if (wasScrolledToBottom) scrollToBottom();
-        }
-      } catch (e) {
-        console.error('Load messages error:', e);
-      }
-    }
-
-    function renderMessages() {
-      let activeList = [];
-
-      if (activeMode === 'global') {
-        activeList = globalMessages;
-      } else if (activeMode === 'dms') {
-        if (!activeDmContact) {
-          messagesContainer.innerHTML = `
-            <div style="text-align: center; color: var(--text-dim); margin-top: 60px; font-size: 13px; font-family: var(--font-mono);">
-              select a direct message conversation on the left to begin chatting
-            </div>
-          `;
-          return;
-        }
-
-        activeList = dmMessages.filter(m => 
-          (m.student_id === currentUser.id && m.recipient_id === activeDmContact.id) ||
-          (m.student_id === activeDmContact.id && m.recipient_id === currentUser.id)
-        );
-      } else if (activeMode === 'admin-dms') {
-        if (!activeAdminDmPair) {
-          messagesContainer.innerHTML = `
-            <div style="text-align: center; color: var(--gold); margin-top: 60px; font-size: 13px; font-family: var(--font-mono);">
-              👑 select any student conversation on the left to inspect their private DM history
-            </div>
-          `;
-          return;
-        }
-
-        const idA = activeAdminDmPair.userA.id;
-        const idB = activeAdminDmPair.userB.id;
-        activeList = dmMessages.filter(m => 
-          (m.student_id === idA && m.recipient_id === idB) ||
-          (m.student_id === idB && m.recipient_id === idA)
-        );
-      }
-
-      const html = activeList.map((m, idx) => {
-        const isMe = m.student_id === currentUser.id;
-        const initials = (m.student_name || 'U').split(' ').map(p => p[0]).slice(0, 2).join('').toUpperCase();
-        const timeAest = formatAEST(m.created_at);
-        const isAdminMsg = m.is_admin === true;
-        // User can delete their OWN messages, admins can delete ANY message
-        const canDelete = isMe || currentUser.isAdmin;
-
-        // Check if previous message was from the same sender in the exact same minute
-        const prevM = idx > 0 ? activeList[idx - 1] : null;
-        const isConsecutive = prevM && 
-          prevM.student_id === m.student_id && 
-          Boolean(prevM.is_admin) === Boolean(m.is_admin) &&
-          formatAEST(prevM.created_at) === timeAest;
-
-        return `
-          <div class="message-row ${isMe ? 'outgoing' : 'incoming'} ${isAdminMsg ? 'is-admin-msg' : ''} ${isConsecutive ? 'consecutive' : ''}" data-msg-id="${m.id}">
-            <div class="msg-avatar" data-avatar-name="${escapeHtml(m.student_name || '')}">
-              ${escapeHtml(initials)}
-            </div>
-            <div class="msg-body">
-              ${!isConsecutive ? `
-                <div class="msg-meta">
-                  <span class="msg-author">${escapeHtml(m.student_name || 'Student')}</span>
-                  ${isAdminMsg ? '<span class="badge-admin-tag"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>Admin</span>' : ''}
-                  <span class="msg-time">${timeAest}</span>
-                </div>
-              ` : ''}
-              <div class="msg-bubble">
-                ${escapeHtml(m.content)}
-              </div>
-            </div>
-            ${canDelete ? `
-              <div class="msg-actions">
-                <button class="btn-msg-delete" onclick="deleteMessage('${m.id}')" title="Delete message">
-                  <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5">
-                    <polyline points="3 6 5 6 21 6"></polyline>
-                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                  </svg>
-                </button>
-              </div>
-            ` : ''}
-          </div>
-        `;
-      }).join('');
-
-      messagesContainer.innerHTML = html || `
-        <div style="text-align: center; color: var(--text-dim); margin-top: 60px; font-size: 13px; font-family: var(--font-mono);">
-          ${activeMode === 'global' ? 'no messages yet — be the first to say something' : 'no messages here yet'}
+    return `
+      <div class="message-row ${isMe?'outgoing':'incoming'} ${isAdminMsg?'is-admin-msg':''} ${isConsecutive?'consecutive':''}" data-msg-id="${m.id}">
+        <div class="msg-avatar" data-avatar-name="${escapeHtml(m.student_name||'')}">${escapeHtml(initials)}</div>
+        <div class="msg-body">
+          ${!isConsecutive ? `
+            <div class="msg-meta">
+              <span class="msg-author">${escapeHtml(m.student_name||'Student')}</span>
+              ${isAdminMsg ? '<span class="badge-admin-tag"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>Admin</span>' : ''}
+              <span class="msg-time">${escapeHtml(timeAest)}</span>
+            </div>` : ''}
+          <div class="msg-bubble">${escapeHtml(m.content)}</div>
         </div>
-      `;
+        ${canDelete ? `
+          <div class="msg-actions">
+            <button class="btn-msg-delete" data-del-id="${m.id}" title="Delete message">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            </button>
+          </div>` : ''}
+      </div>
+    `;
+  }).join('');
 
-      resolveVisibleAvatars();
+  messagesContainer.innerHTML = html || `<div style="text-align:center; color:var(--text-dim); margin-top:60px; font-size:13px; font-family:var(--font-mono);">${activeMode==='global' ? 'no messages yet — be the first to say something' : 'no messages here yet'}</div>`;
+  resolveVisibleAvatars();
+}
+messagesContainer.addEventListener('click', (e)=>{
+  const btn = e.target.closest('[data-del-id]');
+  if(btn) deleteMessage(btn.getAttribute('data-del-id'));
+});
+
+// ── Send message ──
+async function sendMessage(){
+  const text = chatInput.value.trim();
+  if(!text || !currentUser.id || !sbClient) return;
+  if(activeMode==='dms' && !activeDmContact){ alert("Please select a student from the sidebar or click '+ New DM' first."); return; }
+
+  if(!currentUser.isAdmin){
+    const now = Date.now();
+    recentSendTimestamps = recentSendTimestamps.filter(t => now-t < 3000);
+    if(recentSendTimestamps.length >= 7){ triggerRateLimitCooldown(5); return; }
+    recentSendTimestamps.push(now);
+  }
+
+  const showAdmin = currentUser.isAdmin && chkAdminTag.checked;
+  const targetRecipientId = activeMode==='dms' ? activeDmContact.id : null;
+  const targetRecipientName = activeMode==='dms' ? activeDmContact.name : null;
+
+  chatInput.value=''; btnSend.disabled=true; charCounter.textContent='0 / 500';
+  playBeep(true);
+
+  try{
+    const { error } = await sbClient.from('chat_messages').insert({
+      student_id: currentUser.id, student_name: currentUser.name,
+      recipient_id: targetRecipientId, recipient_name: targetRecipientName,
+      content: text, is_admin: showAdmin, is_deleted: false, created_at: new Date().toISOString()
+    }).select();
+    if(error){ alert('Failed to send message: ' + error.message); return; }
+    if(activeMode==='dms' && activeDmContact) syncDmContactsFromHistory();
+    scrollToBottom();
+  }catch(err){ console.error('Send error:', err); }
+}
+
+window.deleteMessage = async function(id){
+  if(!sbClient) return;
+  if(!confirm('Delete this message?')) return;
+  try{
+    await sbClient.from('chat_messages').update({ is_deleted:true }).eq('id', id);
+    globalMessages = globalMessages.filter(m=>m.id!==id);
+    dmMessages = dmMessages.filter(m=>m.id!==id);
+    renderMessages();
+  }catch(err){ console.error('Delete error:', err); }
+};
+
+// ── Admin corner ──
+window.toggleAdminPanel = function(){ adminCornerPanel.classList.toggle('open'); };
+document.addEventListener('click', (e)=>{
+  if(!adminCornerPanel.contains(e.target) && !adminCornerBtn.contains(e.target)){
+    adminCornerPanel.classList.remove('open');
+  }
+});
+window.onAdminTagToggle = function(){
+  sendingAsAdminFlag.classList.toggle('show', chkAdminTag.checked);
+};
+window.purgeGlobalChat = async function(){
+  if(!currentUser.isAdmin || !sbClient) return;
+  adminCornerPanel.classList.remove('open');
+  if(!confirm('Purge all global chat messages for everyone? This cannot be undone.')) return;
+  try{
+    await sbClient.from('chat_messages').update({ is_deleted:true }).eq('is_deleted', false).is('recipient_id', null);
+    globalMessages = [];
+    if(activeMode==='global') renderMessages();
+  }catch(err){ console.error('Purge error:', err); }
+};
+
+// Admin all-DMs inspector
+window.openAdminAllDms = function(){
+  adminCornerPanel.classList.remove('open');
+  adminDmsModal.classList.add('active');
+  renderAdminPairsList();
+};
+window.closeAdminAllDms = function(){ adminDmsModal.classList.remove('active'); };
+function renderAdminPairsList(){
+  const pairMap = new Map();
+  dmMessages.forEach(m=>{
+    if(!m.recipient_id) return;
+    const pairKey = [m.student_id, m.recipient_id].sort().join('__');
+    if(!pairMap.has(pairKey)){
+      pairMap.set(pairKey, {
+        key: pairKey,
+        userA: { id:m.student_id, name:m.student_name || `Student ${m.student_id}` },
+        userB: { id:m.recipient_id, name:m.recipient_name || `Student ${m.recipient_id}` },
+        lastMessage:m.content, lastTime:m.created_at, count:1
+      });
+    } else {
+      const item = pairMap.get(pairKey);
+      item.count++;
+      if(new Date(m.created_at) > new Date(item.lastTime)){ item.lastMessage=m.content; item.lastTime=m.created_at; }
     }
+  });
+  adminPairsCache = Array.from(pairMap.values()).sort((a,b)=> new Date(b.lastTime) - new Date(a.lastTime));
 
-    // ─── SEND MESSAGE ───
-    async function sendMessage() {
-      const text = chatInput.value.trim();
-      if (!text || !currentUser.id || !sbClient) return;
+  if(adminPairsCache.length===0){
+    adminPairsList.innerHTML = `<div style="text-align:center; color:var(--text-dim); font-size:11.5px; padding:16px 4px; font-family:var(--font-mono);">no DM threads logged yet</div>`;
+    return;
+  }
+  adminPairsList.innerHTML = adminPairsCache.map(p=>`
+    <div class="admin-corner-item" style="background:var(--panel-raised); font-size:11.5px;" data-pair-key="${escapeHtml(p.key)}">
+      <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(p.userA.name.split(' ')[0])} ↔ ${escapeHtml(p.userB.name.split(' ')[0])}</span>
+      <span style="color:var(--text-dim); font-family:var(--font-mono); flex-shrink:0;">${p.count}</span>
+    </div>
+  `).join('');
+}
+adminPairsList.addEventListener('click', (e)=>{
+  const item = e.target.closest('[data-pair-key]');
+  if(!item) return;
+  const key = item.getAttribute('data-pair-key');
+  const pair = adminPairsCache.find(p=>p.key===key);
+  if(pair) selectAdminPair(pair);
+});
+function selectAdminPair(pair){
+  activeAdminPairKey = pair.key;
+  adminThreadTitle.textContent = `${pair.userA.name} ↔ ${pair.userB.name}`;
+  const thread = dmMessages.filter(m =>
+    (m.student_id===pair.userA.id && m.recipient_id===pair.userB.id) ||
+    (m.student_id===pair.userB.id && m.recipient_id===pair.userA.id)
+  );
+  adminThreadMessages.innerHTML = thread.map(m => `
+    <div style="font-size:12px; line-height:1.5;">
+      <span style="font-weight:600; color:var(--gold);">${escapeHtml(m.student_name || 'Student')}</span>
+      <span style="color:var(--text-dim); font-family:var(--font-mono); font-size:10px;"> · ${escapeHtml(formatAEST(m.created_at))}</span>
+      <div style="color:var(--text); margin-top:2px;">${escapeHtml(m.content)}</div>
+    </div>
+  `).join('') || `<div style="color:var(--text-dim); font-size:12px;">no messages in this thread</div>`;
+}
 
-      if (activeMode === 'dms' && !activeDmContact) {
-        alert("Please select a student from the sidebar or click '+ New DM' first.");
-        return;
-      }
-
-      if (activeMode === 'admin-dms') {
-        alert("Master DM mode is for inspection only. Switch to your personal Direct Messages to chat.");
-        return;
-      }
-
-      // Rate limit (7 messages in 3 seconds for non-admins)
-      if (!currentUser.isAdmin) {
-        const now = Date.now();
-        recentSendTimestamps = recentSendTimestamps.filter(t => now - t < 3000);
-
-        if (recentSendTimestamps.length >= 7) {
-          triggerRateLimitCooldown(5);
-          return;
-        }
-        recentSendTimestamps.push(now);
-      }
-
-      const showAdmin = currentUser.isAdmin && chkAdminTag.checked;
-      const targetRecipientId = activeMode === 'dms' ? activeDmContact.id : null;
-      const targetRecipientName = activeMode === 'dms' ? activeDmContact.name : null;
-
-      chatInput.value = '';
-      btnSend.disabled = true;
-      charCounter.textContent = '0 / 500';
-      playBeep(true);
-
-      try {
-        const { data, error } = await sbClient
-          .from('chat_messages')
-          .insert({
-            student_id: currentUser.id,
-            student_name: currentUser.name,
-            recipient_id: targetRecipientId,
-            recipient_name: targetRecipientName,
-            content: text,
-            is_admin: showAdmin,
-            is_deleted: false,
-            created_at: new Date().toISOString()
-          })
-          .select();
-
-        if (error) {
-          alert('Failed to send message: ' + error.message);
-          return;
-        }
-
-        if (activeMode === 'dms' && activeDmContact) {
-          addOrUpdateDmContact(activeDmContact, text);
-        }
-
-        scrollToBottom();
-      } catch (err) {
-        console.error('Send error:', err);
-      }
+// ── Rate limit UI ──
+function triggerRateLimitCooldown(seconds){
+  chatInput.disabled = true; btnSend.disabled = true;
+  rateLimitBanner.classList.add('active');
+  let remaining = seconds;
+  rateLimitText.textContent = `rate limit hit (7 msgs / 3s) — cooling down ${remaining}s…`;
+  if(cooldownTimer) clearInterval(cooldownTimer);
+  cooldownTimer = setInterval(()=>{
+    remaining--;
+    if(remaining<=0){
+      clearInterval(cooldownTimer); cooldownTimer=null;
+      rateLimitBanner.classList.remove('active');
+      chatInput.disabled = false;
+      btnSend.disabled = chatInput.value.trim().length===0;
+      chatInput.focus();
+    } else {
+      rateLimitText.textContent = `cooling down ${remaining}s…`;
     }
+  }, 1000);
+}
 
-    // ─── DELETE MESSAGE ───
-    window.deleteMessage = async function(id) {
-      if (!sbClient) return;
-      if (!confirm('Delete this message?')) return;
-      try {
-        await sbClient
-          .from('chat_messages')
-          .update({ is_deleted: true })
-          .eq('id', id);
+// ── Scroll handling ──
+function scrollToBottom(){
+  messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  btnScrollBottom.classList.remove('visible');
+  isUserScrolledUp = false;
+}
+messagesContainer.onscroll = () => {
+  const scrollPos = messagesContainer.scrollTop + messagesContainer.clientHeight;
+  const threshold = messagesContainer.scrollHeight - 80;
+  if(scrollPos < threshold){ isUserScrolledUp=true; btnScrollBottom.classList.add('visible'); }
+  else{ isUserScrolledUp=false; btnScrollBottom.classList.remove('visible'); }
+};
+btnScrollBottom.onclick = scrollToBottom;
 
-        globalMessages = globalMessages.filter(m => m.id !== id);
-        dmMessages = dmMessages.filter(m => m.id !== id);
-        renderMessages();
-      } catch (err) {
-        console.error('Delete error:', err);
-      }
-    };
+chatInput.oninput = () => {
+  const len = chatInput.value.length;
+  charCounter.textContent = `${len} / 500`;
+  btnSend.disabled = chatInput.value.trim().length===0;
+};
+chatInput.onkeydown = (e) => { if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); } };
+btnSend.onclick = sendMessage;
 
-    btnAdminPurge.onclick = async () => {
-      if (!currentUser.isAdmin || !sbClient) return;
-      if (!confirm('Purge all chat messages for everyone? This cannot be undone.')) return;
-      try {
-        await sbClient
-          .from('chat_messages')
-          .update({ is_deleted: true })
-          .eq('is_deleted', false);
+function escapeHtml(str){
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
 
-        globalMessages = [];
-        dmMessages = [];
-        renderMessages();
-      } catch (err) {
-        console.error('Purge error:', err);
-      }
-    };
-
-    function triggerRateLimitCooldown(seconds) {
-      chatInput.disabled = true;
-      btnSend.disabled = true;
-      rateLimitBanner.classList.add('active');
-
-      let remaining = seconds;
-      rateLimitText.textContent = `rate limit hit (7 msgs / 3s) — cooling down ${remaining}s…`;
-
-      if (cooldownTimer) clearInterval(cooldownTimer);
-      cooldownTimer = setInterval(() => {
-        remaining--;
-        if (remaining <= 0) {
-          clearInterval(cooldownTimer);
-          cooldownTimer = null;
-          rateLimitBanner.classList.remove('active');
-          chatInput.disabled = false;
-          btnSend.disabled = chatInput.value.trim().length === 0;
-          chatInput.focus();
-        } else {
-          rateLimitText.textContent = `cooling down ${remaining}s…`;
-        }
-      }, 1000);
-    }
-
-    function scrollToBottom() {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      btnScrollBottom.classList.remove('visible');
-      isUserScrolledUp = false;
-    }
-
-    messagesContainer.onscroll = () => {
-      const scrollPos = messagesContainer.scrollTop + messagesContainer.clientHeight;
-      const threshold = messagesContainer.scrollHeight - 80;
-      if (scrollPos < threshold) {
-        isUserScrolledUp = true;
-        btnScrollBottom.classList.add('visible');
-      } else {
-        isUserScrolledUp = false;
-        btnScrollBottom.classList.remove('visible');
-      }
-    };
-
-    btnScrollBottom.onclick = scrollToBottom;
-
-    chatInput.oninput = () => {
-      const len = chatInput.value.length;
-      charCounter.textContent = `${len} / 500`;
-      btnSend.disabled = chatInput.value.trim().length === 0;
-    };
-
-    chatInput.onkeydown = (e) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    };
-
-    btnSend.onclick = sendMessage;
-
-    function escapeHtml(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    // ─── REALTIME & DESKTOP NOTIFICATIONS ───
-    function setupRealtime() {
-      if (!sbClient) return;
-      sbClient
-        .channel('public:chat_messages')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, payload => {
-          if (payload.eventType === 'INSERT') {
-            const newMsg = payload.new;
-            if (!newMsg.is_deleted) {
-              const isFromMe = newMsg.student_id === currentUser.id;
-
-              if (newMsg.recipient_id) {
-                // DM Message
-                if (newMsg.student_id === currentUser.id || newMsg.recipient_id === currentUser.id) {
-                  if (!dmMessages.some(m => m.id === newMsg.id)) {
-                    dmMessages.push(newMsg);
-                    
-                    const otherUser = newMsg.student_id === currentUser.id 
-                      ? { id: newMsg.recipient_id, name: newMsg.recipient_name || `Student ${newMsg.recipient_id}` }
-                      : { id: newMsg.student_id, name: newMsg.student_name || `Student ${newMsg.student_id}` };
-                    
-                    if (!isFromMe) {
-                      hiddenDmIds.delete(otherUser.id);
-                      saveDmContacts();
-                      playBeep(false);
-                      triggerDesktopNotification(`DM from ${newMsg.student_name}`, newMsg.content, newMsg.student_name);
-
-                      // If user is NOT viewing this specific DM conversation right now, mark as unread
-                      if (activeMode !== 'dms' || !activeDmContact || activeDmContact.id !== otherUser.id) {
-                        unreadDmsMap[otherUser.id] = (unreadDmsMap[otherUser.id] || 0) + 1;
-                        updateUnreadBadges();
-                      }
-                    }
-
-                    syncDmContactsFromHistory();
-                    renderMessages();
-                    if (activeMode === 'dms') renderDmContactsList();
-                    if (activeMode === 'admin-dms') renderAdminAllDmPairsList();
-                    if (!isUserScrolledUp) scrollToBottom();
+// ── Realtime ──
+function setupRealtime(){
+  if(!sbClient) return;
+  sbClient.channel('public:chat_messages')
+    .on('postgres_changes', { event:'*', schema:'public', table:'chat_messages' }, payload => {
+      if(payload.eventType==='INSERT'){
+        const newMsg = payload.new;
+        if(!newMsg.is_deleted){
+          const isFromMe = newMsg.student_id === currentUser.id;
+          if(newMsg.recipient_id){
+            const involvesMe = newMsg.student_id===currentUser.id || newMsg.recipient_id===currentUser.id;
+            if(involvesMe){
+              if(!dmMessages.some(m=>m.id===newMsg.id)){
+                dmMessages.push(newMsg);
+                const otherUser = newMsg.student_id===currentUser.id
+                  ? { id:newMsg.recipient_id, name:newMsg.recipient_name || `Student ${newMsg.recipient_id}` }
+                  : { id:newMsg.student_id, name:newMsg.student_name || `Student ${newMsg.student_id}` };
+                if(!isFromMe){
+                  hiddenDmIds.delete(otherUser.id);
+                  saveDmContacts();
+                  playBeep(false);
+                  flashTabTitle(`💬 DM from ${newMsg.student_name}`);
+                  if(activeMode!=='dms' || !activeDmContact || activeDmContact.id!==otherUser.id){
+                    unreadDmsMap[otherUser.id] = (unreadDmsMap[otherUser.id]||0)+1;
+                    updateUnreadBadges();
                   }
-                } else if (currentUser.isAdmin && activeMode === 'admin-dms') {
-                  // Admin spy channel update
-                  dmMessages.push(newMsg);
-                  renderAdminAllDmPairsList();
-                  renderMessages();
                 }
-              } else {
-                // Global Message
-                if (!globalMessages.some(m => m.id === newMsg.id)) {
-                  globalMessages.push(newMsg);
-                  
-                  if (!isFromMe) {
-                    playBeep(false);
-                    triggerDesktopNotification(`Hub Zero Global — ${newMsg.student_name}`, newMsg.content, newMsg.student_name);
-
-                    if (activeMode !== 'global') {
-                      unreadGlobalCount++;
-                      updateUnreadBadges();
-                    }
-                  }
-
-                  renderMessages();
-                  if (!isUserScrolledUp) scrollToBottom();
-                }
+                syncDmContactsFromHistory();
+                renderMessages();
+                if(activeMode==='dms') renderDmContactsList();
+                if(adminDmsModal.classList.contains('active')) renderAdminPairsList();
+                if(!isUserScrolledUp) scrollToBottom();
               }
+            } else if(currentUser.isAdmin){
+              // keep admin inspector data fresh even for threads not involving the admin
+              dmMessages.push(newMsg);
+              if(adminDmsModal.classList.contains('active')) renderAdminPairsList();
             }
-          } else if (payload.eventType === 'UPDATE') {
-            const updated = payload.new;
-            if (updated.is_deleted) {
-              globalMessages = globalMessages.filter(m => m.id !== updated.id);
-              dmMessages = dmMessages.filter(m => m.id !== updated.id);
-            } else {
-              const gIdx = globalMessages.findIndex(m => m.id === updated.id);
-              if (gIdx !== -1) globalMessages[gIdx] = updated;
-              const dIdx = dmMessages.findIndex(m => m.id === updated.id);
-              if (dIdx !== -1) dmMessages[dIdx] = updated;
+          } else {
+            if(!globalMessages.some(m=>m.id===newMsg.id)){
+              globalMessages.push(newMsg);
+              if(!isFromMe){
+                playBeep(false);
+                flashTabTitle(`💬 Hub Zero — ${newMsg.student_name}`);
+                if(activeMode!=='global'){ unreadGlobalCount++; updateUnreadBadges(); }
+              }
+              renderMessages();
+              if(!isUserScrolledUp) scrollToBottom();
             }
-            renderMessages();
-          } else if (payload.eventType === 'DELETE') {
-            globalMessages = globalMessages.filter(m => m.id !== payload.old.id);
-            dmMessages = dmMessages.filter(m => m.id !== payload.old.id);
-            renderMessages();
           }
-        })
-        .subscribe();
+        }
+      } else if(payload.eventType==='UPDATE'){
+        const updated = payload.new;
+        if(updated.is_deleted){
+          globalMessages = globalMessages.filter(m=>m.id!==updated.id);
+          dmMessages = dmMessages.filter(m=>m.id!==updated.id);
+        } else {
+          const gIdx = globalMessages.findIndex(m=>m.id===updated.id);
+          if(gIdx!==-1) globalMessages[gIdx]=updated;
+          const dIdx = dmMessages.findIndex(m=>m.id===updated.id);
+          if(dIdx!==-1) dmMessages[dIdx]=updated;
+        }
+        renderMessages();
+      } else if(payload.eventType==='DELETE'){
+        globalMessages = globalMessages.filter(m=>m.id!==payload.old.id);
+        dmMessages = dmMessages.filter(m=>m.id!==payload.old.id);
+        renderMessages();
+      }
+    })
+    .subscribe();
 
-      setInterval(loadMessages, 2500);
-    }
+  // Fallback poll — realtime covers most cases, this just guards against a dropped socket.
+  setInterval(loadMessages, 15000);
+}
 
-    window.addEventListener('DOMContentLoaded', async () => {
-      await resolveUserIdentity();
-      await loadMessages();
-      scrollToBottom();
-      setupRealtime();
-      initDropbox();
-    });
-  </script>
+window.addEventListener('DOMContentLoaded', async () => {
+  const ok = await resolveUserIdentity();
+  if(!ok) return;
+  // Always land on the homepage first, every load/visit.
+  homeScreen.style.display = 'flex';
+  await loadMessages();
+  setupRealtime();
+  initDropbox();
+});
+</script>
 </body>
 </html>
