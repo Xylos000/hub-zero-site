@@ -64,7 +64,7 @@ button{font-family:inherit}
 .home-choice-card.dms .choice-cta{ color:var(--blue); }
 .home-footer-note{ margin-top:44px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); border:1px dashed var(--border-strong); padding:7px 14px; border-radius:20px; }
 
-/* ══════════ MAIN APP SHELL (NO TOPBAR - EXPANDED SIDEBAR) ══════════ */
+/* ══════════ MAIN APP SHELL ══════════ */
 .chat-app{ display:none; height:100vh; width:100%; background:var(--bg); position:relative; overflow:hidden; }
 .chat-app.active{ display:flex; }
 
@@ -86,14 +86,12 @@ button{font-family:inherit}
 .sidebar-nav{ display:flex; flex-direction:column; gap:4px; }
 .sidebar-nav-item{
   display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:10px; background:transparent;
-  border:1px solid transparent; color:var(--text-muted); font-size:13px; font-weight:600; cursor:pointer;
+  border:1px solid transparent; color:var(--text-muted); font-size:13.5px; font-weight:600; cursor:pointer;
   transition:all .15s; text-align:left; position:relative;
 }
 .sidebar-nav-item:hover{ background:var(--surface-raised); color:var(--text); }
 .sidebar-nav-item.active.nav-global{ background:var(--teal-dim); color:var(--teal); border-color:rgba(63,169,142,.3); }
 .sidebar-nav-item.active.nav-dms{ background:var(--blue-dim); color:var(--blue); border-color:rgba(56,189,248,.3); }
-.sidebar-nav-item.active.nav-admin-dms{ background:var(--gold-dim); color:var(--gold); border-color:rgba(251,191,36,.35); }
-.sidebar-nav-item.nav-admin-dms{ color:var(--gold); }
 .sidebar-nav-icon{ width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .sidebar-nav-badge{
   margin-left:auto; background:var(--rose); color:#fff; font-family:var(--font-mono); font-size:10px;
@@ -104,8 +102,8 @@ button{font-family:inherit}
 /* ─ Sidebar Footer (User Status & Actions) ─ */
 .sidebar-footer{ padding:12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px; background:rgba(0,0,0,.15); }
 .user-card{
-  display:flex; align-items:center; gap:9px; background:var(--surface-raised); border:1px solid var(--border);
-  border-radius:12px; padding:8px 10px;
+  display:flex; align-items:center; gap:10px; background:var(--surface-raised); border:1px solid var(--border);
+  border-radius:12px; padding:9px 11px;
 }
 .avatar-circle{
   border-radius:50%; overflow:hidden; flex-shrink:0; background:#1a212c; border:1px solid var(--border-strong);
@@ -113,29 +111,26 @@ button{font-family:inherit}
 }
 .avatar-circle img{ width:100%; height:100%; object-fit:cover; display:block; }
 .user-card-info{ display:flex; flex-direction:column; line-height:1.2; min-width:0; flex:1; }
-.user-card-name{ font-size:12px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:4px; }
-.user-card-id{ font-size:9.5px; font-family:var(--font-mono); color:var(--text-dim); }
+.user-card-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:4px; }
+.user-card-id{ font-size:10px; font-family:var(--font-mono); color:var(--text-dim); margin-top:1px; }
 .admin-chip{ display:inline-flex; align-items:center; gap:2px; color:var(--amber); font-size:8.5px; font-weight:700; letter-spacing:.02em; }
 
-.sidebar-actions-row{ display:flex; align-items:center; gap:5px; }
+.sidebar-actions-row{ display:flex; align-items:center; gap:6px; }
 .btn-sidebar-action{
   flex:1; background:var(--surface-raised); border:1px solid var(--border); color:var(--text-muted);
-  border-radius:8px; padding:6px 8px; font-size:11px; font-weight:500; cursor:pointer; display:flex;
-  align-items:center; justify-content:center; gap:5px; transition:all .15s; text-decoration:none;
+  border-radius:8px; padding:7px 10px; font-size:11.5px; font-weight:500; cursor:pointer; display:flex;
+  align-items:center; justify-content:center; gap:6px; transition:all .15s; text-decoration:none;
 }
 .btn-sidebar-action:hover{ color:var(--text); border-color:var(--border-strong); background:var(--surface-hover); }
-.notif-dot{ width:6px; height:6px; border-radius:50%; background:var(--text-dim); }
-.notif-dot.on{ background:#10b981; box-shadow:0 0 6px #10b981; }
-.notif-dot.blocked{ background:var(--rose); }
 
-/* ─ Context Panel (Slimmer DM list) ─ */
+/* ─ Context Panel (DM List / Admin Pairs) ─ */
 .context-panel{
   width:215px; background:var(--surface); border-right:1px solid var(--border);
   display:none; flex-direction:column; flex-shrink:0;
 }
 .context-panel.active{ display:flex; }
 .context-panel-header{ padding:14px 12px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.context-panel-title{ font-family:var(--font-display); font-size:12.5px; font-weight:700; color:var(--text); }
+.context-panel-title{ font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--text); }
 .btn-new-dm{
   background:var(--blue-dim); border:1px solid rgba(56,189,248,.35); color:var(--blue); border-radius:7px;
   padding:5px 9px; font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; transition:all .15s;
@@ -157,81 +152,80 @@ button{font-family:inherit}
 .dm-item.has-unread .unread-indicator-dot{ display:block; }
 .dm-item-info{ flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.25; }
 .dm-item-name-row{ display:flex; align-items:center; justify-content:space-between; gap:4px; }
-.dm-item-name{ font-size:12px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.dm-item-time{ font-size:9px; font-family:var(--font-mono); color:var(--text-dim); flex-shrink:0; }
-.dm-item-last{ font-size:10.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:1px; }
+.dm-item-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dm-item-time{ font-size:9.5px; font-family:var(--font-mono); color:var(--text-dim); flex-shrink:0; }
+.dm-item-last{ font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; min-height:14px; }
 .btn-dm-close{ opacity:0; background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:2px 4px; border-radius:4px; font-size:11px; line-height:1; transition:all .15s; }
 .dm-item:hover .btn-dm-close{ opacity:1; }
 .btn-dm-close:hover{ color:var(--rose); background:var(--rose-dim); }
-.dm-list-empty{ text-align:center; color:var(--text-dim); font-size:11px; padding:28px 10px; font-family:var(--font-mono); line-height:1.6; }
+.dm-list-empty{ text-align:center; color:var(--text-dim); font-size:11.5px; padding:28px 10px; font-family:var(--font-mono); line-height:1.6; }
 
 /* ══════════ MAIN CHAT STAGE ══════════ */
 .main-panel{ flex:1; display:flex; flex-direction:column; background:var(--bg); min-width:0; position:relative; }
 
 .thread-header{
-  height:54px; flex-shrink:0; padding:0 clamp(16px,3vw,28px); display:none; align-items:center;
+  height:58px; flex-shrink:0; padding:0 clamp(16px,3vw,28px); display:none; align-items:center;
   justify-content:space-between; border-bottom:1px solid var(--border); background:var(--bg);
 }
 .thread-header.active{ display:flex; }
-.thread-header-left{ display:flex; align-items:center; gap:11px; min-width:0; }
-.thread-title{ font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.thread-header-left{ display:flex; align-items:center; gap:12px; min-width:0; }
+.thread-title{ font-family:var(--font-display); font-weight:700; font-size:16px; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .thread-title.gold-admin{ color:var(--gold); }
-.thread-subtitle{ font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
-.thread-header-icon{ width:34px; height:34px; border-radius:50%; background:var(--teal-dim); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.thread-subtitle{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); }
+.thread-header-icon{ width:36px; height:36px; border-radius:50%; background:var(--surface-raised); color:var(--teal); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 
 .messages-container{
-  flex:1; overflow-y:auto; padding:20px clamp(16px,3vw,28px) 10px; display:flex; flex-direction:column;
-  gap:4px; scroll-behavior:smooth;
+  flex:1; overflow-y:auto; padding:22px clamp(16px,3vw,28px) 12px; display:flex; flex-direction:column;
+  gap:5px; scroll-behavior:smooth;
 }
 .messages-container::-webkit-scrollbar{ width:6px; }
 .messages-container::-webkit-scrollbar-thumb{ background:var(--border-strong); border-radius:4px; }
-.thread-empty{ text-align:center; color:var(--text-dim); margin:auto; font-size:13.5px; font-family:var(--font-mono); max-width:300px; line-height:1.6; }
+.thread-empty{ text-align:center; color:var(--text-dim); margin:auto; font-size:14px; font-family:var(--font-mono); max-width:320px; line-height:1.6; }
 
-/* ─ Message Rows & Bubble Layout ─ */
+/* ─ ALL MESSAGES ALIGNED TO THE LEFT ─ */
 .msg-row{
-  display:flex; gap:10px; max-width:74%; position:relative; margin-top:10px;
+  display:flex; gap:12px; max-width:76%; position:relative; margin-top:12px;
+  align-self:flex-start; flex-direction:row;
 }
-.msg-row.tight{ margin-top:2px; }
-.msg-row.outgoing{ align-self:flex-end; flex-direction:row-reverse; }
-.msg-row.incoming{ align-self:flex-start; }
+.msg-row.tight{ margin-top:3px; }
 
-.msg-avatar-slot{ width:32px; height:32px; flex-shrink:0; display:flex; align-items:flex-start; }
+.msg-avatar-slot{ width:38px; height:38px; flex-shrink:0; display:flex; align-items:flex-start; }
 .msg-avatar{
-  width:32px; height:32px; border-radius:50%; overflow:hidden; background:#1a212c; border:1px solid var(--border-strong);
-  display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:11px; font-weight:600; color:var(--text-muted);
+  width:38px; height:38px; border-radius:50%; overflow:hidden; background:#1a212c; border:1px solid var(--border-strong);
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--text-muted);
 }
 .msg-avatar img{ width:100%; height:100%; object-fit:cover; }
-.msg-avatar-placeholder{ width:32px; height:32px; }
+.msg-avatar-placeholder{ width:38px; height:38px; }
 .msg-row.outgoing .msg-avatar-slot{ display:none; }
 
 .msg-stack{
-  display:flex; flex-direction:column; min-width:0;
+  display:flex; flex-direction:column; align-items:flex-start; min-width:0;
 }
-.msg-row.outgoing .msg-stack{ align-items:flex-end; }
-.msg-row.incoming .msg-stack{ align-items:flex-start; }
 
-.msg-cluster-meta{ display:flex; align-items:baseline; gap:7px; padding:0 4px 3px; font-size:11px; }
-.msg-row.outgoing .msg-cluster-meta{ justify-content:flex-end; }
-.msg-author{ font-family:var(--font-display); font-weight:600; font-size:12.5px; color:var(--text-muted); }
-.msg-time{ font-size:10.5px; font-family:var(--font-mono); color:var(--text-dim); }
-.badge-admin-tag{ display:inline-flex; align-items:center; gap:3px; color:var(--amber); font-size:10px; font-weight:600; }
+.msg-cluster-meta{ display:flex; align-items:baseline; gap:8px; padding:0 4px 4px; font-size:12px; }
+.msg-author{ font-family:var(--font-display); font-weight:700; font-size:14px; color:var(--text-muted); }
+.msg-time{ font-size:11.5px; font-family:var(--font-mono); color:var(--text-dim); }
+.badge-admin-tag{ display:inline-flex; align-items:center; gap:3px; color:var(--amber); font-size:10.5px; font-weight:700; }
 
-/* Big message bubbles with shrink-wrap fit-content */
+/* EVEN BIGGER BUBBLES with natural content shrink-wrapping */
 .msg-bubble{
-  display:inline-block; width:fit-content; max-width:100%; padding:9px 15px; font-size:15px;
-  line-height:1.55; word-break:break-word; background:var(--surface-raised); color:var(--text); border-radius:18px;
+  display:inline-block; width:fit-content; max-width:100%; padding:11px 18px; font-size:16.5px;
+  line-height:1.55; word-break:break-word; background:var(--surface-raised); border:1px solid var(--border);
+  color:var(--text); border-radius:20px;
 }
-.msg-row.incoming .msg-bubble{ border-bottom-left-radius:18px; border-top-left-radius:18px; }
-.msg-row.incoming.pos-first .msg-bubble, .msg-row.incoming.pos-single .msg-bubble{ border-top-left-radius:5px; }
-.msg-row.incoming.pos-last .msg-bubble, .msg-row.incoming.pos-single .msg-bubble{ border-bottom-left-radius:5px; }
+.msg-row.incoming.pos-first .msg-bubble, .msg-row.incoming.pos-single .msg-bubble{ border-top-left-radius:6px; }
+.msg-row.incoming.pos-last .msg-bubble, .msg-row.incoming.pos-single .msg-bubble{ border-bottom-left-radius:6px; }
 
-.msg-row.outgoing .msg-bubble{ background:var(--teal-dim); color:var(--text); border:1px solid rgba(63,169,142,.3); }
-.msg-row.outgoing.pos-first .msg-bubble, .msg-row.outgoing.pos-single .msg-bubble{ border-top-right-radius:5px; }
-.msg-row.outgoing.pos-last .msg-bubble, .msg-row.outgoing.pos-single .msg-bubble{ border-bottom-right-radius:5px; }
+/* Sent messages: Green theme with You indicator */
+.msg-row.outgoing .msg-bubble{
+  background:var(--teal-dim); color:var(--text); border:1px solid rgba(63,169,142,.35);
+}
+.msg-row.outgoing.pos-first .msg-bubble, .msg-row.outgoing.pos-single .msg-bubble{ border-top-left-radius:6px; }
+.msg-row.outgoing.pos-last .msg-bubble, .msg-row.outgoing.pos-single .msg-bubble{ border-bottom-left-radius:6px; }
 
-.msg-row.is-admin-msg .msg-bubble{ background:var(--amber-dim); border:1px solid rgba(245,166,35,.35); }
+.msg-row.is-admin-msg .msg-bubble{ background:var(--amber-dim); border:1px solid rgba(245,166,35,.4); }
 
-.msg-actions{ opacity:0; display:flex; align-items:center; gap:4px; transition:opacity .15s; align-self:center; }
+.msg-actions{ opacity:0; display:flex; align-items:center; gap:4px; transition:opacity .15s; align-self:center; margin-left:6px; }
 .msg-row:hover .msg-actions{ opacity:1; }
 .btn-msg-delete{
   width:26px; height:26px; border-radius:50%; background:var(--rose-dim); border:1px solid rgba(229,72,77,.3); color:var(--rose);
@@ -248,22 +242,22 @@ button{font-family:inherit}
 
 .rate-limit-banner{
   display:none; padding:8px 16px; background:var(--rose-dim); border-top:1px solid rgba(229,72,77,.3);
-  color:#f3a3a6; font-size:12px; font-weight:500; text-align:center; align-items:center; justify-content:center; gap:8px; font-family:var(--font-mono);
+  color:#f3a3a6; font-size:12.5px; font-weight:500; text-align:center; align-items:center; justify-content:center; gap:8px; font-family:var(--font-mono);
 }
 .rate-limit-banner.active{ display:flex; }
 
 /* ─ Input dock ─ */
 .chat-input-panel{ padding:12px clamp(16px,3vw,28px) 16px; background:var(--bg); display:none; flex-direction:column; gap:6px; flex-shrink:0; }
 .chat-input-panel.active{ display:flex; }
-.input-controls-row{ display:flex; align-items:center; justify-content:flex-end; font-family:var(--font-mono); font-size:10px; color:var(--text-dim); min-height:14px; padding:0 4px; }
-.sending-as-admin-flag{ display:none; align-items:center; gap:5px; color:var(--amber); font-weight:600; font-family:var(--font-body); font-size:11px; margin-right:auto; }
+.input-controls-row{ display:flex; align-items:center; justify-content:flex-end; font-family:var(--font-mono); font-size:11px; color:var(--text-dim); min-height:14px; padding:0 4px; }
+.sending-as-admin-flag{ display:none; align-items:center; gap:5px; color:var(--amber); font-weight:600; font-family:var(--font-body); font-size:11.5px; margin-right:auto; }
 .sending-as-admin-flag.show{ display:flex; }
-.input-dock{ display:flex; align-items:center; gap:8px; background:var(--surface-raised); border:1px solid var(--border-strong); border-radius:26px; padding:5px 5px 5px 17px; transition:border-color .15s; }
+.input-dock{ display:flex; align-items:center; gap:8px; background:var(--surface-raised); border:1px solid var(--border-strong); border-radius:26px; padding:6px 6px 6px 18px; transition:border-color .15s; }
 .input-dock:focus-within{ border-color:var(--teal); }
-.chat-input{ flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--font-body); font-size:15px; padding:9px 0; }
+.chat-input{ flex:1; background:transparent; border:none; outline:none; color:var(--text); font-family:var(--font-body); font-size:16px; padding:9px 0; }
 .chat-input::placeholder{ color:var(--text-dim); }
 .btn-send{
-  background:var(--teal); border:none; color:#06110d; width:38px; height:38px; border-radius:50%;
+  background:var(--teal); border:none; color:#06110d; width:40px; height:40px; border-radius:50%;
   display:flex; align-items:center; justify-content:center; cursor:pointer; transition:transform .1s,opacity .15s; flex-shrink:0;
 }
 .btn-send:hover:not(:disabled){ transform:scale(1.06); }
@@ -297,7 +291,7 @@ button{font-family:inherit}
 .tag-switch input:checked + .tag-slider{ background-color:var(--amber-dim); border-color:var(--amber); }
 .tag-switch input:checked + .tag-slider:before{ transform:translateX(13px); background-color:var(--amber); }
 
-/* ══════════ SEARCH MODAL ══════════ */
+/* ══════════ SEARCH MODAL FOR NEW DMS ══════════ */
 .modal-overlay{ position:fixed; inset:0; background:rgba(6,8,12,.85); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; padding:20px; z-index:1000; opacity:0; pointer-events:none; transition:opacity .2s; }
 .modal-overlay.active{ opacity:1; pointer-events:auto; }
 .modal-card{ width:100%; max-width:460px; background:var(--surface); border:1px solid var(--border-strong); border-radius:18px; padding:20px; box-shadow:0 24px 60px rgba(0,0,0,.7); display:flex; flex-direction:column; gap:14px; max-height:85vh; }
@@ -396,21 +390,13 @@ button{font-family:inherit}
           <span>Direct Messages</span>
           <span class="sidebar-nav-badge" id="dms-unread-count">0</span>
         </button>
-
-        <!-- Admin Master All DMs Tab -->
-        <button class="sidebar-nav-item nav-admin-dms" id="tab-btn-admin-dms" onclick="switchMode('admin-dms')" style="display:none;">
-          <div class="sidebar-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
-          </div>
-          <span>👑 Master All DMs</span>
-        </button>
       </nav>
     </div>
 
     <!-- User Pill & Controls in Sidebar Footer -->
     <div class="sidebar-footer">
       <div class="user-card" id="current-user-card">
-        <div class="avatar-circle" id="sidebar-user-avatar" style="width:30px;height:30px;font-size:10.5px;">
+        <div class="avatar-circle" id="sidebar-user-avatar" style="width:32px;height:32px;font-size:11px;">
           <span id="sidebar-user-initials">?</span>
         </div>
         <div class="user-card-info">
@@ -434,15 +420,11 @@ button{font-family:inherit}
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
           <span>Dashboard</span>
         </a>
-        <button class="btn-sidebar-action" onclick="toggleNotifications()" title="Desktop alerts">
-          <span class="notif-dot" id="notif-indicator"></span>
-          <span id="notif-toggle-label">Alerts</span>
-        </button>
       </div>
     </div>
   </aside>
 
-  <!-- Context Panel (Slimmer DM list / Admin DM Pairs) -->
+  <!-- Context Panel (Slimmer DM List / Admin DM Pairs) -->
   <aside class="context-panel" id="dm-sidebar">
     <div class="context-panel-header">
       <span class="context-panel-title" id="dm-sidebar-title">Direct Messages</span>
@@ -458,7 +440,7 @@ button{font-family:inherit}
   <main class="main-panel">
     <div class="thread-header" id="channel-sub-header">
       <div class="thread-header-left">
-        <div class="thread-header-icon avatar-circle" id="dm-target-avatar" style="width:34px;height:34px;font-size:12px;">
+        <div class="thread-header-icon avatar-circle" id="dm-target-avatar" style="width:36px;height:36px;font-size:12.5px;">
           <span id="dm-target-initials">?</span>
         </div>
         <div>
@@ -508,7 +490,7 @@ button{font-family:inherit}
     Admin Tools
   </div>
   <div class="admin-corner-item" onclick="switchMode('admin-dms')">
-    <span>👑 Master All DMs</span>
+    <span>👑 View All DMs</span>
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M9 18l6-6-6-6"/></svg>
   </div>
   <div class="admin-corner-item">
@@ -559,7 +541,7 @@ const DROPBOX_CONFIG = {
 let currentUser = { id: "", name: "", isAdmin: false };
 let activeMode = "global"; // "global" | "dms" | "admin-dms"
 let activeDmContact = null; // { id: "...", name: "..." }
-let activeAdminDmPair = null; // { userA: {id, name}, userB: {id, name} }
+let activeAdminDmPair = null; // { key, userA, userB }
 let dmMessages = [];
 let globalMessages = [];
 let dmContacts = [];
@@ -572,7 +554,6 @@ let lastReadDmTimes = {}; // contactId -> ISO timestamp
 let unreadGlobalCount = 0;
 let unreadDmsMap = {}; // contactId -> unreadCount
 let unreadCountWhileScrolled = 0;
-let notificationsEnabled = localStorage.getItem('hz_chat_notifications') === 'true';
 
 let dropboxToken = null;
 let dropboxFiles = {};
@@ -586,13 +567,10 @@ const homeScreen = document.getElementById('home-screen');
 const chatApp = document.getElementById('chat-app-root');
 const tabBtnGlobal = document.getElementById('tab-btn-global');
 const tabBtnDms = document.getElementById('tab-btn-dms');
-const tabBtnAdminDms = document.getElementById('tab-btn-admin-dms');
 const globalUnreadBadge = document.getElementById('global-unread-count');
 const dmsUnreadBadge = document.getElementById('dms-unread-count');
 const homeGlobalBadge = document.getElementById('home-global-badge');
 const homeDmsBadge = document.getElementById('home-dms-badge');
-const notifIndicator = document.getElementById('notif-indicator');
-const notifToggleLabel = document.getElementById('notif-toggle-label');
 
 const dmSidebar = document.getElementById('dm-sidebar');
 const dmSidebarTitle = document.getElementById('dm-sidebar-title');
@@ -637,81 +615,6 @@ function playBeep(isSend=true){
   }catch(e){}
 }
 
-// ── Tab title flash ──
-let originalDocTitle = document.title || "Hub Zero Messages";
-let titleFlashTimer = null;
-window.addEventListener('focus', () => {
-  if(titleFlashTimer){ clearInterval(titleFlashTimer); titleFlashTimer=null; }
-  document.title = originalDocTitle;
-});
-function flashTabTitle(text){
-  if(document.hasFocus()) return;
-  if(titleFlashTimer) clearInterval(titleFlashTimer);
-  let toggle=false;
-  titleFlashTimer = setInterval(()=>{
-    document.title = toggle ? text : originalDocTitle;
-    toggle=!toggle;
-  }, 1000);
-}
-
-// ── Notification Manager ──
-function updateNotifUI(){
-  const hasSupport = "Notification" in window;
-  if(hasSupport && Notification.permission==='granted' && notificationsEnabled){
-    notifIndicator.className = 'notif-dot on';
-    notifToggleLabel.textContent = 'Alerts: ON';
-  } else if(hasSupport && Notification.permission==='denied'){
-    notifIndicator.className = 'notif-dot blocked';
-    notifToggleLabel.textContent = 'Alerts: OFF';
-  } else {
-    notifIndicator.className = 'notif-dot';
-    notifToggleLabel.textContent = 'Alerts: OFF';
-  }
-}
-
-window.toggleNotifications = async function(){
-  if(!("Notification" in window)){
-    alert("This browser does not support desktop notifications.");
-    return;
-  }
-  if(Notification.permission==='denied'){
-    alert("Desktop notifications are blocked in your browser site permissions. Please click the icon next to the URL to allow notifications.");
-    notificationsEnabled = false;
-    localStorage.setItem('hz_chat_notifications', 'false');
-    updateNotifUI();
-    return;
-  }
-  if(!notificationsEnabled){
-    try{
-      const perm = await Notification.requestPermission();
-      if(perm==='granted'){
-        notificationsEnabled = true;
-        localStorage.setItem('hz_chat_notifications', 'true');
-        triggerDesktopNotification("Hub Zero Notifications Enabled", "You'll receive alerts for incoming messages!", "");
-      } else {
-        notificationsEnabled = false;
-        localStorage.setItem('hz_chat_notifications', 'false');
-      }
-    }catch(err){ console.error("Notification permission error:", err); }
-  } else {
-    notificationsEnabled = false;
-    localStorage.setItem('hz_chat_notifications', 'false');
-  }
-  updateNotifUI();
-};
-
-function triggerDesktopNotification(title, body, senderName){
-  flashTabTitle(`💬 ${title}`);
-  if(!notificationsEnabled || !("Notification" in window) || Notification.permission!=='granted') return;
-  try{
-    const path = findPhotoPath(senderName);
-    let iconUrl = 'https://hub-zero.site/favicon.ico';
-    if(path && photoCache[path]) iconUrl = photoCache[path];
-    const notif = new Notification(title, { body: body||'New message received', icon: iconUrl, tag: 'hz_msg_'+Date.now() });
-    notif.onclick = function(){ window.focus(); notif.close(); };
-  }catch(e){ console.warn("Notification error:", e); }
-}
-
 // ── Auth Gate ──
 async function resolveUserIdentity(){
   let savedId="", savedName="";
@@ -750,7 +653,6 @@ async function resolveUserIdentity(){
 
   if(isAdmin){
     document.getElementById('sidebar-admin-badge').style.display = 'inline-flex';
-    tabBtnAdminDms.style.display = 'flex';
     adminCornerBtn.classList.add('show');
   }
 
@@ -759,7 +661,6 @@ async function resolveUserIdentity(){
 
   loadSavedDmContacts();
   loadReadTimestamps();
-  updateNotifUI();
   resolveVisibleAvatars();
   return true;
 }
@@ -920,7 +821,6 @@ window.switchMode = function(mode){
 
   tabBtnGlobal.classList.toggle('active', mode==='global');
   tabBtnDms.classList.toggle('active', mode==='dms');
-  if(tabBtnAdminDms) tabBtnAdminDms.classList.toggle('active', mode==='admin-dms');
 
   if(mode==='global'){
     dmSidebar.classList.remove('active');
@@ -948,15 +848,15 @@ window.switchMode = function(mode){
         dmTargetName.textContent = "Select a conversation";
         dmTargetName.classList.remove('gold-admin');
         dmTargetId.textContent = "";
-        dmTargetInitials.textContent = "?";
         dmTargetAvatar.removeAttribute('data-avatar-loaded');
         dmTargetAvatar.removeAttribute('data-avatar-name');
+        dmTargetAvatar.innerHTML = `<span id="dm-target-initials">?</span>`;
         chatInput.placeholder = "Select or start a DM…";
         renderMessages();
       }
     }
   } else if(mode==='admin-dms'){
-    // Master Admin All DMs View
+    // Master Admin All DMs View (Opened exclusively from Admin Menu)
     dmSidebar.classList.add('active');
     channelSubHeader.classList.add('active');
     dmSidebarTitle.textContent = "👑 Master All DMs";
@@ -971,15 +871,15 @@ window.switchMode = function(mode){
       dmTargetName.textContent = "Select a student conversation";
       dmTargetName.classList.add('gold-admin');
       dmTargetId.textContent = "(👑 Moderator view)";
-      dmTargetInitials.textContent = "👑";
       dmTargetAvatar.removeAttribute('data-avatar-loaded');
       dmTargetAvatar.removeAttribute('data-avatar-name');
+      dmTargetAvatar.innerHTML = `<span style="color:var(--gold); font-size:16px;">👑</span>`;
       renderMessages();
     }
   }
 };
 
-// ── DM Contacts Management ──
+// ── DM Contacts Management & Accurate Live Previews ──
 function loadSavedDmContacts(){
   try{
     const saved = localStorage.getItem(`hz_dms_${currentUser.id}`);
@@ -995,28 +895,53 @@ function saveDmContacts(){
     localStorage.setItem(`hz_hidden_dms_${currentUser.id}`, JSON.stringify(Array.from(hiddenDmIds)));
   }catch(e){}
 }
+
 function syncDmContactsFromHistory(){
   if(!currentUser.id) return;
-  const map = new Map();
-  dmContacts.forEach(c=>map.set(c.id,c));
-  dmMessages.forEach(m=>{
-    let otherId=null, otherName=null;
-    if(m.student_id===currentUser.id && m.recipient_id){ otherId=m.recipient_id; otherName=m.recipient_name || `Student ${m.recipient_id}`; }
-    else if(m.recipient_id===currentUser.id){ otherId=m.student_id; otherName=m.student_name || `Student ${m.student_id}`; }
-    if(otherId){
-      const existing = map.get(otherId) || { id:otherId, name:otherName };
-      existing.name = otherName || existing.name;
-      if(!existing.lastTime || new Date(m.created_at) > new Date(existing.lastTime)){
-        existing.lastMessage = m.content; existing.lastTime = m.created_at;
+  
+  const contactMap = new Map();
+  dmContacts.forEach(c => contactMap.set(c.id, { id: c.id, name: c.name }));
+
+  // Collect all users involved in non-deleted messages
+  dmMessages.forEach(m => {
+    if (m.student_id === currentUser.id && m.recipient_id) {
+      if (!contactMap.has(m.recipient_id)) {
+        contactMap.set(m.recipient_id, { id: m.recipient_id, name: m.recipient_name || `Student ${m.recipient_id}` });
       }
-      map.set(otherId, existing);
+    } else if (m.recipient_id === currentUser.id) {
+      if (!contactMap.has(m.student_id)) {
+        contactMap.set(m.student_id, { id: m.student_id, name: m.student_name || `Student ${m.student_id}` });
+      }
     }
   });
-  dmContacts = Array.from(map.values()).sort((a,b)=>{
-    const ta = a.lastTime ? new Date(a.lastTime).getTime() : 0;
-    const tb = b.lastTime ? new Date(b.lastTime).getTime() : 0;
-    return tb-ta;
+
+  // Calculate TRUE latest non-deleted message dynamically
+  const contactsList = [];
+  contactMap.forEach(c => {
+    const threadMsgs = dmMessages.filter(m => 
+      !m.is_deleted && 
+      ((m.student_id === currentUser.id && m.recipient_id === c.id) ||
+       (m.student_id === c.id && m.recipient_id === currentUser.id))
+    );
+
+    if (threadMsgs.length > 0) {
+      const latest = threadMsgs[threadMsgs.length - 1];
+      c.lastMessage = latest.content;
+      c.lastTime = latest.created_at;
+    } else {
+      c.lastMessage = ""; // Empty if no messages or all deleted
+      c.lastTime = null;
+    }
+    contactsList.push(c);
   });
+
+  // Sort contacts by latest message timestamp descending
+  dmContacts = contactsList.sort((a, b) => {
+    const timeA = a.lastTime ? new Date(a.lastTime).getTime() : 0;
+    const timeB = b.lastTime ? new Date(b.lastTime).getTime() : 0;
+    return timeB - timeA;
+  });
+
   saveDmContacts();
 }
 
@@ -1035,7 +960,7 @@ function renderDmContactsList(){
     return `
       <div class="dm-item ${isActive?'active':''} ${hasUnread?'has-unread':''}" data-contact-id="${escapeHtml(c.id)}" data-action="select-dm">
         <div class="dm-item-avatar-wrap">
-          <div class="avatar-circle" style="width:34px;height:34px;font-size:11px;" data-avatar-name="${escapeHtml(c.name)}">${escapeHtml(initials)}</div>
+          <div class="avatar-circle" style="width:36px;height:36px;font-size:11.5px;" data-avatar-name="${escapeHtml(c.name)}">${escapeHtml(initials)}</div>
           <span class="unread-indicator-dot"></span>
         </div>
         <div class="dm-item-info">
@@ -1043,7 +968,7 @@ function renderDmContactsList(){
             <span class="dm-item-name">${escapeHtml(c.name)}</span>
             <span class="dm-item-time">${escapeHtml(timeStr)}</span>
           </div>
-          <div class="dm-item-last">${escapeHtml(c.lastMessage || `ID: ${c.id}`)}</div>
+          <div class="dm-item-last">${escapeHtml(c.lastMessage || '')}</div>
         </div>
         <button class="btn-dm-close" data-contact-id="${escapeHtml(c.id)}" data-action="close-dm" title="Close conversation">✕</button>
       </div>
@@ -1077,9 +1002,9 @@ function closeDm(contactId){
     activeDmContact=null;
     dmTargetName.textContent = "Select a conversation";
     dmTargetId.textContent = "";
-    dmTargetInitials.textContent = "?";
     dmTargetAvatar.removeAttribute('data-avatar-loaded');
     dmTargetAvatar.removeAttribute('data-avatar-name');
+    dmTargetAvatar.innerHTML = `<span id="dm-target-initials">?</span>`;
   }
   renderDmContactsList();
   renderMessages();
@@ -1096,7 +1021,7 @@ function selectDmContact(contact){
   dmTargetId.textContent = `ID ${contact.id}`;
   const initials = contact.name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
   
-  // FIX: Reset avatar loaded state to ensure correct profile photo renders
+  // FIX: Reset loaded state and apply new name attribute for fresh photo loading
   dmTargetAvatar.removeAttribute('data-avatar-loaded');
   dmTargetAvatar.setAttribute('data-avatar-name', contact.name);
   dmTargetAvatar.innerHTML = `<span id="dm-target-initials">${escapeHtml(initials)}</span>`;
@@ -1116,7 +1041,7 @@ function renderAdminDmPairsList(){
   if(!currentUser.isAdmin) return;
   const pairMap = new Map();
   dmMessages.forEach(m=>{
-    if(!m.recipient_id) return;
+    if(!m.recipient_id || m.is_deleted) return;
     if(m.student_id==='089091' || m.recipient_id==='089091') return; // NEVER show admin's own DMs
 
     const pairKey = [m.student_id, m.recipient_id].sort().join('__');
@@ -1146,11 +1071,11 @@ function renderAdminDmPairsList(){
     const timeStr = p.lastTime ? formatAEST(p.lastTime).replace('Today, ','') : '';
     return `
       <div class="dm-item ${isActive?'active gold':''}" data-admin-pair-key="${escapeHtml(p.key)}">
-        <div class="avatar-circle" style="width:34px;height:34px;font-size:12px;border-color:rgba(251,191,36,.4);color:var(--gold);">👑</div>
+        <div class="avatar-circle" style="width:36px;height:36px;font-size:13px;border-color:rgba(251,191,36,.4);color:var(--gold);">👑</div>
         <div class="dm-item-info">
           <div class="dm-item-name-row">
-            <span class="dm-item-name" style="color:var(--gold);">${escapeHtml(p.userA.name.split(' ')[0])} ↔ ${escapeHtml(p.userB.name.split(' ')[0])}</span>
-            <span class="dm-item-time">${p.count} msgs</span>
+            <span class="dm-item-name" style="color:var(--gold); font-size:13px;">${escapeHtml(p.userA.name.split(' ')[0])} ↔ ${escapeHtml(p.userB.name.split(' ')[0])}</span>
+            <span class="dm-item-time">${p.count}</span>
           </div>
           <div class="dm-item-last">${escapeHtml(p.lastMessage)}</div>
         </div>
@@ -1166,7 +1091,7 @@ function selectAdminDmPair(pair){
   dmTargetId.textContent = `(${pair.userA.id} ↔ ${pair.userB.id})`;
   dmTargetAvatar.removeAttribute('data-avatar-loaded');
   dmTargetAvatar.removeAttribute('data-avatar-name');
-  dmTargetAvatar.innerHTML = `<span style="color:var(--gold);">👑</span>`;
+  dmTargetAvatar.innerHTML = `<span style="color:var(--gold); font-size:16px;">👥</span>`;
   chatInputPanel.classList.remove('active'); // Inspection only
 
   renderAdminDmPairsList();
@@ -1207,7 +1132,7 @@ function renderSearchResults(query){
     const initials = (s.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
     return `
       <div class="search-user-item" data-user-id="${escapeHtml(s.id)}" data-user-name="${escapeHtml(s.name)}">
-        <div class="avatar-circle" style="width:34px;height:34px;font-size:11px;" data-avatar-name="${escapeHtml(s.name)}">${escapeHtml(initials)}</div>
+        <div class="avatar-circle" style="width:36px;height:36px;font-size:11.5px;" data-avatar-name="${escapeHtml(s.name)}">${escapeHtml(initials)}</div>
         <div class="search-user-info">
           <div class="search-user-name"><span>${escapeHtml(s.name)}</span>${hasExistingDm ? `<span class="search-user-badge-active">Active DM</span>` : ''}</div>
           <div class="search-user-id">ID ${escapeHtml(s.id)}</div>
@@ -1352,8 +1277,8 @@ function renderMessages(){
         <div class="msg-stack">
           ${isFirst ? `
             <div class="msg-cluster-meta">
-              ${!isMe ? `<span class="msg-author">${escapeHtml(m.student_name||'Student')}</span>` : ''}
-              ${(!isMe && isAdminMsg) ? '<span class="badge-admin-tag"><svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>Admin</span>' : ''}
+              ${isMe ? `<span class="msg-author" style="color:var(--teal);">You</span>` : `<span class="msg-author">${escapeHtml(m.student_name||'Student')}</span>`}
+              ${isAdminMsg ? '<span class="badge-admin-tag"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>Admin</span>' : ''}
               <span class="msg-time">${escapeHtml(timeAest)}</span>
             </div>` : ''}
           <div class="msg-bubble">${escapeHtml(m.content)}</div>
@@ -1361,7 +1286,7 @@ function renderMessages(){
         ${canDelete ? `
           <div class="msg-actions">
             <button class="btn-msg-delete" data-del-id="${m.id}" title="Delete message">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
             </button>
           </div>` : ''}
       </div>
@@ -1416,6 +1341,9 @@ window.deleteMessage = async function(id){
     await sbClient.from('chat_messages').update({ is_deleted:true }).eq('id', id);
     globalMessages = globalMessages.filter(m=>m.id!==id);
     dmMessages = dmMessages.filter(m=>m.id!==id);
+    syncDmContactsFromHistory();
+    if(activeMode==='dms') renderDmContactsList();
+    if(activeMode==='admin-dms') renderAdminDmPairsList();
     renderMessages();
   }catch(err){ console.error('Delete error:', err); }
 };
@@ -1516,7 +1444,6 @@ function setupRealtime(){
                   hiddenDmIds.delete(otherUser.id);
                   saveDmContacts();
                   playBeep(false);
-                  triggerDesktopNotification(`DM from ${newMsg.student_name}`, newMsg.content, newMsg.student_name);
                   
                   if(activeMode!=='dms' || !activeDmContact || activeDmContact.id!==otherUser.id){
                     unreadDmsMap[otherUser.id] = (unreadDmsMap[otherUser.id]||0)+1;
@@ -1555,7 +1482,6 @@ function setupRealtime(){
               globalMessages.push(newMsg);
               if(!isFromMe){
                 playBeep(false);
-                triggerDesktopNotification(`Hub Zero Global — ${newMsg.student_name}`, newMsg.content, newMsg.student_name);
                 if(activeMode!=='global'){
                   unreadGlobalCount++;
                   updateUnreadBadges();
@@ -1586,10 +1512,16 @@ function setupRealtime(){
           const dIdx = dmMessages.findIndex(m=>m.id===updated.id);
           if(dIdx!==-1) dmMessages[dIdx]=updated;
         }
+        syncDmContactsFromHistory();
+        if(activeMode==='dms') renderDmContactsList();
+        if(activeMode==='admin-dms') renderAdminDmPairsList();
         renderMessages();
       } else if(payload.eventType==='DELETE'){
         globalMessages = globalMessages.filter(m=>m.id!==payload.old.id);
         dmMessages = dmMessages.filter(m=>m.id!==payload.old.id);
+        syncDmContactsFromHistory();
+        if(activeMode==='dms') renderDmContactsList();
+        if(activeMode==='admin-dms') renderAdminDmPairsList();
         renderMessages();
       }
     })
