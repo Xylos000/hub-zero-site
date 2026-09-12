@@ -151,84 +151,99 @@ button{font-family:inherit}
 .chat-app{ display:none; height:100vh; width:100%; background:var(--bg); position:relative; overflow:hidden; }
 .chat-app.active{ display:flex; }
 
-/* ─ Compact Left Icon Sidebar (76px) ─ */
+/* ─ Main Left Sidebar (240px) ─ */
 .app-sidebar{
-  width:76px; flex-shrink:0; background:var(--sidebar-bg); border-right:1px solid var(--border);
-  display:flex; flex-direction:column; align-items:center; justify-content:space-between;
-  padding:14px 0 12px; z-index:25; user-select:none;
+  width:240px; flex-shrink:0; background:var(--sidebar-bg); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; justify-content:space-between;
+  padding:16px 12px 14px; z-index:25; user-select:none;
 }
-.sidebar-top{ display:flex; flex-direction:column; align-items:center; gap:16px; width:100%; }
-.sidebar-brand{
-  width:46px; height:46px; border-radius:14px; background:#121824; border:1px solid var(--border-strong);
-  display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .18s cubic-bezier(0.16,1,0.3,1);
-  color:var(--text); text-decoration:none; padding:0; flex-shrink:0;
+.sidebar-top{ display:flex; flex-direction:column; gap:16px; width:100%; }
+.sidebar-brand-btn{
+  width:100%; display:flex; align-items:center; gap:11px; padding:8px 10px; border-radius:12px;
+  background:transparent; border:1px solid transparent; cursor:pointer; text-align:left;
+  transition:all .15s; text-decoration:none; color:inherit;
 }
-.sidebar-brand:hover{ border-color:var(--teal); transform:scale(1.06); box-shadow:0 0 16px rgba(63,169,142,.3); }
-.sidebar-brand img{ width:28px; height:28px; object-fit:contain; }
+.sidebar-brand-btn:hover{ background:var(--surface-raised); border-color:var(--border); }
+.sidebar-brand-logo{ width:30px; height:30px; object-fit:contain; flex-shrink:0; }
+.sidebar-brand-text{ display:flex; flex-direction:column; min-width:0; }
+.brand-title{ font-family:var(--font-display); font-weight:800; font-size:15px; letter-spacing:-.01em; color:var(--text); line-height:1.2; }
+.brand-sub{ font-family:var(--font-mono); font-weight:700; font-size:10px; letter-spacing:.06em; color:var(--teal); line-height:1; }
 
-.sidebar-nav{ display:flex; flex-direction:column; gap:10px; align-items:center; width:100%; padding:0 12px; }
+.sidebar-nav{ display:flex; flex-direction:column; gap:6px; width:100%; padding:0; }
 .sidebar-nav-item{
-  width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center;
-  background:var(--surface); border:1px solid var(--border); color:var(--text-muted); cursor:pointer;
-  position:relative; transition:all .18s cubic-bezier(0.16,1,0.3,1); padding:0;
+  width:100%; height:44px; border-radius:12px; display:flex; align-items:center; gap:12px;
+  background:transparent; border:1px solid transparent; color:var(--text-muted); cursor:pointer;
+  padding:0 12px; transition:all .15s cubic-bezier(0.16,1,0.3,1); position:relative; text-align:left;
 }
-.sidebar-nav-item:hover{ background:var(--surface-hover); color:#fff; transform:scale(1.06); border-color:var(--border-strong); }
-.sidebar-nav-item.active.nav-global{ background:var(--teal-dim); color:var(--teal); border-color:var(--teal); box-shadow:0 0 14px rgba(63,169,142,.3); }
-.sidebar-nav-item.active.nav-dms{ background:var(--blue-dim); color:var(--blue); border-color:var(--blue); box-shadow:0 0 14px rgba(56,189,248,.3); }
-.sidebar-nav-item.active.nav-servers{ background:var(--purple-dim); color:var(--purple); border-color:var(--purple); box-shadow:0 0 14px rgba(168,85,247,.3); }
-.sidebar-nav-icon{ width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sidebar-nav-item:hover{ background:var(--surface-raised); color:#fff; border-color:var(--border); }
+.sidebar-nav-item.active.nav-global{ background:var(--teal-dim); color:var(--teal); border-color:rgba(63,169,142,.35); font-weight:600; }
+.sidebar-nav-item.active.nav-dms{ background:var(--blue-dim); color:var(--blue); border-color:rgba(56,189,248,.35); font-weight:600; }
+.sidebar-nav-item.active.nav-servers{ background:var(--purple-dim); color:var(--purple); border-color:rgba(168,85,247,.35); font-weight:600; }
+.sidebar-nav-icon{ width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sidebar-nav-label{ font-size:13.5px; font-weight:600; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .sidebar-nav-badge{
-  position:absolute; top:-4px; right:-4px; background:var(--rose); color:#fff; font-family:var(--font-mono);
-  font-size:10px; font-weight:700; padding:1px 5px; border-radius:10px; display:none; align-items:center;
-  justify-content:center; border:2px solid var(--sidebar-bg);
+  background:var(--rose); color:#fff; font-family:var(--font-mono);
+  font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; display:none; align-items:center;
+  justify-content:center; flex-shrink:0;
 }
 .sidebar-nav-badge.active{ display:inline-flex; }
 
-/* ─ Sidebar Footer (User Avatar & Utility Icons) ─ */
+/* Sidebar Notification Banner Prompt */
+.sidebar-notif-prompt{
+  display:none; align-items:center; gap:8px; padding:9px 12px; border-radius:10px;
+  background:rgba(245,166,35,.12); border:1px solid rgba(245,166,35,.3); color:var(--amber);
+  font-size:11.5px; font-weight:600; cursor:pointer; transition:all .15s; margin-top:4px;
+}
+.sidebar-notif-prompt:hover{ background:rgba(245,166,35,.2); border-color:var(--amber); color:#fde68a; }
+
+/* ─ Sidebar Footer (User Card & Actions) ─ */
 .sidebar-footer{
-  width:100%; display:flex; flex-direction:column; align-items:center; gap:10px;
+  width:100%; display:flex; flex-direction:column; gap:10px;
   padding-top:12px; border-top:1px solid var(--border);
 }
-.sidebar-user-avatar-btn{
-  position:relative; width:42px; height:42px; border-radius:50%; background:#1a212c;
-  border:2px solid var(--border-strong); display:flex; align-items:center; justify-content:center;
-  cursor:pointer; transition:transform .15s, border-color .15s; overflow:hidden;
+.sidebar-user-card{
+  display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:12px;
+  background:var(--surface); border:1px solid var(--border); cursor:pointer; transition:all .15s;
 }
-.sidebar-user-avatar-btn:hover{ transform:scale(1.06); border-color:var(--teal); }
-.sidebar-user-avatar-btn .avatar-circle{ width:100%; height:100%; font-size:12px; border:none; }
-.sidebar-user-avatar-btn .status-dot{ bottom:0; right:0; }
+.sidebar-user-card:hover{ background:var(--surface-hover); border-color:var(--border-strong); }
+.sidebar-user-avatar-wrap{ position:relative; flex-shrink:0; }
+.sidebar-user-avatar-wrap .avatar-circle{ width:36px; height:36px; font-size:12px; }
+.sidebar-user-avatar-wrap .status-dot{ bottom:0; right:0; }
+.sidebar-user-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.sidebar-user-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sidebar-user-id{ font-size:10px; font-family:var(--font-mono); color:var(--text-dim); }
 
-.sidebar-icon-actions{ display:flex; flex-direction:column; gap:6px; align-items:center; }
-.btn-sidebar-icon-action{
-  width:34px; height:34px; border-radius:10px; background:transparent; border:1px solid transparent;
+.sidebar-footer-actions{ display:flex; align-items:center; justify-content:space-between; gap:6px; padding:0 2px; }
+.btn-sidebar-footer-action{
+  flex:1; height:32px; border-radius:8px; background:var(--surface-raised); border:1px solid var(--border);
   color:var(--text-dim); display:flex; align-items:center; justify-content:center; cursor:pointer;
-  transition:all .15s; text-decoration:none;
+  transition:all .15s; text-decoration:none; font-size:11px;
 }
-.btn-sidebar-icon-action:hover{ background:var(--surface-raised); color:var(--text); border-color:var(--border); }
-.btn-sidebar-icon-action.install{ color:var(--teal); background:var(--teal-dim); border-color:rgba(63,169,142,.3); }
+.btn-sidebar-footer-action:hover{ background:var(--surface-hover); color:var(--text); border-color:var(--border-strong); }
+.btn-sidebar-footer-action.install{ color:var(--teal); background:var(--teal-dim); border-color:rgba(63,169,142,.3); }
 
-/* ─ Extended Context Panel (275px) ─ */
+/* ─ Extended Context Panel (320px) ─ */
 .context-panel{
-  width:275px; background:var(--surface); border-right:1px solid var(--border);
+  width:320px; background:var(--surface); border-right:1px solid var(--border);
   display:none; flex-direction:column; flex-shrink:0; z-index:15;
 }
 .context-panel.active{ display:flex; }
-.context-panel-header{ padding:14px 14px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid var(--border); }
-.context-panel-title{ font-family:var(--font-display); font-size:14px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
+.context-panel-header{ padding:14px 16px 12px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid var(--border); }
+.context-panel-title{ font-family:var(--font-display); font-size:14.5px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
 .btn-new-dm{
   background:var(--blue-dim); border:1px solid rgba(56,189,248,.35); color:var(--blue); border-radius:8px;
-  padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
+  padding:5px 11px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
 }
 .btn-new-dm:hover{ background:var(--blue); color:#061019; }
 .btn-new-server{
   background:var(--purple-dim); border:1px solid rgba(168,85,247,.35); color:var(--purple); border-radius:8px;
-  padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
+  padding:5px 11px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
 }
 .btn-new-server:hover{ background:var(--purple); color:#061019; }
 
-.dm-list{ flex:1; overflow-y:auto; padding:6px 8px 10px; display:flex; flex-direction:column; gap:4px; }
+.dm-list{ flex:1; overflow-y:auto; padding:8px 10px 12px; display:flex; flex-direction:column; gap:4px; }
 .dm-item{
-  display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:12px; background:transparent;
+  display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:12px; background:transparent;
   border:1px solid transparent; cursor:pointer; transition:all .15s; text-align:left; position:relative;
 }
 .dm-item:hover{ background:var(--surface-raised); border-color:rgba(255,255,255,.05); }
@@ -242,8 +257,8 @@ button{font-family:inherit}
 .dm-item.has-unread .unread-indicator-dot{ display:block; }
 .dm-item-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; line-height:1.25; }
 .dm-item-name-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.dm-item-name{ font-size:13.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.dm-item-time{ font-size:10px; font-family:var(--font-mono); color:var(--text-dim); flex-shrink:0; }
+.dm-item-name{ font-size:14px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dm-item-time{ font-size:10.5px; font-family:var(--font-mono); color:var(--text-dim); flex-shrink:0; }
 .dm-item-last{ font-size:12px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; min-height:16px; }
 
 /* Server Custom Badge */
@@ -588,8 +603,13 @@ button{font-family:inherit}
 .btn-remove-server-member:hover{ background:var(--rose-dim); }
 
 @media (max-width:768px){
-  .app-sidebar{ width:60px; }
-  .context-panel{ width:210px; }
+  .app-sidebar{ width:68px; padding:12px 6px; }
+  .sidebar-brand-text, .sidebar-nav-label, .sidebar-user-info, .sidebar-notif-prompt span{ display:none; }
+  .sidebar-brand-btn{ justify-content:center; padding:6px; }
+  .sidebar-nav-item{ justify-content:center; padding:0; }
+  .sidebar-user-card{ justify-content:center; padding:4px; }
+  .sidebar-footer-actions{ flex-direction:column; }
+  .context-panel{ width:230px; }
   .right-sidebar-panel{ display:none !important; }
   .messages-container{ padding:14px 12px 8px; }
   .msg-row{ max-width:88%; }
@@ -644,55 +664,74 @@ button{font-family:inherit}
 <!-- ══════════ MAIN APP SHELL ══════════ -->
 <div class="chat-app" id="chat-app-root">
 
-  <!-- Compact Left Icon Sidebar (76px) -->
+  <!-- Main Left Sidebar (240px) -->
   <aside class="app-sidebar">
     <div class="sidebar-top">
-      <button class="sidebar-brand" onclick="goHome()" data-tooltip="Hub Zero Home">
-        <img src="/logo.png" alt="Hub Zero">
+      <button class="sidebar-brand-btn" onclick="goHome()" title="Hub Zero Messages Home">
+        <img src="/logo.png" alt="Hub Zero" class="sidebar-brand-logo">
+        <div class="sidebar-brand-text">
+          <span class="brand-title">HUB ZERO</span>
+          <span class="brand-sub">MESSAGES</span>
+        </div>
       </button>
 
       <nav class="sidebar-nav">
-        <button class="sidebar-nav-item nav-global active" id="tab-btn-global" onclick="switchMode('global')" data-tooltip="Global Chat">
+        <button class="sidebar-nav-item nav-global active" id="tab-btn-global" onclick="switchMode('global')">
           <div class="sidebar-nav-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path></svg>
           </div>
+          <span class="sidebar-nav-label">Global Chat</span>
           <span class="sidebar-nav-badge" id="global-unread-count">0</span>
         </button>
 
-        <button class="sidebar-nav-item nav-dms" id="tab-btn-dms" onclick="switchMode('dms')" data-tooltip="Direct Messages">
+        <button class="sidebar-nav-item nav-dms" id="tab-btn-dms" onclick="switchMode('dms')">
           <div class="sidebar-nav-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           </div>
+          <span class="sidebar-nav-label">Direct Messages</span>
           <span class="sidebar-nav-badge" id="dms-unread-count">0</span>
         </button>
 
-        <button class="sidebar-nav-item nav-servers" id="tab-btn-servers" onclick="switchMode('servers')" data-tooltip="Servers">
+        <button class="sidebar-nav-item nav-servers" id="tab-btn-servers" onclick="switchMode('servers')">
           <div class="sidebar-nav-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
           </div>
+          <span class="sidebar-nav-label">Servers</span>
           <span class="sidebar-nav-badge" id="servers-unread-count">0</span>
         </button>
       </nav>
+
+      <!-- Enable Notifications Prompt -->
+      <div class="sidebar-notif-prompt" id="sidebar-notif-prompt" onclick="requestNotificationPermission(true)" title="Click to enable desktop notifications">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+        <span>Enable Notifications</span>
+      </div>
     </div>
 
-    <!-- User Avatar & Quick Icon Actions -->
+    <!-- User Card & Footer Quick Actions -->
     <div class="sidebar-footer">
-      <div class="sidebar-user-avatar-btn" id="sidebar-user-avatar-btn" data-tooltip="Your Account" onclick="goHome()">
-        <div class="avatar-circle" id="sidebar-user-avatar" data-avatar-name="">
-          <span id="sidebar-user-initials">?</span>
+      <div class="sidebar-user-card" id="sidebar-user-card" onclick="goHome()" title="Return to Portal">
+        <div class="sidebar-user-avatar-wrap">
+          <div class="avatar-circle" id="sidebar-user-avatar" data-avatar-name="">
+            <span id="sidebar-user-initials">?</span>
+          </div>
+          <span class="status-dot online"></span>
         </div>
-        <span class="status-dot online"></span>
+        <div class="sidebar-user-info">
+          <div class="sidebar-user-name" id="sidebar-user-name">Loading…</div>
+          <div class="sidebar-user-id" id="sidebar-user-id">ID ------</div>
+        </div>
       </div>
 
-      <div class="sidebar-icon-actions">
-        <button class="btn-sidebar-icon-action" onclick="goHome()" data-tooltip="Return to Portal">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+      <div class="sidebar-footer-actions">
+        <button class="btn-sidebar-footer-action" onclick="goHome()" title="Hub Zero Portal">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
         </button>
-        <button class="btn-sidebar-icon-action install" id="btn-sidebar-install" onclick="triggerPwaInstall()" data-tooltip="Install HZ Messages App">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <button class="btn-sidebar-footer-action install" id="btn-sidebar-install" onclick="triggerPwaInstall()" title="Install App">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
-        <a href="/" class="btn-sidebar-icon-action" data-tooltip="Hub Zero Scripts" target="_blank">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
+        <a href="/" class="btn-sidebar-footer-action" title="Hub Zero Scripts" target="_blank">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
         </a>
       </div>
     </div>
@@ -1119,37 +1158,62 @@ function playBeep(isSend=true){
 }
 
 // ── Desktop & Background Notifications ──
-function requestNotificationPermission(){
-  if('Notification' in window && Notification.permission === 'default'){
-    Notification.requestPermission().catch(()=>{});
+function updateNotificationPrompt(){
+  const promptEl = document.getElementById('sidebar-notif-prompt');
+  if(!promptEl) return;
+  if('Notification' in window && Notification.permission !== 'granted'){
+    promptEl.style.display = 'flex';
+  } else {
+    promptEl.style.display = 'none';
   }
 }
+
+window.requestNotificationPermission = async function(manual=false){
+  if(!('Notification' in window)) return;
+  if(Notification.permission === 'default' || manual){
+    try{
+      const perm = await Notification.requestPermission();
+      updateNotificationPrompt();
+      if(perm === 'granted' && manual){
+        sendDesktopNotification({
+          title: 'Notifications Enabled! 🔔',
+          body: 'You will now receive alerts for direct messages and server updates.',
+          tag: 'hz-welcome'
+        });
+      }
+    }catch(e){}
+  }
+};
 
 function sendDesktopNotification({ title, body, tag, data }){
   try{
     if(!('Notification' in window) || Notification.permission !== 'granted') return;
     
-    // Attempt Service Worker background notification first
-    if(navigator.serviceWorker && navigator.serviceWorker.controller){
-      navigator.serviceWorker.ready.then(reg => {
-        reg.showNotification(title, {
-          body: body || '',
-          icon: '/logo.png',
-          badge: '/logo.png',
-          tag: tag || 'hz-msg',
-          renotify: true,
-          data: data || {}
-        });
+    // Check service worker registration first
+    if(navigator.serviceWorker){
+      navigator.serviceWorker.getRegistration().then(reg => {
+        if(reg && reg.showNotification){
+          reg.showNotification(title, {
+            body: body || '',
+            icon: '/logo.png',
+            badge: '/logo.png',
+            tag: tag || 'hz-msg',
+            renotify: true,
+            data: data || { url: '/chat/' }
+          });
+        } else {
+          fallbackNotification(title, body, tag, data);
+        }
       }).catch(()=>{
-        fallbackNotification(title, body, tag);
+        fallbackNotification(title, body, tag, data);
       });
     } else {
-      fallbackNotification(title, body, tag);
+      fallbackNotification(title, body, tag, data);
     }
   }catch(e){ console.warn('Notification notice:', e); }
 }
 
-function fallbackNotification(title, body, tag){
+function fallbackNotification(title, body, tag, data){
   try{
     const notif = new Notification(title, {
       body: body || '',
@@ -1233,12 +1297,18 @@ async function resolveUserIdentity(){
   if(avatarInitialsEl) avatarInitialsEl.textContent = initials;
   const avatarEl = document.getElementById('sidebar-user-avatar');
   if(avatarEl) avatarEl.setAttribute('data-avatar-name', name);
+  const sidebarUserName = document.getElementById('sidebar-user-name');
+  if(sidebarUserName) sidebarUserName.textContent = name;
+  const sidebarUserId = document.getElementById('sidebar-user-id');
+  if(sidebarUserId) sidebarUserId.textContent = `ID ${savedId}`;
   const homeUserLine = document.getElementById('home-user-line');
   if(homeUserLine) homeUserLine.textContent = `Signed in as ${name} · ID ${savedId}`;
 
   if(isAdmin){
     adminCornerBtn.classList.add('show');
   }
+
+  updateNotificationPrompt();
 
   chatInput.disabled = false;
   btnSend.disabled = chatInput.value.trim().length === 0;
@@ -1813,20 +1883,21 @@ function selectDmContact(contact){
 // ── Right Side Panel 1: Global Members List ──
 function renderGlobalMembersList(){
   if(verifiedStudentsDirectory.length===0) return;
-  let onlineCount = onlineUserIds.size;
-  if(onlineCount < 1) onlineCount = 1; // At least current user
 
-  const sorted = [...verifiedStudentsDirectory].sort((a,b)=>{
-    const onA = onlineUserIds.has(a.id) || a.id === currentUser.id;
-    const onB = onlineUserIds.has(b.id) || b.id === currentUser.id;
-    if(onA && !onB) return -1;
-    if(!onA && onB) return 1;
+  const onlineList = verifiedStudentsDirectory.filter(s => onlineUserIds.has(s.id) || s.id === currentUser.id);
+  const offlineList = verifiedStudentsDirectory.filter(s => !onlineUserIds.has(s.id) && s.id !== currentUser.id);
+
+  onlineList.sort((a,b) => {
+    if(a.id === currentUser.id) return -1;
+    if(b.id === currentUser.id) return 1;
     return (a.name||'').localeCompare(b.name||'');
   });
 
-  globalOnlineCounter.textContent = `${onlineCount} ONLINE`;
-  globalMembersList.innerHTML = sorted.map(s => {
-    const isOnline = onlineUserIds.has(s.id) || s.id === currentUser.id;
+  offlineList.sort((a,b) => (a.name||'').localeCompare(b.name||''));
+
+  globalOnlineCounter.textContent = `${onlineList.length} ONLINE`;
+
+  const renderMemberRow = (s, isOnline) => {
     const isMe = s.id === currentUser.id;
     const initials = (s.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
     return `
@@ -1841,7 +1912,14 @@ function renderGlobalMembersList(){
         </div>
       </div>
     `;
-  }).join('');
+  };
+
+  globalMembersList.innerHTML = `
+    <div class="right-panel-section-title">ONLINE — ${onlineList.length}</div>
+    ${onlineList.map(s => renderMemberRow(s, true)).join('')}
+    <div class="right-panel-section-title" style="margin-top:10px;">OFFLINE — ${offlineList.length}</div>
+    ${offlineList.map(s => renderMemberRow(s, false)).join('')}
+  `;
   resolveVisibleAvatars();
 }
 
@@ -2096,20 +2174,22 @@ function renderServerMembersList(){
     serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
     return;
   }
-  let onlineCount = 0;
-  const sortedMembers = [...activeGroup.members].sort((a,b)=>{
+
+  const onlineList = activeGroup.members.filter(m => onlineUserIds.has(m.student_id) || m.student_id === currentUser.id);
+  const offlineList = activeGroup.members.filter(m => !onlineUserIds.has(m.student_id) && m.student_id !== currentUser.id);
+
+  const sortFn = (a, b) => {
     if(a.student_id === activeGroup.created_by) return -1;
     if(b.student_id === activeGroup.created_by) return 1;
-    const onA = onlineUserIds.has(a.student_id) || a.student_id === currentUser.id;
-    const onB = onlineUserIds.has(b.student_id) || b.student_id === currentUser.id;
-    if(onA && !onB) return -1;
-    if(!onA && onB) return 1;
+    if(a.student_id === currentUser.id) return -1;
+    if(b.student_id === currentUser.id) return 1;
     return (a.student_name||'').localeCompare(b.student_name||'');
-  });
+  };
 
-  serverMembersList.innerHTML = sortedMembers.map(m => {
-    const isOnline = onlineUserIds.has(m.student_id) || m.student_id === currentUser.id;
-    if(isOnline) onlineCount++;
+  onlineList.sort(sortFn);
+  offlineList.sort(sortFn);
+
+  const renderMemberRow = (m, isOnline) => {
     const isOwner = m.student_id === activeGroup.created_by;
     const isMe = m.student_id === currentUser.id;
     const initials = (m.student_name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
@@ -2129,9 +2209,18 @@ function renderServerMembersList(){
         </div>
       </div>
     `;
-  }).join('');
+  };
 
-  serverMembersHeaderTitle.textContent = `MEMBERS (${onlineCount}/${activeGroup.members.length})`;
+  serverMembersHeaderTitle.textContent = `MEMBERS (${onlineList.length}/${activeGroup.members.length})`;
+
+  serverMembersList.innerHTML = `
+    <div class="right-panel-section-title">ONLINE — ${onlineList.length}</div>
+    ${onlineList.map(m => renderMemberRow(m, true)).join('')}
+    ${offlineList.length > 0 ? `
+      <div class="right-panel-section-title" style="margin-top:10px;">OFFLINE — ${offlineList.length}</div>
+      ${offlineList.map(m => renderMemberRow(m, false)).join('')}
+    ` : ''}
+  `;
   resolveVisibleAvatars();
 }
 
