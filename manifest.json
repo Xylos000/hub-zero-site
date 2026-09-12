@@ -53,10 +53,10 @@
       ]
     },
     {
-      "name": "Group Chats",
-      "short_name": "Groups",
-      "description": "Open Group Chats",
-      "url": "/chat/#groups",
+      "name": "Servers",
+      "short_name": "Servers",
+      "description": "Open Servers",
+      "url": "/chat/#servers",
       "icons": [
         {
           "src": "/logo.png",
