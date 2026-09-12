@@ -1,0 +1,74 @@
+{
+  "name": "Hub Zero Messages",
+  "short_name": "HZ Messages",
+  "description": "Realtime direct messaging, group chats, and global chat for Hub Zero.",
+  "start_url": "/chat/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#090c10",
+  "theme_color": "#090c10",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/gallery/Logo.png",
+      "sizes": "192x192 512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "categories": [
+    "social",
+    "productivity",
+    "utilities"
+  ],
+  "shortcuts": [
+    {
+      "name": "Direct Messages",
+      "short_name": "DMs",
+      "description": "Open Direct Messages",
+      "url": "/chat/#dms",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Group Chats",
+      "short_name": "Groups",
+      "description": "Open Group Chats",
+      "url": "/chat/#groups",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Global Chat",
+      "short_name": "Global",
+      "description": "Open Global Chat",
+      "url": "/chat/#global",
+      "icons": [
+        {
+          "src": "/logo.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
