@@ -52,14 +52,14 @@ button{font-family:inherit}
 .home-title span{ color:var(--teal); }
 .home-subtitle{ color:var(--text-muted); font-size:14.5px; text-align:center; margin-bottom:34px; max-width:440px; }
 
-/* 4-Box Home Choices Grid */
+/* 3-Box Home Choices Grid */
 .home-choices{
-  display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));
-  gap:16px; width:100%; max-width:980px; justify-content:center;
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:18px; width:100%; max-width:880px; justify-content:center;
 }
 .home-choice-card{
   background:var(--surface); border:1px solid var(--border-strong);
-  border-radius:16px; padding:24px 20px; cursor:pointer; text-align:left; color:inherit;
+  border-radius:16px; padding:26px 22px; cursor:pointer; text-align:left; color:inherit;
   display:flex; flex-direction:column; gap:14px; transition:transform .15s, border-color .15s, background .15s; position:relative; overflow:hidden;
 }
 .home-choice-card:hover{ transform:translateY(-3px); background:var(--surface-hover); }
@@ -69,27 +69,19 @@ button{font-family:inherit}
 .home-choice-card.dms:hover{ border-color:var(--blue); }
 .home-choice-card.servers{ border-color:rgba(168,85,247,.35); }
 .home-choice-card.servers:hover{ border-color:var(--purple); }
-.home-choice-card.action-card.install{ border-color:rgba(52,211,153,.35); }
-.home-choice-card.action-card.install:hover{ border-color:#34d399; }
-.home-choice-card.action-card.scripts{ border-color:rgba(245,166,35,.35); }
-.home-choice-card.action-card.scripts:hover{ border-color:var(--amber); }
 
-.choice-icon-wrap{ width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.choice-icon-wrap{ width:46px; height:46px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .home-choice-card.global .choice-icon-wrap{ background:var(--teal-dim); color:var(--teal); }
 .home-choice-card.dms .choice-icon-wrap{ background:var(--blue-dim); color:var(--blue); }
 .home-choice-card.servers .choice-icon-wrap{ background:var(--purple-dim); color:var(--purple); }
-.home-choice-card.action-card.install .choice-icon-wrap{ background:rgba(52,211,153,.15); color:#34d399; }
-.home-choice-card.action-card.scripts .choice-icon-wrap{ background:var(--amber-dim); color:var(--amber); }
 
-.choice-title{ font-family:var(--font-display); font-size:17.5px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.choice-title{ font-family:var(--font-display); font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px; }
 .choice-badge{ margin-left:auto; background:var(--rose); color:#fff; font-family:var(--font-mono); font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; display:none; }
 .choice-badge.show{ display:inline-flex; }
-.choice-cta{ margin-top:auto; font-size:12.5px; font-weight:600; display:flex; align-items:center; gap:6px; padding-top:4px; }
+.choice-cta{ margin-top:auto; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; padding-top:4px; }
 .home-choice-card.global .choice-cta{ color:var(--teal); }
 .home-choice-card.dms .choice-cta{ color:var(--blue); }
 .home-choice-card.servers .choice-cta{ color:var(--purple); }
-.home-choice-card.action-card.install .choice-cta{ color:#34d399; }
-.home-choice-card.action-card.scripts .choice-cta{ color:var(--amber); }
 
 /* ─ Avatar Standard & Photo Containment ─ */
 .avatar-circle{
@@ -161,6 +153,12 @@ button{font-family:inherit}
 .sidebar-header-row{
   display:flex; align-items:center; justify-content:space-between;
   padding:4px 6px 12px; border-bottom:1px solid var(--border);
+}
+.sidebar-brand-left{
+  display:flex; align-items:center; gap:9px;
+}
+.sidebar-brand-logo{
+  width:24px; height:24px; object-fit:contain; flex-shrink:0;
 }
 .sidebar-brand-title{
   font-family:var(--font-display); font-weight:800; font-size:17px; letter-spacing:-.01em; color:#fff;
@@ -622,7 +620,10 @@ button{font-family:inherit}
 
 <!-- ══════════ HOME SCREEN PORTAL ══════════ -->
 <div class="home-screen" id="home-screen">
-  <div class="home-brand"><span class="home-brand-mark">HUB <em>ZERO</em></span></div>
+  <div class="home-brand">
+    <img src="/logo.png" alt="Hub Zero" style="width:30px; height:30px; object-fit:contain;">
+    <span class="home-brand-mark">HUB <em>ZERO</em></span>
+  </div>
   <h1 class="home-title">Welcome to <span>Hub Zero MESSAGES</span></h1>
   <p class="home-subtitle" id="home-user-line">Loading your account…</p>
 
@@ -650,15 +651,6 @@ button{font-family:inherit}
       <div class="choice-title">Servers <span class="choice-badge" id="home-servers-badge">0</span></div>
       <div class="choice-cta">Open Servers →</div>
     </button>
-
-    <!-- Dynamic 4th Box: Install App (Browser) or Get Scripts (PWA) -->
-    <button class="home-choice-card action-card install" id="home-action-card" onclick="handleHomeActionCard()">
-      <div class="choice-icon-wrap" id="home-action-icon">
-        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      </div>
-      <div class="choice-title" id="home-action-title">Install App</div>
-      <div class="choice-cta" id="home-action-cta">Install HZ Messages →</div>
-    </button>
   </div>
 </div>
 
@@ -669,7 +661,10 @@ button{font-family:inherit}
   <aside class="app-sidebar">
     <div class="sidebar-top">
       <div class="sidebar-header-row" onclick="goHome()" style="cursor:pointer;" title="Hub Zero Messages">
-        <div class="sidebar-brand-title">HUB <em>ZERO</em></div>
+        <div class="sidebar-brand-left">
+          <img src="/logo.png" alt="Hub Zero" class="sidebar-brand-logo">
+          <div class="sidebar-brand-title">HUB <em>ZERO</em></div>
+        </div>
         <span class="sidebar-brand-chip">CHAT</span>
       </div>
 
@@ -1227,38 +1222,7 @@ function fallbackNotification(title, body, tag, data){
   }catch(e){}
 }
 
-// ── Dynamic 4th Box: Install App vs Get Scripts ──
-function updateHomeActionCard(){
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  const actionCard = document.getElementById('home-action-card');
-  const actionIcon = document.getElementById('home-action-icon');
-  const actionTitle = document.getElementById('home-action-title');
-  const actionCta = document.getElementById('home-action-cta');
-
-  if(!actionCard) return;
-
-  if(isStandalone){
-    actionCard.className = 'home-choice-card action-card scripts';
-    if(actionIcon) actionIcon.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
-    if(actionTitle) actionTitle.textContent = 'Get Scripts';
-    if(actionCta) actionCta.innerHTML = `<span>Explore hub</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>`;
-  } else {
-    actionCard.className = 'home-choice-card action-card install';
-    if(actionIcon) actionIcon.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
-    if(actionTitle) actionTitle.textContent = 'Install App';
-    if(actionCta) actionCta.innerHTML = `<span>Install HZ Messages</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
-  }
-}
-
-window.handleHomeActionCard = function(){
-  requestNotificationPermission();
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  if(isStandalone){
-    window.open('https://hub-zero.site/', '_blank');
-  } else {
-    triggerPwaInstall();
-  }
-};
+function updateHomeActionCard(){}
 
 // ── Auth Gate ──
 async function resolveUserIdentity(){
