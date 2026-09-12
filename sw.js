@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hz-messages-v2';
+const CACHE_NAME = 'hz-messages-v12';
 const PRECACHE_ASSETS = [
   '/chat/',
   '/chat/index.html',
@@ -15,6 +15,12 @@ self.addEventListener('install', (event) => {
       });
     })
   );
+});
+
+self.addEventListener('message', (event) => {
+  if (event.data && event.data.action === 'skipWaiting') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('activate', (event) => {
