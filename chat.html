@@ -45,124 +45,139 @@ button{font-family:inherit}
   display:flex; flex-direction:column; align-items:center; justify-content:center;
   padding:32px 20px; z-index:500; overflow-y:auto;
 }
-.home-brand{ display:flex; align-items:center; gap:10px; margin-bottom:34px; }
+.home-brand{ display:flex; align-items:center; gap:10px; margin-bottom:28px; }
 .home-brand-mark{ font-family:var(--font-display); font-weight:800; font-size:20px; letter-spacing:-.01em; }
 .home-brand-mark em{ font-style:normal; color:var(--amber); }
 .home-title{ font-family:var(--font-display); font-weight:800; font-size:clamp(28px,5vw,44px); text-align:center; line-height:1.15; margin-bottom:10px; letter-spacing:-.01em; }
 .home-title span{ color:var(--teal); }
-.home-subtitle{ color:var(--text-muted); font-size:14.5px; text-align:center; margin-bottom:40px; max-width:440px; }
-.home-choices{ display:flex; gap:16px; width:100%; max-width:960px; flex-wrap:wrap; justify-content:center; }
+.home-subtitle{ color:var(--text-muted); font-size:14.5px; text-align:center; margin-bottom:34px; max-width:440px; }
+
+/* 4-Box Home Choices Grid */
+.home-choices{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));
+  gap:16px; width:100%; max-width:980px; justify-content:center;
+}
 .home-choice-card{
-  flex:1 1 280px; max-width:310px; background:var(--surface); border:1px solid var(--border-strong);
-  border-radius:16px; padding:26px 22px; cursor:pointer; text-align:left; color:inherit;
-  display:flex; flex-direction:column; gap:12px; transition:transform .15s, border-color .15s, background .15s; position:relative; overflow:hidden;
+  background:var(--surface); border:1px solid var(--border-strong);
+  border-radius:16px; padding:24px 20px; cursor:pointer; text-align:left; color:inherit;
+  display:flex; flex-direction:column; gap:14px; transition:transform .15s, border-color .15s, background .15s; position:relative; overflow:hidden;
 }
 .home-choice-card:hover{ transform:translateY(-3px); background:var(--surface-hover); }
 .home-choice-card.global{ border-color:rgba(63,169,142,.35); }
 .home-choice-card.global:hover{ border-color:var(--teal); }
 .home-choice-card.dms{ border-color:rgba(56,189,248,.35); }
 .home-choice-card.dms:hover{ border-color:var(--blue); }
-.home-choice-card.groups{ border-color:rgba(168,85,247,.35); }
-.home-choice-card.groups:hover{ border-color:var(--purple); }
+.home-choice-card.servers{ border-color:rgba(168,85,247,.35); }
+.home-choice-card.servers:hover{ border-color:var(--purple); }
+.home-choice-card.action-card.install{ border-color:rgba(52,211,153,.35); }
+.home-choice-card.action-card.install:hover{ border-color:#34d399; }
+.home-choice-card.action-card.scripts{ border-color:rgba(245,166,35,.35); }
+.home-choice-card.action-card.scripts:hover{ border-color:var(--amber); }
+
 .choice-icon-wrap{ width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .home-choice-card.global .choice-icon-wrap{ background:var(--teal-dim); color:var(--teal); }
 .home-choice-card.dms .choice-icon-wrap{ background:var(--blue-dim); color:var(--blue); }
-.home-choice-card.groups .choice-icon-wrap{ background:var(--purple-dim); color:var(--purple); }
-.choice-title{ font-family:var(--font-display); font-size:18px; font-weight:700; display:flex; align-items:center; gap:8px; }
-.choice-desc{ font-size:12.5px; color:var(--text-muted); line-height:1.5; }
+.home-choice-card.servers .choice-icon-wrap{ background:var(--purple-dim); color:var(--purple); }
+.home-choice-card.action-card.install .choice-icon-wrap{ background:rgba(52,211,153,.15); color:#34d399; }
+.home-choice-card.action-card.scripts .choice-icon-wrap{ background:var(--amber-dim); color:var(--amber); }
+
+.choice-title{ font-family:var(--font-display); font-size:17.5px; font-weight:700; display:flex; align-items:center; gap:8px; }
 .choice-badge{ margin-left:auto; background:var(--rose); color:#fff; font-family:var(--font-mono); font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; display:none; }
 .choice-badge.show{ display:inline-flex; }
-.choice-cta{ margin-top:auto; font-size:12.5px; font-weight:600; display:flex; align-items:center; gap:6px; padding-top:6px; }
+.choice-cta{ margin-top:auto; font-size:12.5px; font-weight:600; display:flex; align-items:center; gap:6px; padding-top:4px; }
 .home-choice-card.global .choice-cta{ color:var(--teal); }
 .home-choice-card.dms .choice-cta{ color:var(--blue); }
-.home-choice-card.groups .choice-cta{ color:var(--purple); }
+.home-choice-card.servers .choice-cta{ color:var(--purple); }
+.home-choice-card.action-card.install .choice-cta{ color:#34d399; }
+.home-choice-card.action-card.scripts .choice-cta{ color:var(--amber); }
 
 /* ══════════ MAIN APP SHELL ══════════ */
 .chat-app{ display:none; height:100vh; width:100%; background:var(--bg); position:relative; overflow:hidden; }
 .chat-app.active{ display:flex; }
 
-/* ─ Main Sidebar (Expanded) ─ */
+/* ─ Compact Left Icon Sidebar (76px) ─ */
 .app-sidebar{
-  width:230px; flex-shrink:0; background:var(--sidebar-bg); border-right:1px solid var(--border);
-  display:flex; flex-direction:column; justify-content:space-between; z-index:20;
+  width:76px; flex-shrink:0; background:var(--sidebar-bg); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; align-items:center; justify-content:space-between;
+  padding:14px 0 12px; z-index:25; user-select:none;
 }
-.sidebar-top{ padding:16px 14px 12px; display:flex; flex-direction:column; gap:16px; }
+.sidebar-top{ display:flex; flex-direction:column; align-items:center; gap:16px; width:100%; }
 .sidebar-brand{
-  display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit; background:none;
-  border:none; cursor:pointer; padding:4px 6px; border-radius:8px; transition:background .15s;
+  width:46px; height:46px; border-radius:14px; background:#121824; border:1px solid var(--border-strong);
+  display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all .18s cubic-bezier(0.16,1,0.3,1);
+  color:var(--text); text-decoration:none; padding:0; flex-shrink:0;
 }
-.sidebar-brand:hover{ background:var(--surface-raised); }
-.sidebar-brand-mark{ font-family:var(--font-display); font-weight:800; font-size:15px; letter-spacing:-.01em; color:var(--text); }
-.sidebar-brand-mark em{ font-style:normal; color:var(--amber); }
-.sidebar-brand-sub{ font-family:var(--font-mono); font-size:10px; color:var(--text-dim); margin-left:auto; }
+.sidebar-brand:hover{ border-color:var(--teal); transform:scale(1.06); box-shadow:0 0 16px rgba(63,169,142,.3); }
+.sidebar-brand img{ width:28px; height:28px; object-fit:contain; }
 
-.sidebar-nav{ display:flex; flex-direction:column; gap:4px; }
+.sidebar-nav{ display:flex; flex-direction:column; gap:10px; align-items:center; width:100%; padding:0 12px; }
 .sidebar-nav-item{
-  display:flex; align-items:center; gap:11px; padding:10px 12px; border-radius:10px; background:transparent;
-  border:1px solid transparent; color:var(--text-muted); font-size:13.5px; font-weight:600; cursor:pointer;
-  transition:all .15s; text-align:left; position:relative;
+  width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+  background:var(--surface); border:1px solid var(--border); color:var(--text-muted); cursor:pointer;
+  position:relative; transition:all .18s cubic-bezier(0.16,1,0.3,1); padding:0;
 }
-.sidebar-nav-item:hover{ background:var(--surface-raised); color:var(--text); }
-.sidebar-nav-item.active.nav-global{ background:var(--teal-dim); color:var(--teal); border-color:rgba(63,169,142,.3); }
-.sidebar-nav-item.active.nav-dms{ background:var(--blue-dim); color:var(--blue); border-color:rgba(56,189,248,.3); }
-.sidebar-nav-item.active.nav-groups{ background:var(--purple-dim); color:var(--purple); border-color:rgba(168,85,247,.3); }
-.sidebar-nav-icon{ width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.sidebar-nav-item:hover{ background:var(--surface-hover); color:#fff; transform:scale(1.06); border-color:var(--border-strong); }
+.sidebar-nav-item.active.nav-global{ background:var(--teal-dim); color:var(--teal); border-color:var(--teal); box-shadow:0 0 14px rgba(63,169,142,.3); }
+.sidebar-nav-item.active.nav-dms{ background:var(--blue-dim); color:var(--blue); border-color:var(--blue); box-shadow:0 0 14px rgba(56,189,248,.3); }
+.sidebar-nav-item.active.nav-servers{ background:var(--purple-dim); color:var(--purple); border-color:var(--purple); box-shadow:0 0 14px rgba(168,85,247,.3); }
+.sidebar-nav-icon{ width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .sidebar-nav-badge{
-  margin-left:auto; background:var(--rose); color:#fff; font-family:var(--font-mono); font-size:10px;
-  font-weight:700; padding:1px 6px; border-radius:8px; display:none; align-items:center; justify-content:center;
+  position:absolute; top:-4px; right:-4px; background:var(--rose); color:#fff; font-family:var(--font-mono);
+  font-size:10px; font-weight:700; padding:1px 5px; border-radius:10px; display:none; align-items:center;
+  justify-content:center; border:2px solid var(--sidebar-bg);
 }
 .sidebar-nav-badge.active{ display:inline-flex; }
 
-/* ─ Sidebar Footer (User Status & Actions) ─ */
-.sidebar-footer{ padding:12px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px; background:rgba(0,0,0,.15); }
-.user-card{
-  display:flex; align-items:center; gap:10px; background:var(--surface-raised); border:1px solid var(--border);
-  border-radius:12px; padding:9px 11px;
+/* ─ Sidebar Footer (User Avatar & Utility Icons) ─ */
+.sidebar-footer{
+  width:100%; display:flex; flex-direction:column; align-items:center; gap:10px;
+  padding-top:12px; border-top:1px solid var(--border);
 }
-.avatar-circle{
-  border-radius:50%; overflow:hidden; flex-shrink:0; background:#1a212c; border:1px solid var(--border-strong);
-  display:flex; align-items:center; justify-content:center; font-family:var(--font-mono); font-weight:600; color:var(--text-muted);
+.sidebar-user-avatar-btn{
+  position:relative; width:40px; height:40px; border-radius:50%; background:#1a212c;
+  border:2px solid var(--border-strong); display:flex; align-items:center; justify-content:center;
+  cursor:pointer; transition:transform .15s, border-color .15s;
 }
-.avatar-circle img{ width:100%; height:100%; object-fit:cover; display:block; }
-.user-card-info{ display:flex; flex-direction:column; line-height:1.2; min-width:0; flex:1; }
-.user-card-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:4px; }
-.user-card-id{ font-size:10px; font-family:var(--font-mono); color:var(--text-dim); margin-top:1px; }
-.admin-chip{ display:inline-flex; align-items:center; gap:2px; color:var(--amber); font-size:8.5px; font-weight:700; letter-spacing:.02em; }
+.sidebar-user-avatar-btn:hover{ transform:scale(1.06); border-color:var(--teal); }
+.sidebar-user-avatar-btn .avatar-circle{ width:100%; height:100%; font-size:12px; border:none; }
+.sidebar-user-avatar-btn .status-dot{ bottom:0; right:0; }
 
-.sidebar-actions-row{ display:flex; align-items:center; gap:6px; }
-.btn-sidebar-action{
-  flex:1; background:var(--surface-raised); border:1px solid var(--border); color:var(--text-muted);
-  border-radius:8px; padding:7px 10px; font-size:11.5px; font-weight:500; cursor:pointer; display:flex;
-  align-items:center; justify-content:center; gap:6px; transition:all .15s; text-decoration:none;
+.sidebar-icon-actions{ display:flex; flex-direction:column; gap:6px; align-items:center; }
+.btn-sidebar-icon-action{
+  width:34px; height:34px; border-radius:10px; background:transparent; border:1px solid transparent;
+  color:var(--text-dim); display:flex; align-items:center; justify-content:center; cursor:pointer;
+  transition:all .15s; text-decoration:none;
 }
-.btn-sidebar-action:hover{ color:var(--text); border-color:var(--border-strong); background:var(--surface-hover); }
+.btn-sidebar-icon-action:hover{ background:var(--surface-raised); color:var(--text); border-color:var(--border); }
+.btn-sidebar-icon-action.install{ color:var(--teal); background:var(--teal-dim); border-color:rgba(63,169,142,.3); }
 
-/* ─ Context Panel (DM List / Group List / Admin Pairs) ─ */
+/* ─ Extended Context Panel (275px) ─ */
 .context-panel{
-  width:220px; background:var(--surface); border-right:1px solid var(--border);
-  display:none; flex-direction:column; flex-shrink:0;
+  width:275px; background:var(--surface); border-right:1px solid var(--border);
+  display:none; flex-direction:column; flex-shrink:0; z-index:15;
 }
 .context-panel.active{ display:flex; }
-.context-panel-header{ padding:14px 12px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.context-panel-title{ font-family:var(--font-display); font-size:13px; font-weight:700; color:var(--text); }
+.context-panel-header{ padding:14px 14px 10px; display:flex; align-items:center; justify-content:space-between; gap:8px; border-bottom:1px solid var(--border); }
+.context-panel-title{ font-family:var(--font-display); font-size:13.5px; font-weight:700; color:var(--text); letter-spacing:-.01em; }
 .btn-new-dm{
-  background:var(--blue-dim); border:1px solid rgba(56,189,248,.35); color:var(--blue); border-radius:7px;
-  padding:5px 9px; font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; transition:all .15s;
+  background:var(--blue-dim); border:1px solid rgba(56,189,248,.35); color:var(--blue); border-radius:8px;
+  padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
 }
 .btn-new-dm:hover{ background:var(--blue); color:#061019; }
-.btn-new-group{
-  background:var(--purple-dim); border:1px solid rgba(168,85,247,.35); color:var(--purple); border-radius:7px;
-  padding:5px 9px; font-size:11px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; transition:all .15s;
+.btn-new-server{
+  background:var(--purple-dim); border:1px solid rgba(168,85,247,.35); color:var(--purple); border-radius:8px;
+  padding:5px 10px; font-size:11.5px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px; transition:all .15s;
 }
-.btn-new-group:hover{ background:var(--purple); color:#061019; }
+.btn-new-server:hover{ background:var(--purple); color:#061019; }
 
-.dm-list{ flex:1; overflow-y:auto; padding:4px 6px 8px; display:flex; flex-direction:column; gap:3px; }
+.dm-list{ flex:1; overflow-y:auto; padding:6px 8px 10px; display:flex; flex-direction:column; gap:4px; }
 .dm-item{
-  display:flex; align-items:center; gap:9px; padding:8px; border-radius:10px; background:transparent;
+  display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:12px; background:transparent;
   border:1px solid transparent; cursor:pointer; transition:all .15s; text-align:left; position:relative;
 }
-.dm-item:hover{ background:var(--surface-raised); }
+.dm-item:hover{ background:var(--surface-raised); border-color:rgba(255,255,255,.05); }
 .dm-item.active{ background:var(--surface-raised); border-color:var(--blue); }
+.dm-item.active.server-active{ border-color:var(--purple); }
 .dm-item.active.gold{ border-color:var(--gold); }
 .dm-item.has-unread .dm-item-name{ color:#fff; font-weight:700; }
 .dm-item.has-unread .dm-item-last{ color:#93c5fd; font-weight:600; }
@@ -170,14 +185,23 @@ button{font-family:inherit}
 .unread-indicator-dot{ position:absolute; bottom:-1px; right:-1px; width:8px; height:8px; border-radius:50%; background:var(--blue); border:2px solid var(--surface); display:none; }
 .dm-item.has-unread .unread-indicator-dot{ display:block; }
 .dm-item-info{ flex:1; min-width:0; display:flex; flex-direction:column; line-height:1.25; }
-.dm-item-name-row{ display:flex; align-items:center; justify-content:space-between; gap:4px; }
-.dm-item-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.dm-item-name-row{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+.dm-item-name{ font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .dm-item-time{ font-size:9.5px; font-family:var(--font-mono); color:var(--text-dim); flex-shrink:0; }
-.dm-item-last{ font-size:11px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; min-height:14px; }
-.btn-dm-close{ opacity:0; background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:2px 4px; border-radius:4px; font-size:11px; line-height:1; transition:all .15s; }
-.dm-item:hover .btn-dm-close{ opacity:1; }
+.dm-item-last{ font-size:11.5px; color:var(--text-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; min-height:15px; }
+
+/* Reordering Controls */
+.dm-item-controls{ opacity:0; display:flex; align-items:center; gap:3px; transition:opacity .15s; flex-shrink:0; }
+.dm-item:hover .dm-item-controls{ opacity:1; }
+.btn-reorder{
+  background:transparent; border:none; color:var(--text-dim); cursor:pointer; padding:2px 4px;
+  border-radius:4px; font-size:10px; line-height:1; transition:all .12s;
+}
+.btn-reorder:hover{ color:var(--text); background:rgba(255,255,255,.1); }
+.btn-dm-close{ background:transparent; border:none; color:var(--text-dim); cursor:pointer; padding:2px 4px; border-radius:4px; font-size:11px; line-height:1; transition:all .12s; }
 .btn-dm-close:hover{ color:var(--rose); background:var(--rose-dim); }
-.dm-list-empty{ text-align:center; color:var(--text-dim); font-size:11.5px; padding:28px 10px; font-family:var(--font-mono); line-height:1.6; }
+.dm-list-empty{ text-align:center; color:var(--text-dim); font-size:12px; padding:28px 12px; font-family:var(--font-mono); line-height:1.6; }
+
 
 /* ══════════ MAIN CHAT STAGE ══════════ */
 .main-panel{ flex:1; display:flex; flex-direction:column; background:var(--bg); min-width:0; position:relative; }
@@ -361,35 +385,72 @@ button{font-family:inherit}
 .btn-login-redirect{ display:inline-flex; align-items:center; justify-content:center; width:100%; height:44px; background:var(--teal-dim); border:1px solid rgba(63,169,142,.4); color:var(--teal); border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; text-decoration:none; transition:background .15s,color .15s; }
 .btn-login-redirect:hover{ background:var(--teal); color:#06110d; }
 
-/* ─ Chat Stage Layout with Right Member Panel ─ */
+/* ─ Chat Stage Layout with Right Panels ─ */
 .chat-stage-body{ flex:1; display:flex; min-height:0; position:relative; overflow:hidden; }
 .chat-stage-content{ flex:1; display:flex; flex-direction:column; min-width:0; position:relative; }
-.group-members-panel{
-  width:220px; background:var(--sidebar-bg); border-left:1px solid var(--border);
+
+/* ─ Right Side Panels (Global Users / Server Members / DM Profile) ─ */
+.right-sidebar-panel{
+  width:240px; background:var(--sidebar-bg); border-left:1px solid var(--border);
   display:none; flex-direction:column; flex-shrink:0; z-index:10;
 }
-.group-members-panel.active{ display:flex; }
-.group-members-header{
+.right-sidebar-panel.active{ display:flex; }
+.right-panel-header{
   padding:14px 14px 10px; font-family:var(--font-display); font-size:11.5px;
   font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:.05em;
-  border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;
+  border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:6px;
 }
-.group-members-list{ flex:1; overflow-y:auto; padding:8px 6px; display:flex; flex-direction:column; gap:4px; }
-.group-member-item{
-  display:flex; align-items:center; gap:9px; padding:6px 8px; border-radius:8px;
-  background:transparent; transition:background .15s;
+.right-panel-header-btn{
+  background:var(--surface-raised); border:1px solid var(--border); color:var(--text-muted);
+  border-radius:6px; padding:3px 7px; font-size:10.5px; font-weight:600; cursor:pointer;
+  display:inline-flex; align-items:center; gap:4px; transition:all .15s;
 }
-.group-member-item:hover{ background:var(--surface-raised); }
-.group-member-avatar-wrap{ position:relative; flex-shrink:0; }
+.right-panel-header-btn:hover{ color:var(--text); border-color:var(--border-strong); background:var(--surface-hover); }
+
+.right-panel-list{ flex:1; overflow-y:auto; padding:8px 8px 12px; display:flex; flex-direction:column; gap:4px; }
+.right-panel-section-title{
+  font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--text-dim);
+  text-transform:uppercase; letter-spacing:.06em; padding:8px 6px 4px;
+}
+.member-item{
+  display:flex; align-items:center; gap:10px; padding:7px 8px; border-radius:10px;
+  background:transparent; transition:background .15s; cursor:default;
+}
+.member-item:hover{ background:var(--surface-raised); }
+.member-avatar-wrap{ position:relative; flex-shrink:0; }
 .status-dot{
   width:9px; height:9px; border-radius:50%; border:2px solid var(--sidebar-bg);
   position:absolute; bottom:-1px; right:-1px;
 }
 .status-dot.online{ background:#22c55e; box-shadow:0 0 6px rgba(34,197,94,.5); }
 .status-dot.offline{ background:#64748b; }
-.group-member-info{ flex:1; min-width:0; }
-.group-member-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:4px; }
-.group-member-id{ font-size:9.5px; font-family:var(--font-mono); color:var(--text-dim); }
+.member-info{ flex:1; min-width:0; }
+.member-name{ font-size:12.5px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:flex; align-items:center; gap:4px; }
+.member-id{ font-size:9.5px; font-family:var(--font-mono); color:var(--text-dim); }
+.member-badge-owner{ font-size:8.5px; font-family:var(--font-mono); color:var(--amber); background:var(--amber-dim); border:1px solid rgba(245,166,35,.3); padding:1px 5px; border-radius:6px; font-weight:700; margin-left:auto; }
+
+/* ─ Focused DM Profile Card in Right Panel ─ */
+.dm-profile-card{
+  padding:24px 16px; display:flex; flex-direction:column; align-items:center; text-align:center; gap:12px;
+}
+.dm-profile-avatar-wrap{ position:relative; }
+.dm-profile-avatar-wrap .avatar-circle{ width:72px; height:72px; font-size:24px; border:2px solid var(--border-strong); }
+.dm-profile-avatar-wrap .status-dot{ width:14px; height:14px; border-width:3px; bottom:2px; right:2px; }
+.dm-profile-details{ display:flex; flex-direction:column; align-items:center; gap:3px; }
+.dm-profile-name{ font-family:var(--font-display); font-size:17px; font-weight:700; color:var(--text); }
+.dm-profile-id{ font-family:var(--font-mono); font-size:11px; color:var(--text-dim); }
+.dm-profile-status-pill{
+  display:inline-flex; align-items:center; gap:6px; padding:3px 10px; border-radius:12px;
+  font-size:11px; font-weight:600; margin-top:4px;
+}
+.dm-profile-status-pill.online{ background:rgba(34,197,94,.12); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
+.dm-profile-status-pill.offline{ background:rgba(100,116,139,.12); color:#94a3b8; border:1px solid rgba(100,116,139,.3); }
+.dm-profile-actions{ display:flex; flex-direction:column; gap:6px; width:100%; margin-top:12px; padding-top:16px; border-top:1px solid var(--border); }
+.btn-profile-action{
+  width:100%; padding:8px 12px; border-radius:8px; background:var(--surface-raised); border:1px solid var(--border);
+  color:var(--text-muted); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; transition:all .15s;
+}
+.btn-profile-action:hover{ color:var(--text); border-color:var(--border-strong); background:var(--surface-hover); }
 
 /* ─ Reply & Edit Docks ─ */
 .reply-dock-bar, .edit-dock-bar{
@@ -425,7 +486,7 @@ button{font-family:inherit}
 .btn-msg-reply:hover{ background:var(--blue-dim); color:var(--blue); border-color:rgba(56,189,248,.35); }
 .btn-msg-edit:hover{ background:var(--amber-dim); color:var(--amber); border-color:rgba(245,166,35,.35); }
 
-/* ─ Group Creation Modal ─ */
+/* ─ Server Creation & Settings Modals ─ */
 .selected-chips-container{ display:flex; flex-wrap:wrap; gap:6px; max-height:80px; overflow-y:auto; }
 .student-chip{
   display:inline-flex; align-items:center; gap:5px; background:var(--purple-dim); border:1px solid rgba(168,85,247,.35);
@@ -442,123 +503,30 @@ button{font-family:inherit}
 .btn-create-group-submit:hover:not(:disabled){
   transform:translateY(-1.5px); box-shadow:0 6px 22px rgba(168,85,247,.55); filter:brightness(1.08);
 }
-.btn-create-group-submit:active:not(:disabled){
-  transform:translateY(0); box-shadow:0 2px 8px rgba(168,85,247,.3);
-}
 .btn-create-group-submit:disabled{
   background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.07);
   color:rgba(255,255,255,.22); box-shadow:none; cursor:not-allowed; transform:none;
 }
 .group-req-counter{ font-size:12px; font-family:var(--font-mono); color:var(--text-muted); }
 
+/* Server Edit Member Rows */
+.server-edit-member-item{
+  display:flex; align-items:center; justify-content:space-between; padding:6px 8px;
+  border-radius:8px; background:var(--surface-raised); border:1px solid var(--border);
+}
+.btn-remove-server-member{
+  background:transparent; border:none; color:var(--rose); font-size:11px; font-weight:600;
+  cursor:pointer; padding:3px 6px; border-radius:6px;
+}
+.btn-remove-server-member:hover{ background:var(--rose-dim); }
 
-/* ══════════ PWA INSTALL BANNER & BUTTONS ══════════ */
-.home-pwa-banner {
-  margin-top: 28px;
-  width: 100%;
-  max-width: 960px;
-  background: linear-gradient(135deg, rgba(63, 169, 142, 0.12) 0%, rgba(56, 189, 248, 0.08) 100%);
-  border: 1px solid rgba(63, 169, 142, 0.35);
-  border-radius: 14px;
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  animation: pwaFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  box-sizing: border-box;
-}
-@keyframes pwaFadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.pwa-banner-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.pwa-icon-wrap {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  background: #0f131a;
-  border: 1px solid var(--border-strong);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-.pwa-icon-wrap img {
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-}
-.pwa-banner-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.pwa-banner-title {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 700;
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.pwa-banner-sub {
-  font-size: 12px;
-  color: var(--text-muted);
-}
-.btn-pwa-install {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 18px;
-  border-radius: 10px;
-  background: linear-gradient(135deg, var(--teal) 0%, #2e8b74 100%);
-  color: #ffffff;
-  border: none;
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(63, 169, 142, 0.35);
-  transition: all 0.16s ease;
-  flex-shrink: 0;
-}
-.btn-pwa-install:hover {
-  transform: translateY(-1.5px);
-  box-shadow: 0 6px 20px rgba(63, 169, 142, 0.5);
-  filter: brightness(1.08);
-}
-.btn-sidebar-install {
-  background: rgba(63, 169, 142, 0.12) !important;
-  border-color: rgba(63, 169, 142, 0.3) !important;
-  color: var(--teal) !important;
-  font-weight: 600;
-}
-.btn-sidebar-install:hover {
-  background: rgba(63, 169, 142, 0.22) !important;
-  border-color: var(--teal) !important;
-  color: #ffffff !important;
-}
 @media (max-width:768px){
-  .app-sidebar{ width:64px; }
-  .sidebar-brand-mark, .sidebar-brand-sub, .sidebar-nav-item span, .user-card-info, .btn-sidebar-action span{ display:none; }
-  .context-panel{ width:195px; }
-  .group-members-panel{ display:none !important; }
+  .app-sidebar{ width:60px; }
+  .context-panel{ width:210px; }
+  .right-sidebar-panel{ display:none !important; }
   .messages-container{ padding:14px 12px 8px; }
   .msg-row{ max-width:88%; }
-  .home-choices{ flex-direction:column; }
-  .home-pwa-banner{ flex-direction:column; align-items:flex-start; }
-}
-@media (display-mode: standalone) {
-  #pwa-install-banner, #btn-sidebar-install {
-    display: none !important;
-  }
+  .home-choices{ grid-template-columns:1fr; }
 }
 </style>
 </head>
@@ -576,7 +544,6 @@ button{font-family:inherit}
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path></svg>
       </div>
       <div class="choice-title">Global Chat <span class="choice-badge" id="home-global-badge">0</span></div>
-      <div class="choice-desc">Chat with every Hub Zero user in global general.</div>
       <div class="choice-cta">Open Global Chat →</div>
     </button>
 
@@ -585,34 +552,24 @@ button{font-family:inherit}
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
       </div>
       <div class="choice-title">Direct Messages <span class="choice-badge" id="home-dms-badge">0</span></div>
-      <div class="choice-desc">Directly and privately chat with verified Hub Zero users.</div>
       <div class="choice-cta">Open Direct Messages →</div>
     </button>
 
-    <button class="home-choice-card groups" onclick="enterApp('groups')">
+    <button class="home-choice-card servers" onclick="enterApp('servers')">
       <div class="choice-icon-wrap">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
       </div>
-      <div class="choice-title">Group Chats <span class="choice-badge" id="home-groups-badge">0</span></div>
-      <div class="choice-desc">Custom group messages with 2 or more verified Hub Zero users.</div>
-      <div class="choice-cta">Open Group Chats →</div>
+      <div class="choice-title">Servers <span class="choice-badge" id="home-servers-badge">0</span></div>
+      <div class="choice-cta">Open Servers →</div>
     </button>
-  </div>
 
-  <!-- PWA Install Banner -->
-  <div class="home-pwa-banner" id="pwa-install-banner">
-    <div class="pwa-banner-left">
-      <div class="pwa-icon-wrap">
-        <img src="/logo.png" alt="Hub Zero">
+    <!-- Dynamic 4th Box: Install App (Browser) or Get Scripts (PWA) -->
+    <button class="home-choice-card action-card install" id="home-action-card" onclick="handleHomeActionCard()">
+      <div class="choice-icon-wrap" id="home-action-icon">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
       </div>
-      <div class="pwa-banner-text">
-        <div class="pwa-banner-title">Install Hub Zero Messages App</div>
-        <div class="pwa-banner-sub">Get standalone window mode, fast access, and no browser tabs.</div>
-      </div>
-    </div>
-    <button class="btn-pwa-install" id="btn-pwa-install" onclick="triggerPwaInstall()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-      Install App
+      <div class="choice-title" id="home-action-title">Install App</div>
+      <div class="choice-cta" id="home-action-cta">Install HZ Messages →</div>
     </button>
   </div>
 </div>
@@ -620,98 +577,82 @@ button{font-family:inherit}
 <!-- ══════════ MAIN APP SHELL ══════════ -->
 <div class="chat-app" id="chat-app-root">
 
-  <!-- Main Sidebar (Expanded) -->
+  <!-- Compact Left Icon Sidebar (76px) -->
   <aside class="app-sidebar">
     <div class="sidebar-top">
-      <button class="sidebar-brand" onclick="goHome()" title="Return to Portal">
-        <span class="sidebar-brand-mark">HUB <em>ZERO</em></span>
-        <span class="sidebar-brand-sub">CHAT</span>
+      <button class="sidebar-brand" onclick="goHome()" title="Home Portal">
+        <img src="/logo.png" alt="Hub Zero">
       </button>
 
       <nav class="sidebar-nav">
-        <button class="sidebar-nav-item nav-global active" id="tab-btn-global" onclick="switchMode('global')">
+        <button class="sidebar-nav-item nav-global active" id="tab-btn-global" onclick="switchMode('global')" title="Global Chat">
           <div class="sidebar-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10A15.3 15.3 0 0 1 12 2z"></path></svg>
           </div>
-          <span>Global Chat</span>
           <span class="sidebar-nav-badge" id="global-unread-count">0</span>
         </button>
 
-        <button class="sidebar-nav-item nav-dms" id="tab-btn-dms" onclick="switchMode('dms')">
+        <button class="sidebar-nav-item nav-dms" id="tab-btn-dms" onclick="switchMode('dms')" title="Direct Messages">
           <div class="sidebar-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
           </div>
-          <span>Direct Messages</span>
           <span class="sidebar-nav-badge" id="dms-unread-count">0</span>
         </button>
 
-        <button class="sidebar-nav-item nav-groups" id="tab-btn-groups" onclick="switchMode('groups')">
+        <button class="sidebar-nav-item nav-servers" id="tab-btn-servers" onclick="switchMode('servers')" title="Servers">
           <div class="sidebar-nav-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
           </div>
-          <span>Group Chats</span>
-          <span class="sidebar-nav-badge" id="groups-unread-count">0</span>
+          <span class="sidebar-nav-badge" id="servers-unread-count">0</span>
         </button>
       </nav>
     </div>
 
-    <!-- User Pill & Controls in Sidebar Footer -->
+    <!-- User Avatar & Quick Icon Actions -->
     <div class="sidebar-footer">
-      <div class="user-card" id="current-user-card">
-        <div class="avatar-circle" id="sidebar-user-avatar" style="width:32px;height:32px;font-size:11px;">
+      <div class="sidebar-user-avatar-btn" id="sidebar-user-avatar-btn" title="Your Account" onclick="goHome()">
+        <div class="avatar-circle" id="sidebar-user-avatar" data-avatar-name="">
           <span id="sidebar-user-initials">?</span>
         </div>
-        <div class="user-card-info">
-          <div class="user-card-name">
-            <span id="sidebar-user-name">Connecting…</span>
-            <span class="admin-chip" id="sidebar-admin-badge" style="display:none;">
-              <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M12 2l8 4v6c0 5-3.4 8.7-8 10-4.6-1.3-8-5-8-10V6z"/></svg>
-              ADMIN
-            </span>
-          </div>
-          <div class="user-card-id" id="sidebar-user-id">ID ----</div>
-        </div>
+        <span class="status-dot online"></span>
       </div>
 
-      <div class="sidebar-actions-row">
-        <button class="btn-sidebar-action" onclick="goHome()" title="Home Portal">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-          <span>Home</span>
+      <div class="sidebar-icon-actions">
+        <button class="btn-sidebar-icon-action" onclick="goHome()" title="Return to Portal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
         </button>
-        <button class="btn-sidebar-action btn-sidebar-install" id="btn-sidebar-install" onclick="triggerPwaInstall()" title="Install Hub Zero App">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          <span>App</span>
+        <button class="btn-sidebar-icon-action install" id="btn-sidebar-install" onclick="triggerPwaInstall()" title="Install HZ Messages App">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         </button>
-        <a href="/" class="btn-sidebar-action" title="Hub Zero Dashboard">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
-          <span>Dash</span>
+        <a href="/" class="btn-sidebar-icon-action" title="Hub Zero Scripts & Dashboard" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>
         </a>
       </div>
     </div>
   </aside>
 
-  <!-- Context Panel 1: Direct Messages -->
+  <!-- Context Panel 1: Direct Messages (275px) -->
   <aside class="context-panel" id="dm-sidebar">
     <div class="context-panel-header">
       <span class="context-panel-title" id="dm-sidebar-title">Direct Messages</span>
       <button class="btn-new-dm" id="btn-open-search" onclick="openSearchModal()">
-        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         <span>New DM</span>
       </button>
     </div>
     <div class="dm-list" id="dm-contacts-list"></div>
   </aside>
 
-  <!-- Context Panel 2: Group Chats -->
-  <aside class="context-panel" id="group-sidebar">
+  <!-- Context Panel 2: Servers (275px) -->
+  <aside class="context-panel" id="server-sidebar">
     <div class="context-panel-header">
-      <span class="context-panel-title" id="group-sidebar-title">Group Chats</span>
-      <button class="btn-new-group" id="btn-open-group-modal" onclick="openCreateGroupModal()">
-        <svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-        <span>New Group</span>
+      <span class="context-panel-title" id="server-sidebar-title">Servers</span>
+      <button class="btn-new-server" id="btn-open-server-modal" onclick="openCreateServerModal()">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>Create</span>
       </button>
     </div>
-    <div class="dm-list" id="group-chats-list"></div>
+    <div class="dm-list" id="server-chats-list"></div>
   </aside>
 
   <!-- Main Thread Stage -->
@@ -722,8 +663,8 @@ button{font-family:inherit}
           <span id="dm-target-initials">?</span>
         </div>
         <div>
-          <div class="thread-title" id="dm-target-name">Select a conversation</div>
-          <div class="thread-subtitle" id="dm-target-id"></div>
+          <div class="thread-title" id="dm-target-name">Global General</div>
+          <div class="thread-subtitle" id="dm-target-id">Public hub chat</div>
         </div>
       </div>
       <div class="thread-header-right">
@@ -745,14 +686,59 @@ button{font-family:inherit}
 
         <div class="rate-limit-banner" id="rate-limit-banner">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          <span id="rate-limit-text">rate limit hit — cooling down 5s…</span>
+          <span id="rate-limit-text">rate limit hit — cooling down 3s…</span>
         </div>
       </div>
 
-      <!-- Right Discord-Style Member Status Panel for Group Chats -->
-      <aside class="group-members-panel" id="group-members-panel">
-        <div class="group-members-header" id="group-members-header">MEMBERS (0)</div>
-        <div class="group-members-list" id="group-members-list"></div>
+      <!-- Right Panel 1: Global Chat Online Users -->
+      <aside class="right-sidebar-panel" id="global-members-panel">
+        <div class="right-panel-header">
+          <span>ONLINE USERS</span>
+          <span style="font-family:var(--font-mono); font-size:10px; color:var(--teal);" id="global-online-counter">0</span>
+        </div>
+        <div class="right-panel-list" id="global-members-list"></div>
+      </aside>
+
+      <!-- Right Panel 2: Server Members & Settings -->
+      <aside class="right-sidebar-panel" id="server-members-panel">
+        <div class="right-panel-header">
+          <span id="server-members-header-title">MEMBERS</span>
+          <button class="right-panel-header-btn" onclick="openEditServerModal()" title="Edit Server Details">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            <span>Edit</span>
+          </button>
+        </div>
+        <div class="right-panel-list" id="server-members-list"></div>
+      </aside>
+
+      <!-- Right Panel 3: Focused DM Profile Panel -->
+      <aside class="right-sidebar-panel" id="dm-profile-panel">
+        <div class="right-panel-header">
+          <span>CONTACT INFO</span>
+        </div>
+        <div class="dm-profile-card">
+          <div class="dm-profile-avatar-wrap">
+            <div class="avatar-circle" id="dm-profile-avatar" data-avatar-name="">
+              <span id="dm-profile-initials">?</span>
+            </div>
+            <span class="status-dot online" id="dm-profile-status-dot"></span>
+          </div>
+          <div class="dm-profile-details">
+            <div class="dm-profile-name" id="dm-profile-name">Student Name</div>
+            <div class="dm-profile-id" id="dm-profile-id">ID ------</div>
+            <span class="dm-profile-status-pill online" id="dm-profile-status-pill">● Online</span>
+          </div>
+          <div class="dm-profile-actions">
+            <button class="btn-profile-action" onclick="mentionContactInChat()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="4"></circle><path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path></svg>
+              <span>Mention in Message</span>
+            </button>
+            <button class="btn-profile-action" onclick="copyContactId()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy Student ID</span>
+            </button>
+          </div>
+        </div>
       </aside>
     </div>
 
@@ -826,7 +812,7 @@ button{font-family:inherit}
 <div class="modal-overlay" id="search-modal">
   <div class="modal-card">
     <div class="modal-header">
-      <span class="modal-title">Start a Direct Message <span style="color:var(--teal); font-size:12px; font-weight:600;">(Hub Zero Verified Users)</span></span>
+      <span class="modal-title">Start a Direct Message <span style="color:var(--teal); font-size:12px; font-weight:600;">(Verified Users)</span></span>
       <button class="btn-modal-close" onclick="closeSearchModal()">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
@@ -841,30 +827,68 @@ button{font-family:inherit}
   </div>
 </div>
 
-<!-- ══════════ CREATE GROUP MODAL (>= 2 STUDENTS) ══════════ -->
-<div class="modal-overlay" id="create-group-modal">
+<!-- ══════════ CREATE SERVER MODAL (>= 2 STUDENTS) ══════════ -->
+<div class="modal-overlay" id="create-server-modal">
   <div class="modal-card" style="max-width:480px;">
     <div class="modal-header">
-      <span class="modal-title">Create Group Chat <span style="color:var(--purple); font-size:12px; font-weight:600;">(Min. 2 People)</span></span>
-      <button class="btn-modal-close" onclick="closeCreateGroupModal()">
+      <span class="modal-title">Create Server <span style="color:var(--purple); font-size:12px; font-weight:600;">(Min. 2 People)</span></span>
+      <button class="btn-modal-close" onclick="closeCreateServerModal()">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
     <div style="display:flex; flex-direction:column; gap:6px;">
-      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Group Name (optional)</label>
-      <input type="text" class="search-input" id="group-name-input" placeholder="e.g. Study Group, Project Team…" style="background:var(--bg); border:1px solid var(--border-strong); border-radius:10px; padding:8px 12px;" maxlength="40">
+      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Server Name</label>
+      <input type="text" class="search-input" id="server-name-input" placeholder="e.g. Study Group, Year 10 Hangout…" style="background:var(--bg); border:1px solid var(--border-strong); border-radius:10px; padding:8px 12px;" maxlength="40">
     </div>
     <div class="search-input-wrap">
       <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-      <input type="text" class="search-input" id="group-search-student-input" placeholder="Search students to add…" autocomplete="off">
+      <input type="text" class="search-input" id="server-search-student-input" placeholder="Search students to add…" autocomplete="off">
     </div>
-    <div class="selected-chips-container" id="group-selected-chips" style="display:none;"></div>
-    <div class="search-results-list" id="group-search-results-list">
+    <div class="selected-chips-container" id="server-selected-chips" style="display:none;"></div>
+    <div class="search-results-list" id="server-search-results-list">
       <div class="search-empty">Loading students…</div>
     </div>
     <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; padding-top:10px; border-top:1px solid var(--border);">
-      <span class="group-req-counter" id="group-selection-count">Select at least 2 students (0 selected)</span>
-      <button class="btn-create-group-submit" id="btn-create-group-submit" onclick="submitCreateGroup()" disabled>Create Group</button>
+      <span class="group-req-counter" id="server-selection-count">Select at least 2 students (0 selected)</span>
+      <button class="btn-create-group-submit" id="btn-create-server-submit" onclick="submitCreateServer()" disabled>Create Server</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ EDIT SERVER SETTINGS MODAL ══════════ -->
+<div class="modal-overlay" id="edit-server-modal">
+  <div class="modal-card" style="max-width:500px;">
+    <div class="modal-header">
+      <span class="modal-title">Server Settings</span>
+      <button class="btn-modal-close" onclick="closeEditServerModal()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:6px;">
+      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Server Name</label>
+      <input type="text" class="search-input" id="edit-server-name-input" placeholder="Server name…" style="background:var(--bg); border:1px solid var(--border-strong); border-radius:10px; padding:8px 12px;" maxlength="40">
+    </div>
+    
+    <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Current Members (<span id="edit-server-member-count">0</span>)</label>
+      <div style="max-height:140px; overflow-y:auto; display:flex; flex-direction:column; gap:4px; padding:4px 0;" id="edit-server-current-members-list"></div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
+      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Add New Members</label>
+      <div class="search-input-wrap">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" class="search-input" id="edit-server-search-input" placeholder="Search students to add to server…" autocomplete="off">
+      </div>
+      <div class="selected-chips-container" id="edit-server-selected-chips" style="display:none;"></div>
+      <div class="search-results-list" id="edit-server-search-results" style="max-height:140px;"></div>
+    </div>
+
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:12px; border-top:1px solid var(--border);">
+      <button class="btn-sidebar-action" onclick="leaveActiveServer()" style="color:var(--rose); border-color:rgba(229,72,77,.3); background:var(--rose-dim); max-width:130px;">
+        Leave Server
+      </button>
+      <button class="btn-create-group-submit" id="btn-save-server-submit" onclick="saveServerSettings()">Save Changes</button>
     </div>
   </div>
 </div>
@@ -883,7 +907,7 @@ const DROPBOX_CONFIG = {
 
 // ── State ──
 let currentUser = { id: "", name: "", isAdmin: false };
-let activeMode = "global"; // "global" | "dms" | "groups" | "admin-dms"
+let activeMode = "global"; // "global" | "dms" | "servers" | "admin-dms"
 let activeDmContact = null; // { id: "...", name: "..." }
 let activeGroup = null; // { id: "...", name: "...", created_by: "...", members: [...] }
 let activeAdminDmPair = null; // { key, userA, userB }
@@ -895,8 +919,12 @@ let dmContacts = [];
 let userGroups = [];
 let hiddenDmIds = new Set();
 let hiddenGroupIds = new Set();
+let customDmOrder = [];
+let customServerOrder = [];
+
 let verifiedStudentsDirectory = [];
-let selectedGroupStudentIds = new Set();
+let selectedServerStudentIds = new Set();
+let editServerSelectedStudentIds = new Set();
 let onlineUserIds = new Set();
 
 // Replies & Edits State
@@ -925,20 +953,22 @@ const homeScreen = document.getElementById('home-screen');
 const chatApp = document.getElementById('chat-app-root');
 const tabBtnGlobal = document.getElementById('tab-btn-global');
 const tabBtnDms = document.getElementById('tab-btn-dms');
-const tabBtnGroups = document.getElementById('tab-btn-groups');
+const tabBtnServers = document.getElementById('tab-btn-servers');
 const globalUnreadBadge = document.getElementById('global-unread-count');
 const dmsUnreadBadge = document.getElementById('dms-unread-count');
-const groupsUnreadBadge = document.getElementById('groups-unread-count');
+const serversUnreadBadge = document.getElementById('servers-unread-count');
 const homeGlobalBadge = document.getElementById('home-global-badge');
 const homeDmsBadge = document.getElementById('home-dms-badge');
-const homeGroupsBadge = document.getElementById('home-groups-badge');
+const homeServersBadge = document.getElementById('home-servers-badge');
 
 const dmSidebar = document.getElementById('dm-sidebar');
-const groupSidebar = document.getElementById('group-sidebar');
+const serverSidebar = document.getElementById('server-sidebar');
 const dmSidebarTitle = document.getElementById('dm-sidebar-title');
+const serverSidebarTitle = document.getElementById('server-sidebar-title');
 const btnOpenSearch = document.getElementById('btn-open-search');
+const btnOpenServerModal = document.getElementById('btn-open-server-modal');
 const dmContactsList = document.getElementById('dm-contacts-list');
-const groupChatsList = document.getElementById('group-chats-list');
+const serverChatsList = document.getElementById('server-chats-list');
 
 const channelSubHeader = document.getElementById('channel-sub-header');
 const dmTargetName = document.getElementById('dm-target-name');
@@ -948,9 +978,22 @@ const dmTargetInitials = document.getElementById('dm-target-initials');
 const btnThreadPurge = document.getElementById('btn-thread-purge');
 const adminMenuPurgeDm = document.getElementById('admin-menu-purge-dm');
 
-const groupMembersPanel = document.getElementById('group-members-panel');
-const groupMembersHeader = document.getElementById('group-members-header');
-const groupMembersList = document.getElementById('group-members-list');
+// Right Panels
+const globalMembersPanel = document.getElementById('global-members-panel');
+const globalMembersList = document.getElementById('global-members-list');
+const globalOnlineCounter = document.getElementById('global-online-counter');
+
+const serverMembersPanel = document.getElementById('server-members-panel');
+const serverMembersHeaderTitle = document.getElementById('server-members-header-title');
+const serverMembersList = document.getElementById('server-members-list');
+
+const dmProfilePanel = document.getElementById('dm-profile-panel');
+const dmProfileAvatar = document.getElementById('dm-profile-avatar');
+const dmProfileInitials = document.getElementById('dm-profile-initials');
+const dmProfileStatusDot = document.getElementById('dm-profile-status-dot');
+const dmProfileName = document.getElementById('dm-profile-name');
+const dmProfileId = document.getElementById('dm-profile-id');
+const dmProfileStatusPill = document.getElementById('dm-profile-status-pill');
 
 const replyDockBar = document.getElementById('reply-dock-bar');
 const replyDockTarget = document.getElementById('reply-dock-target');
@@ -970,17 +1013,27 @@ const chkAdminTag = document.getElementById('chk-admin-tag');
 const adminCornerBtn = document.getElementById('admin-corner-btn');
 const adminCornerPanel = document.getElementById('admin-corner-panel');
 
+// Modals
 const searchModal = document.getElementById('search-modal');
 const searchStudentsInput = document.getElementById('search-students-input');
 const searchResultsList = document.getElementById('search-results-list');
 
-const createGroupModal = document.getElementById('create-group-modal');
-const groupNameInput = document.getElementById('group-name-input');
-const groupSearchStudentInput = document.getElementById('group-search-student-input');
-const groupSelectedChips = document.getElementById('group-selected-chips');
-const groupSearchResultsList = document.getElementById('group-search-results-list');
-const groupSelectionCount = document.getElementById('group-selection-count');
-const btnCreateGroupSubmit = document.getElementById('btn-create-group-submit');
+const createServerModal = document.getElementById('create-server-modal');
+const serverNameInput = document.getElementById('server-name-input');
+const serverSearchStudentInput = document.getElementById('server-search-student-input');
+const serverSelectedChips = document.getElementById('server-selected-chips');
+const serverSearchResultsList = document.getElementById('server-search-results');
+const serverSelectionCount = document.getElementById('server-selection-count');
+const btnCreateServerSubmit = document.getElementById('btn-create-server-submit');
+
+const editServerModal = document.getElementById('edit-server-modal');
+const editServerNameInput = document.getElementById('edit-server-name-input');
+const editServerMemberCount = document.getElementById('edit-server-member-count');
+const editServerCurrentMembersList = document.getElementById('edit-server-current-members-list');
+const editServerSearchInput = document.getElementById('edit-server-search-input');
+const editServerSelectedChips = document.getElementById('edit-server-selected-chips');
+const editServerSearchResults = document.getElementById('edit-server-search-results');
+const btnSaveServerSubmit = document.getElementById('btn-save-server-submit');
 
 // ── Audio chime ──
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -997,6 +1050,87 @@ function playBeep(isSend=true){
     osc.start(); osc.stop(audioCtx.currentTime+0.08);
   }catch(e){}
 }
+
+// ── Desktop & Background Notifications ──
+function requestNotificationPermission(){
+  if('Notification' in window && Notification.permission === 'default'){
+    Notification.requestPermission().catch(()=>{});
+  }
+}
+
+function sendDesktopNotification({ title, body, tag, data }){
+  try{
+    if(!('Notification' in window) || Notification.permission !== 'granted') return;
+    
+    // Attempt Service Worker background notification first
+    if(navigator.serviceWorker && navigator.serviceWorker.controller){
+      navigator.serviceWorker.ready.then(reg => {
+        reg.showNotification(title, {
+          body: body || '',
+          icon: '/logo.png',
+          badge: '/logo.png',
+          tag: tag || 'hz-msg',
+          renotify: true,
+          data: data || {}
+        });
+      }).catch(()=>{
+        fallbackNotification(title, body, tag);
+      });
+    } else {
+      fallbackNotification(title, body, tag);
+    }
+  }catch(e){ console.warn('Notification notice:', e); }
+}
+
+function fallbackNotification(title, body, tag){
+  try{
+    const notif = new Notification(title, {
+      body: body || '',
+      icon: '/logo.png',
+      badge: '/logo.png',
+      tag: tag || 'hz-msg'
+    });
+    notif.onclick = () => {
+      window.focus();
+      notif.close();
+    };
+  }catch(e){}
+}
+
+// ── Dynamic 4th Box: Install App vs Get Scripts ──
+function updateHomeActionCard(){
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const actionCard = document.getElementById('home-action-card');
+  const actionIcon = document.getElementById('home-action-icon');
+  const actionTitle = document.getElementById('home-action-title');
+  const actionCta = document.getElementById('home-action-cta');
+  const sideInstallBtn = document.getElementById('btn-sidebar-install');
+
+  if(!actionCard) return;
+
+  if(isStandalone){
+    actionCard.className = 'home-choice-card action-card scripts';
+    if(actionIcon) actionIcon.innerHTML = `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>`;
+    if(actionTitle) actionTitle.textContent = 'Get Scripts';
+    if(actionCta) actionCta.innerHTML = `<span>Explore hub</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path></svg>`;
+    if(sideInstallBtn) sideInstallBtn.style.display = 'none';
+  } else {
+    actionCard.className = 'home-choice-card action-card install';
+    if(actionIcon) actionIcon.innerHTML = `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`;
+    if(actionTitle) actionTitle.textContent = 'Install App';
+    if(actionCta) actionCta.innerHTML = `<span>Install HZ Messages</span> <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+  }
+}
+
+window.handleHomeActionCard = function(){
+  requestNotificationPermission();
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  if(isStandalone){
+    window.open('https://hub-zero.site/', '_blank');
+  } else {
+    triggerPwaInstall();
+  }
+};
 
 // ── Auth Gate ──
 async function resolveUserIdentity(){
@@ -1026,16 +1160,16 @@ async function resolveUserIdentity(){
   }
   currentUser = { id: savedId, name, isAdmin };
 
-  // Set Sidebar User Pill
-  document.getElementById('sidebar-user-name').textContent = name;
-  document.getElementById('sidebar-user-id').textContent = `ID ${savedId}`;
+  // Set Sidebar User Details
   const initials = name.split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
-  document.getElementById('sidebar-user-initials').textContent = initials;
-  document.getElementById('sidebar-user-avatar').setAttribute('data-avatar-name', name);
-  document.getElementById('home-user-line').textContent = `Signed in as ${name} · ID ${savedId}`;
+  const avatarInitialsEl = document.getElementById('sidebar-user-initials');
+  if(avatarInitialsEl) avatarInitialsEl.textContent = initials;
+  const avatarEl = document.getElementById('sidebar-user-avatar');
+  if(avatarEl) avatarEl.setAttribute('data-avatar-name', name);
+  const homeUserLine = document.getElementById('home-user-line');
+  if(homeUserLine) homeUserLine.textContent = `Signed in as ${name} · ID ${savedId}`;
 
   if(isAdmin){
-    document.getElementById('sidebar-admin-badge').style.display = 'inline-flex';
     adminCornerBtn.classList.add('show');
   }
 
@@ -1044,6 +1178,7 @@ async function resolveUserIdentity(){
 
   await loadUserAccountMeta();
   await loadUserGroups();
+  loadCustomSortOrders();
   updatePurgeButtonVisibility();
   resolveVisibleAvatars();
   return true;
@@ -1095,6 +1230,7 @@ async function initDropbox(){
     }
   }catch(err){ console.warn('Dropbox avatar notice:', err); }
 }
+
 async function loadDropboxFiles(token){
   try{
     let cursor=null, hasMore=true; const map={};
@@ -1115,6 +1251,7 @@ async function loadDropboxFiles(token){
     sessionStorage.setItem('hz_dropbox_files', JSON.stringify(map));
   }catch(err){ console.warn('Dropbox file listing notice:', err); }
 }
+
 function findPhotoPath(name){
   if(!name) return null;
   const norm = name.toLowerCase().replace(/[^a-z0-9]/g,'');
@@ -1124,6 +1261,7 @@ function findPhotoPath(name){
   }
   return null;
 }
+
 async function getPhotoUrl(token, path){
   if(!token || !path) return null;
   if(photoCache[path]) return photoCache[path];
@@ -1148,6 +1286,7 @@ async function getPhotoUrl(token, path){
   }catch(e){}
   return null;
 }
+
 async function resolveVisibleAvatars(){
   const avatarElements = document.querySelectorAll('[data-avatar-name]:not([data-avatar-loaded="true"])');
   for(const el of avatarElements){
@@ -1214,18 +1353,38 @@ async function saveUserAccountMeta(){
   }catch(e){ console.warn('Account meta save note:', e); }
 }
 
+function loadCustomSortOrders(){
+  if(!currentUser.id) return;
+  try{
+    const dmOrder = localStorage.getItem(`hz_order_dms_${currentUser.id}`);
+    if(dmOrder) customDmOrder = JSON.parse(dmOrder);
+    const srvOrder = localStorage.getItem(`hz_order_servers_${currentUser.id}`);
+    if(srvOrder) customServerOrder = JSON.parse(srvOrder);
+  }catch(e){}
+}
+
+function saveCustomSortOrders(){
+  if(!currentUser.id) return;
+  try{
+    localStorage.setItem(`hz_order_dms_${currentUser.id}`, JSON.stringify(customDmOrder));
+    localStorage.setItem(`hz_order_servers_${currentUser.id}`, JSON.stringify(customServerOrder));
+  }catch(e){}
+}
+
 function markGlobalAsRead(){
   lastReadGlobalTime = new Date().toISOString();
   unreadGlobalCount = 0;
   saveUserAccountMeta();
   updateUnreadBadges();
 }
+
 function markDmAsRead(contactId){
   lastReadDmTimes[contactId] = new Date().toISOString();
   delete unreadDmsMap[contactId];
   saveUserAccountMeta();
   updateUnreadBadges();
 }
+
 function markGroupAsRead(groupId){
   lastReadGroupTimes[groupId] = new Date().toISOString();
   delete unreadGroupsMap[groupId];
@@ -1239,7 +1398,9 @@ window.goHome = function(){
   homeScreen.style.display = 'flex';
   adminCornerPanel.classList.remove('open');
 };
+
 window.enterApp = function(mode){
+  requestNotificationPermission();
   homeScreen.style.display = 'none';
   chatApp.classList.add('active');
   switchMode(mode);
@@ -1254,23 +1415,30 @@ window.switchMode = function(mode){
 
   tabBtnGlobal.classList.toggle('active', mode==='global');
   tabBtnDms.classList.toggle('active', mode==='dms');
-  tabBtnGroups.classList.toggle('active', mode==='groups');
+  tabBtnServers.classList.toggle('active', mode==='servers');
 
   if(mode==='global'){
     dmSidebar.classList.remove('active');
-    groupSidebar.classList.remove('active');
-    groupMembersPanel.classList.remove('active');
+    serverSidebar.classList.remove('active');
+    globalMembersPanel.classList.add('active');
+    serverMembersPanel.classList.remove('active');
+    dmProfilePanel.classList.remove('active');
+
     channelSubHeader.classList.remove('active');
     chatInputPanel.classList.add('active');
     chatInput.placeholder = "Message everyone…";
     markGlobalAsRead();
     updatePurgeButtonVisibility();
+    renderGlobalMembersList();
     renderMessages();
     scrollToBottom();
   } else if(mode==='dms'){
     dmSidebar.classList.add('active');
-    groupSidebar.classList.remove('active');
-    groupMembersPanel.classList.remove('active');
+    serverSidebar.classList.remove('active');
+    globalMembersPanel.classList.remove('active');
+    serverMembersPanel.classList.remove('active');
+    dmProfilePanel.classList.add('active');
+
     channelSubHeader.classList.add('active');
     dmSidebarTitle.textContent = "Direct Messages";
     btnOpenSearch.style.display = 'flex';
@@ -1281,7 +1449,7 @@ window.switchMode = function(mode){
     if(activeDmContact){
       selectDmContact(activeDmContact);
     } else {
-      const visible = dmContacts.filter(c=>!hiddenDmIds.has(c.id));
+      const visible = getSortedDmContacts();
       if(visible.length>0){ selectDmContact(visible[0]); }
       else{
         dmTargetName.textContent = "Select a conversation";
@@ -1291,14 +1459,18 @@ window.switchMode = function(mode){
         dmTargetAvatar.removeAttribute('data-avatar-name');
         dmTargetAvatar.innerHTML = `<span id="dm-target-initials">?</span>`;
         chatInput.placeholder = "Select or start a DM…";
+        renderDmProfilePanel();
         updatePurgeButtonVisibility();
         renderMessages();
       }
     }
-  } else if(mode==='groups'){
+  } else if(mode==='servers'){
     dmSidebar.classList.remove('active');
-    groupSidebar.classList.add('active');
-    groupMembersPanel.classList.add('active');
+    serverSidebar.classList.add('active');
+    globalMembersPanel.classList.remove('active');
+    serverMembersPanel.classList.add('active');
+    dmProfilePanel.classList.remove('active');
+
     channelSubHeader.classList.add('active');
     chatInputPanel.classList.add('active');
 
@@ -1307,26 +1479,29 @@ window.switchMode = function(mode){
     if(activeGroup){
       selectGroup(activeGroup);
     } else {
-      const visible = userGroups.filter(g=>!hiddenGroupIds.has(g.id));
+      const visible = getSortedServerList();
       if(visible.length>0){ selectGroup(visible[0]); }
       else{
-        dmTargetName.textContent = "Select a group chat";
+        dmTargetName.textContent = "Select a server";
         dmTargetName.classList.remove('gold-admin');
         dmTargetId.textContent = "";
         dmTargetAvatar.removeAttribute('data-avatar-loaded');
         dmTargetAvatar.removeAttribute('data-avatar-name');
         dmTargetAvatar.innerHTML = `<span style="color:var(--purple);font-size:15px;font-weight:700;">#</span>`;
-        chatInput.placeholder = "Select or create a Group…";
-        groupMembersHeader.textContent = "MEMBERS (0)";
-        groupMembersList.innerHTML = `<div class="dm-list-empty">No group selected</div>`;
+        chatInput.placeholder = "Select or create a Server…";
+        serverMembersHeaderTitle.textContent = "MEMBERS (0)";
+        serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
         updatePurgeButtonVisibility();
         renderMessages();
       }
     }
   } else if(mode==='admin-dms'){
     dmSidebar.classList.add('active');
-    groupSidebar.classList.remove('active');
-    groupMembersPanel.classList.remove('active');
+    serverSidebar.classList.remove('active');
+    globalMembersPanel.classList.remove('active');
+    serverMembersPanel.classList.remove('active');
+    dmProfilePanel.classList.remove('active');
+
     channelSubHeader.classList.add('active');
     dmSidebarTitle.textContent = "👑 Master All DMs";
     btnOpenSearch.style.display = 'none';
@@ -1349,7 +1524,7 @@ window.switchMode = function(mode){
   }
 };
 
-// ── DM Contacts Management & Accurate Live Previews ──
+// ── DM Contacts Management & Sorting ──
 function syncDmContactsFromHistory(){
   if(!currentUser.id) return;
   const contactMap = new Map();
@@ -1386,7 +1561,24 @@ function syncDmContactsFromHistory(){
     contactsList.push(c);
   });
 
-  dmContacts = contactsList.sort((a, b) => {
+  dmContacts = contactsList;
+}
+
+function getSortedDmContacts(){
+  const visible = dmContacts.filter(c=>!hiddenDmIds.has(c.id));
+  if(customDmOrder.length > 0){
+    return visible.sort((a,b)=>{
+      const idxA = customDmOrder.indexOf(a.id);
+      const idxB = customDmOrder.indexOf(b.id);
+      if(idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if(idxA !== -1) return -1;
+      if(idxB !== -1) return 1;
+      const timeA = a.lastTime ? new Date(a.lastTime).getTime() : 0;
+      const timeB = b.lastTime ? new Date(b.lastTime).getTime() : 0;
+      return timeB - timeA;
+    });
+  }
+  return visible.sort((a,b)=>{
     const timeA = a.lastTime ? new Date(a.lastTime).getTime() : 0;
     const timeB = b.lastTime ? new Date(b.lastTime).getTime() : 0;
     return timeB - timeA;
@@ -1394,7 +1586,7 @@ function syncDmContactsFromHistory(){
 }
 
 function renderDmContactsList(){
-  const visible = dmContacts.filter(c=>!hiddenDmIds.has(c.id));
+  const visible = getSortedDmContacts();
   if(visible.length===0){
     dmContactsList.innerHTML = `<div class="dm-list-empty">no active DMs yet.<br>tap "New DM" to start!</div>`;
     return;
@@ -1418,16 +1610,47 @@ function renderDmContactsList(){
           </div>
           <div class="dm-item-last">${escapeHtml(c.lastMessage || '')}</div>
         </div>
-        <button class="btn-dm-close" data-contact-id="${escapeHtml(c.id)}" data-action="close-dm" title="Close conversation">✕</button>
+        <div class="dm-item-controls">
+          <button class="btn-reorder" onclick="moveDmUp('${escapeHtml(c.id)}', event)" title="Move up">▲</button>
+          <button class="btn-reorder" onclick="moveDmDown('${escapeHtml(c.id)}', event)" title="Move down">▼</button>
+          <button class="btn-dm-close" onclick="closeDm('${escapeHtml(c.id)}', event)" title="Close DM">✕</button>
+        </div>
       </div>
     `;
   }).join('');
   resolveVisibleAvatars();
 }
 
+window.moveDmUp = function(id, e){
+  if(e) e.stopPropagation();
+  let list = getSortedDmContacts().map(c=>c.id);
+  const idx = list.indexOf(id);
+  if(idx > 0){
+    const temp = list[idx];
+    list[idx] = list[idx-1];
+    list[idx-1] = temp;
+    customDmOrder = list;
+    saveCustomSortOrders();
+    renderDmContactsList();
+  }
+};
+
+window.moveDmDown = function(id, e){
+  if(e) e.stopPropagation();
+  let list = getSortedDmContacts().map(c=>c.id);
+  const idx = list.indexOf(id);
+  if(idx !== -1 && idx < list.length - 1){
+    const temp = list[idx];
+    list[idx] = list[idx+1];
+    list[idx+1] = temp;
+    customDmOrder = list;
+    saveCustomSortOrders();
+    renderDmContactsList();
+  }
+};
+
 dmContactsList.addEventListener('click', (e)=>{
-  const closeBtn = e.target.closest('[data-action="close-dm"]');
-  if(closeBtn){ e.stopPropagation(); closeDm(closeBtn.getAttribute('data-contact-id')); return; }
+  if(e.target.closest('.dm-item-controls')) return;
   const item = e.target.closest('[data-action="select-dm"]');
   if(item){
     const id = item.getAttribute('data-contact-id');
@@ -1443,7 +1666,8 @@ dmContactsList.addEventListener('click', (e)=>{
   }
 });
 
-function closeDm(contactId){
+window.closeDm = function(contactId, e){
+  if(e) e.stopPropagation();
   hiddenDmIds.add(contactId);
   saveUserAccountMeta();
   if(activeDmContact && activeDmContact.id===contactId){
@@ -1453,11 +1677,12 @@ function closeDm(contactId){
     dmTargetAvatar.removeAttribute('data-avatar-loaded');
     dmTargetAvatar.removeAttribute('data-avatar-name');
     dmTargetAvatar.innerHTML = `<span id="dm-target-initials">?</span>`;
+    renderDmProfilePanel();
   }
   updatePurgeButtonVisibility();
   renderDmContactsList();
   renderMessages();
-}
+};
 
 function selectDmContact(contact){
   activeDmContact = contact;
@@ -1477,6 +1702,7 @@ function selectDmContact(contact){
   chatInputPanel.classList.add('active');
   chatInput.placeholder = `Message ${contact.name.split(' ')[0]}…`;
   
+  renderDmProfilePanel();
   updatePurgeButtonVisibility();
   renderDmContactsList();
   renderMessages();
@@ -1484,7 +1710,102 @@ function selectDmContact(contact){
   resolveVisibleAvatars();
 }
 
-// ── Group Chats Management ──
+// ── Right Side Panel 1: Global Members List ──
+function renderGlobalMembersList(){
+  if(verifiedStudentsDirectory.length===0) return;
+  const isMeOnline = true;
+  let onlineCount = onlineUserIds.size;
+  if(onlineCount < 1) onlineCount = 1; // At least current user
+
+  const sorted = [...verifiedStudentsDirectory].sort((a,b)=>{
+    const onA = onlineUserIds.has(a.id) || a.id === currentUser.id;
+    const onB = onlineUserIds.has(b.id) || b.id === currentUser.id;
+    if(onA && !onB) return -1;
+    if(!onA && onB) return 1;
+    return (a.name||'').localeCompare(b.name||'');
+  });
+
+  globalOnlineCounter.textContent = `${onlineCount} ONLINE`;
+  globalMembersList.innerHTML = sorted.map(s => {
+    const isOnline = onlineUserIds.has(s.id) || s.id === currentUser.id;
+    const isMe = s.id === currentUser.id;
+    const initials = (s.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+    return `
+      <div class="member-item" onclick="startDmWithStudent('${escapeHtml(s.id)}', '${escapeHtml(s.name)}')" style="cursor:pointer;" title="${isMe ? 'You' : 'Click to send DM'}">
+        <div class="member-avatar-wrap">
+          <div class="avatar-circle" style="width:32px;height:32px;font-size:11px;" data-avatar-name="${escapeHtml(s.name)}">${escapeHtml(initials)}</div>
+          <span class="status-dot ${isOnline?'online':'offline'}"></span>
+        </div>
+        <div class="member-info">
+          <div class="member-name"><span>${escapeHtml(s.name)}</span>${isMe ? '<span style="color:var(--teal); font-size:9.5px; font-family:var(--font-mono); font-weight:700;">(You)</span>' : ''}</div>
+          <div class="member-id">ID ${escapeHtml(s.id)}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+  resolveVisibleAvatars();
+}
+
+window.startDmWithStudent = function(id, name){
+  if(id === currentUser.id) return;
+  hiddenDmIds.delete(id);
+  saveUserAccountMeta();
+  enterApp('dms');
+  selectDmContact({ id, name });
+};
+
+// ── Right Side Panel 2: DM Profile Card ──
+function renderDmProfilePanel(){
+  if(!activeDmContact){
+    dmProfileAvatar.removeAttribute('data-avatar-loaded');
+    dmProfileAvatar.removeAttribute('data-avatar-name');
+    dmProfileInitials.textContent = '?';
+    dmProfileName.textContent = 'No Contact Selected';
+    dmProfileId.textContent = 'Select a conversation';
+    dmProfileStatusPill.className = 'dm-profile-status-pill offline';
+    dmProfileStatusPill.textContent = '● Inactive';
+    dmProfileStatusDot.className = 'status-dot offline';
+    return;
+  }
+
+  const isOnline = onlineUserIds.has(activeDmContact.id);
+  const initials = (activeDmContact.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+
+  dmProfileAvatar.removeAttribute('data-avatar-loaded');
+  dmProfileAvatar.setAttribute('data-avatar-name', activeDmContact.name);
+  dmProfileAvatar.innerHTML = `<span id="dm-profile-initials">${escapeHtml(initials)}</span>`;
+  
+  dmProfileName.textContent = activeDmContact.name;
+  dmProfileId.textContent = `Student ID ${activeDmContact.id}`;
+  
+  if(isOnline){
+    dmProfileStatusPill.className = 'dm-profile-status-pill online';
+    dmProfileStatusPill.textContent = '● Online Now';
+    dmProfileStatusDot.className = 'status-dot online';
+  } else {
+    dmProfileStatusPill.className = 'dm-profile-status-pill offline';
+    dmProfileStatusPill.textContent = '● Offline';
+    dmProfileStatusDot.className = 'status-dot offline';
+  }
+  resolveVisibleAvatars();
+}
+
+window.mentionContactInChat = function(){
+  if(!activeDmContact) return;
+  chatInput.value = `@${activeDmContact.name} ` + chatInput.value;
+  chatInput.focus();
+};
+
+window.copyContactId = function(){
+  if(!activeDmContact) return;
+  navigator.clipboard.writeText(activeDmContact.id).then(()=>{
+    alert(`Copied Student ID ${activeDmContact.id} to clipboard!`);
+  }).catch(()=>{
+    prompt('Student ID:', activeDmContact.id);
+  });
+};
+
+// ── Servers (Groups) Management & Sorting ──
 async function loadUserGroups(){
   if(!sbClient || !currentUser.id) return;
   try{
@@ -1512,10 +1833,10 @@ async function loadUserGroups(){
       if(activeGroup){
         const refreshed = userGroups.find(g=>g.id===activeGroup.id);
         if(refreshed) activeGroup = refreshed;
-        renderGroupMembersList();
+        renderServerMembersList();
       }
     }
-  }catch(e){ console.warn('Group load note:', e); }
+  }catch(e){ console.warn('Server load note:', e); }
 }
 
 function syncGroupPreviews(){
@@ -1530,8 +1851,23 @@ function syncGroupPreviews(){
       g.lastTime = null;
     }
   });
+}
 
-  userGroups.sort((a,b)=>{
+function getSortedServerList(){
+  const visible = userGroups.filter(g=>!hiddenGroupIds.has(g.id));
+  if(customServerOrder.length > 0){
+    return visible.sort((a,b)=>{
+      const idxA = customServerOrder.indexOf(a.id);
+      const idxB = customServerOrder.indexOf(b.id);
+      if(idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if(idxA !== -1) return -1;
+      if(idxB !== -1) return 1;
+      const timeA = a.lastTime ? new Date(a.lastTime).getTime() : 0;
+      const timeB = b.lastTime ? new Date(b.lastTime).getTime() : 0;
+      return timeB - timeA;
+    });
+  }
+  return visible.sort((a,b)=>{
     const timeA = a.lastTime ? new Date(a.lastTime).getTime() : 0;
     const timeB = b.lastTime ? new Date(b.lastTime).getTime() : 0;
     return timeB - timeA;
@@ -1539,19 +1875,19 @@ function syncGroupPreviews(){
 }
 
 function renderGroupChatsList(){
-  const visible = userGroups.filter(g=>!hiddenGroupIds.has(g.id));
+  const visible = getSortedServerList();
   if(visible.length===0){
-    groupChatsList.innerHTML = `<div class="dm-list-empty">no active group chats.<br>tap "New Group" to create!</div>`;
+    serverChatsList.innerHTML = `<div class="dm-list-empty">no active servers.<br>tap "Create" to build one!</div>`;
     return;
   }
-  groupChatsList.innerHTML = visible.map(g=>{
+  serverChatsList.innerHTML = visible.map(g=>{
     const isActive = activeGroup && activeGroup.id===g.id;
     const unreadCount = unreadGroupsMap[g.id] || 0;
     const hasUnread = unreadCount > 0;
     const timeStr = g.lastTime ? formatAEST(g.lastTime).replace('Today, ','') : '';
     const memCount = g.members ? g.members.length : 0;
     return `
-      <div class="dm-item ${isActive?'active':''} ${hasUnread?'has-unread':''}" data-group-id="${escapeHtml(g.id)}" data-action="select-group">
+      <div class="dm-item ${isActive?'active server-active':''} ${hasUnread?'has-unread':''}" data-group-id="${escapeHtml(g.id)}" data-action="select-group">
         <div class="dm-item-avatar-wrap">
           <div class="avatar-circle" style="width:36px;height:36px;font-size:13px;background:var(--purple-dim);color:var(--purple);border-color:rgba(168,85,247,.35);">#</div>
           <span class="unread-indicator-dot" style="background:var(--purple);"></span>
@@ -1563,15 +1899,46 @@ function renderGroupChatsList(){
           </div>
           <div class="dm-item-last">${escapeHtml(g.lastMessage || `${memCount} members`)}</div>
         </div>
-        <button class="btn-dm-close" data-group-id="${escapeHtml(g.id)}" data-action="close-group" title="Leave/Close group">✕</button>
+        <div class="dm-item-controls">
+          <button class="btn-reorder" onclick="moveServerUp('${escapeHtml(g.id)}', event)" title="Move up">▲</button>
+          <button class="btn-reorder" onclick="moveServerDown('${escapeHtml(g.id)}', event)" title="Move down">▼</button>
+          <button class="btn-dm-close" onclick="closeGroup('${escapeHtml(g.id)}', event)" title="Close server">✕</button>
+        </div>
       </div>
     `;
   }).join('');
 }
 
-groupChatsList.addEventListener('click', (e)=>{
-  const closeBtn = e.target.closest('[data-action="close-group"]');
-  if(closeBtn){ e.stopPropagation(); closeGroup(closeBtn.getAttribute('data-group-id')); return; }
+window.moveServerUp = function(id, e){
+  if(e) e.stopPropagation();
+  let list = getSortedServerList().map(g=>g.id);
+  const idx = list.indexOf(id);
+  if(idx > 0){
+    const temp = list[idx];
+    list[idx] = list[idx-1];
+    list[idx-1] = temp;
+    customServerOrder = list;
+    saveCustomSortOrders();
+    renderGroupChatsList();
+  }
+};
+
+window.moveServerDown = function(id, e){
+  if(e) e.stopPropagation();
+  let list = getSortedServerList().map(g=>g.id);
+  const idx = list.indexOf(id);
+  if(idx !== -1 && idx < list.length - 1){
+    const temp = list[idx];
+    list[idx] = list[idx+1];
+    list[idx+1] = temp;
+    customServerOrder = list;
+    saveCustomSortOrders();
+    renderGroupChatsList();
+  }
+};
+
+serverChatsList.addEventListener('click', (e)=>{
+  if(e.target.closest('.dm-item-controls')) return;
   const item = e.target.closest('[data-action="select-group"]');
   if(item){
     const id = item.getAttribute('data-group-id');
@@ -1580,21 +1947,22 @@ groupChatsList.addEventListener('click', (e)=>{
   }
 });
 
-function closeGroup(groupId){
+window.closeGroup = function(groupId, e){
+  if(e) e.stopPropagation();
   hiddenGroupIds.add(groupId);
   saveUserAccountMeta();
   if(activeGroup && activeGroup.id===groupId){
     activeGroup=null;
-    dmTargetName.textContent = "Select a group chat";
+    dmTargetName.textContent = "Select a server";
     dmTargetId.textContent = "";
     dmTargetAvatar.innerHTML = `<span style="color:var(--purple);font-size:15px;font-weight:700;">#</span>`;
-    groupMembersHeader.textContent = "MEMBERS (0)";
-    groupMembersList.innerHTML = `<div class="dm-list-empty">No group selected</div>`;
+    serverMembersHeaderTitle.textContent = "MEMBERS (0)";
+    serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
   }
   updatePurgeButtonVisibility();
   renderGroupChatsList();
   renderMessages();
-}
+};
 
 function selectGroup(group){
   activeGroup = group;
@@ -1614,70 +1982,78 @@ function selectGroup(group){
 
   updatePurgeButtonVisibility();
   renderGroupChatsList();
-  renderGroupMembersList();
+  renderServerMembersList();
   renderMessages();
   scrollToBottom();
 }
 
-function renderGroupMembersList(){
+function renderServerMembersList(){
   if(!activeGroup || !activeGroup.members){
-    groupMembersHeader.textContent = "MEMBERS (0)";
-    groupMembersList.innerHTML = `<div class="dm-list-empty">No group selected</div>`;
+    serverMembersHeaderTitle.textContent = "MEMBERS (0)";
+    serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
     return;
   }
   let onlineCount = 0;
   const sortedMembers = [...activeGroup.members].sort((a,b)=>{
-    const onA = onlineUserIds.has(a.student_id);
-    const onB = onlineUserIds.has(b.student_id);
+    if(a.student_id === activeGroup.created_by) return -1;
+    if(b.student_id === activeGroup.created_by) return 1;
+    const onA = onlineUserIds.has(a.student_id) || a.student_id === currentUser.id;
+    const onB = onlineUserIds.has(b.student_id) || b.student_id === currentUser.id;
     if(onA && !onB) return -1;
     if(!onA && onB) return 1;
     return (a.student_name||'').localeCompare(b.student_name||'');
   });
 
-  groupMembersList.innerHTML = sortedMembers.map(m => {
-    const isOnline = onlineUserIds.has(m.student_id);
+  serverMembersList.innerHTML = sortedMembers.map(m => {
+    const isOnline = onlineUserIds.has(m.student_id) || m.student_id === currentUser.id;
     if(isOnline) onlineCount++;
+    const isOwner = m.student_id === activeGroup.created_by;
     const isMe = m.student_id === currentUser.id;
     const initials = (m.student_name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
     return `
-      <div class="group-member-item">
-        <div class="group-member-avatar-wrap">
+      <div class="member-item">
+        <div class="member-avatar-wrap">
           <div class="avatar-circle" style="width:32px;height:32px;font-size:11px;" data-avatar-name="${escapeHtml(m.student_name)}">${escapeHtml(initials)}</div>
-          <span class="status-dot ${isOnline?'online':'offline'}" title="${isOnline?'Online (Website open)':'Offline'}"></span>
+          <span class="status-dot ${isOnline?'online':'offline'}" title="${isOnline?'Online':'Offline'}"></span>
         </div>
-        <div class="group-member-info">
-          <div class="group-member-name"><span>${escapeHtml(m.student_name)}</span>${isMe ? '<span style="color:var(--teal); font-size:9.5px; font-family:var(--font-mono); font-weight:700;">(You)</span>' : ''}</div>
-          <div class="group-member-id">ID ${escapeHtml(m.student_id)}</div>
+        <div class="member-info">
+          <div class="member-name">
+            <span>${escapeHtml(m.student_name)}</span>
+            ${isMe ? '<span style="color:var(--teal); font-size:9.5px; font-family:var(--font-mono); font-weight:700;">(You)</span>' : ''}
+            ${isOwner ? '<span class="member-badge-owner">OWNER</span>' : ''}
+          </div>
+          <div class="member-id">ID ${escapeHtml(m.student_id)}</div>
         </div>
       </div>
     `;
   }).join('');
 
-  groupMembersHeader.textContent = `MEMBERS (${onlineCount}/${activeGroup.members.length})`;
+  serverMembersHeaderTitle.textContent = `MEMBERS (${onlineCount}/${activeGroup.members.length})`;
   resolveVisibleAvatars();
 }
 
-// ── Create Group Modal (>= 2 students) ──
-window.openCreateGroupModal = async function(){
-  createGroupModal.classList.add('active');
-  groupNameInput.value = '';
-  groupSearchStudentInput.value = '';
-  selectedGroupStudentIds.clear();
-  renderGroupSelectedChips();
-  updateGroupSelectionCounter();
+// ── Create Server Modal ──
+window.openCreateServerModal = async function(){
+  createServerModal.classList.add('active');
+  serverNameInput.value = '';
+  serverSearchStudentInput.value = '';
+  selectedServerStudentIds.clear();
+  renderServerSelectedChips();
+  updateServerSelectionCounter();
 
   if(verifiedStudentsDirectory.length===0 && sbClient){
     const { data } = await sbClient.from('verified_students').select('id, name').limit(1000);
     if(data) verifiedStudentsDirectory = data;
   }
-  renderGroupStudentSearchResults("");
-  groupSearchStudentInput.focus();
+  renderServerStudentSearchResults("");
+  serverSearchStudentInput.focus();
 };
-window.closeCreateGroupModal = function(){ createGroupModal.classList.remove('active'); };
 
-groupSearchStudentInput.oninput = () => renderGroupStudentSearchResults(groupSearchStudentInput.value.trim());
+window.closeCreateServerModal = function(){ createServerModal.classList.remove('active'); };
 
-function renderGroupStudentSearchResults(query){
+serverSearchStudentInput.oninput = () => renderServerStudentSearchResults(serverSearchStudentInput.value.trim());
+
+function renderServerStudentSearchResults(query){
   const q = query.toLowerCase().replace(/[^a-z0-9]/g,'');
   const filtered = verifiedStudentsDirectory.filter(s=>{
     if(s.id===currentUser.id) return false;
@@ -1687,15 +2063,15 @@ function renderGroupStudentSearchResults(query){
   }).slice(0,30);
 
   if(filtered.length===0){
-    groupSearchResultsList.innerHTML = `<div class="search-empty">No Hub Zero students found</div>`;
+    serverSearchResultsList.innerHTML = `<div class="search-empty">No Hub Zero students found</div>`;
     return;
   }
 
-  groupSearchResultsList.innerHTML = filtered.map(s=>{
-    const isSelected = selectedGroupStudentIds.has(s.id);
+  serverSearchResultsList.innerHTML = filtered.map(s=>{
+    const isSelected = selectedServerStudentIds.has(s.id);
     const initials = (s.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
     return `
-      <div class="search-user-item ${isSelected?'active':''}" data-select-group-student="${escapeHtml(s.id)}" data-student-name="${escapeHtml(s.name)}" style="${isSelected?'border-color:var(--purple); background:var(--purple-dim);':''}">
+      <div class="search-user-item ${isSelected?'active':''}" data-select-server-student="${escapeHtml(s.id)}" data-student-name="${escapeHtml(s.name)}" style="${isSelected?'border-color:var(--purple); background:var(--purple-dim);':''}">
         <div class="avatar-circle" style="width:34px;height:34px;font-size:11px;" data-avatar-name="${escapeHtml(s.name)}">${escapeHtml(initials)}</div>
         <div class="search-user-info">
           <div class="search-user-name">${escapeHtml(s.name)}</div>
@@ -1708,66 +2084,66 @@ function renderGroupStudentSearchResults(query){
   resolveVisibleAvatars();
 }
 
-groupSearchResultsList.addEventListener('click', (e)=>{
-  const item = e.target.closest('[data-select-group-student]');
+serverSearchResultsList.addEventListener('click', (e)=>{
+  const item = e.target.closest('[data-select-server-student]');
   if(!item) return;
-  const id = item.getAttribute('data-select-group-student');
-  if(selectedGroupStudentIds.has(id)){
-    selectedGroupStudentIds.delete(id);
+  const id = item.getAttribute('data-select-server-student');
+  if(selectedServerStudentIds.has(id)){
+    selectedServerStudentIds.delete(id);
   } else {
-    selectedGroupStudentIds.add(id);
+    selectedServerStudentIds.add(id);
   }
-  renderGroupSelectedChips();
-  renderGroupStudentSearchResults(groupSearchStudentInput.value.trim());
-  updateGroupSelectionCounter();
+  renderServerSelectedChips();
+  renderServerStudentSearchResults(serverSearchStudentInput.value.trim());
+  updateServerSelectionCounter();
 });
 
-function renderGroupSelectedChips(){
-  if(selectedGroupStudentIds.size===0){
-    groupSelectedChips.style.display = 'none';
-    groupSelectedChips.innerHTML = '';
+function renderServerSelectedChips(){
+  if(selectedServerStudentIds.size===0){
+    serverSelectedChips.style.display = 'none';
+    serverSelectedChips.innerHTML = '';
     return;
   }
-  groupSelectedChips.style.display = 'flex';
-  const chipsHtml = Array.from(selectedGroupStudentIds).map(id=>{
+  serverSelectedChips.style.display = 'flex';
+  const chipsHtml = Array.from(selectedServerStudentIds).map(id=>{
     const s = verifiedStudentsDirectory.find(x=>x.id===id);
     const name = s ? s.name.split(' ')[0] : id;
     return `
       <span class="student-chip">
         <span>${escapeHtml(name)}</span>
-        <button class="btn-chip-remove" onclick="removeGroupStudent('${escapeHtml(id)}')">✕</button>
+        <button class="btn-chip-remove" onclick="removeServerStudent('${escapeHtml(id)}')">✕</button>
       </span>
     `;
   }).join('');
-  groupSelectedChips.innerHTML = chipsHtml;
+  serverSelectedChips.innerHTML = chipsHtml;
 }
 
-window.removeGroupStudent = function(id){
-  selectedGroupStudentIds.delete(id);
-  renderGroupSelectedChips();
-  renderGroupStudentSearchResults(groupSearchStudentInput.value.trim());
-  updateGroupSelectionCounter();
+window.removeServerStudent = function(id){
+  selectedServerStudentIds.delete(id);
+  renderServerSelectedChips();
+  renderServerStudentSearchResults(serverSearchStudentInput.value.trim());
+  updateServerSelectionCounter();
 };
 
-function updateGroupSelectionCounter(){
-  const count = selectedGroupStudentIds.size;
-  groupSelectionCount.textContent = `Select at least 2 students (${count} selected)`;
-  btnCreateGroupSubmit.disabled = count < 2;
-  groupSelectionCount.style.color = count >= 2 ? 'var(--purple)' : 'var(--text-dim)';
+function updateServerSelectionCounter(){
+  const count = selectedServerStudentIds.size;
+  serverSelectionCount.textContent = `Select at least 2 students (${count} selected)`;
+  btnCreateServerSubmit.disabled = count < 2;
+  serverSelectionCount.style.color = count >= 2 ? 'var(--purple)' : 'var(--text-dim)';
 }
 
-window.submitCreateGroup = async function(){
-  if(selectedGroupStudentIds.size < 2 || !sbClient || !currentUser.id) return;
-  btnCreateGroupSubmit.disabled = true;
+window.submitCreateServer = async function(){
+  if(selectedServerStudentIds.size < 2 || !sbClient || !currentUser.id) return;
+  btnCreateServerSubmit.disabled = true;
 
-  const selectedStudents = Array.from(selectedGroupStudentIds).map(id=>{
+  const selectedStudents = Array.from(selectedServerStudentIds).map(id=>{
     const s = verifiedStudentsDirectory.find(x=>x.id===id);
     return { id, name: s ? s.name : `Student ${id}` };
   });
 
-  let customName = groupNameInput.value.trim();
+  let customName = serverNameInput.value.trim();
   if(!customName){
-    customName = `${selectedStudents.map(s=>s.name.split(' ')[0]).join(', ')} & You`;
+    customName = `${selectedStudents.map(s=>s.name.split(' ')[0]).join(', ')}'s Server`;
   }
 
   try{
@@ -1778,7 +2154,7 @@ window.submitCreateGroup = async function(){
       created_at: new Date().toISOString()
     }).select().single();
 
-    if(grpError || !newGroup){ alert('Failed to create group: ' + (grpError?grpError.message:'')); btnCreateGroupSubmit.disabled=false; return; }
+    if(grpError || !newGroup){ alert('Failed to create server: ' + (grpError?grpError.message:'')); btnCreateServerSubmit.disabled=false; return; }
 
     const memberInserts = [
       { group_id: newGroup.id, student_id: currentUser.id, student_name: currentUser.name },
@@ -1787,12 +2163,181 @@ window.submitCreateGroup = async function(){
 
     await sbClient.from('chat_group_members').insert(memberInserts);
 
-    closeCreateGroupModal();
+    closeCreateServerModal();
     await loadUserGroups();
-    enterApp('groups');
+    enterApp('servers');
     const created = userGroups.find(g=>g.id===newGroup.id);
     if(created) selectGroup(created);
-  }catch(err){ console.error('Create group error:', err); btnCreateGroupSubmit.disabled=false; }
+  }catch(err){ console.error('Create server error:', err); btnCreateServerSubmit.disabled=false; }
+};
+
+// ── Edit Server Modal & Settings ──
+window.openEditServerModal = function(){
+  if(!activeGroup) return;
+  editServerModal.classList.add('active');
+  editServerNameInput.value = activeGroup.name || '';
+  editServerSearchInput.value = '';
+  editServerSelectedStudentIds.clear();
+  renderEditServerSelectedChips();
+  renderEditServerCurrentMembers();
+  renderEditServerSearchResults("");
+};
+
+window.closeEditServerModal = function(){
+  editServerModal.classList.remove('active');
+};
+
+function renderEditServerCurrentMembers(){
+  if(!activeGroup || !activeGroup.members){
+    editServerMemberCount.textContent = '0';
+    editServerCurrentMembersList.innerHTML = '<div style="font-size:12px; color:var(--text-dim);">No members</div>';
+    return;
+  }
+  editServerMemberCount.textContent = activeGroup.members.length;
+  editServerCurrentMembersList.innerHTML = activeGroup.members.map(m => {
+    const isOwner = m.student_id === activeGroup.created_by;
+    const isMe = m.student_id === currentUser.id;
+    return `
+      <div class="server-edit-member-item">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:12.5px; font-weight:600; color:var(--text);">${escapeHtml(m.student_name)}</span>
+          ${isOwner ? '<span class="member-badge-owner">OWNER</span>' : ''}
+          ${isMe ? '<span style="font-size:9.5px; color:var(--teal); font-family:var(--font-mono);">(You)</span>' : ''}
+        </div>
+        ${!isOwner ? `<button class="btn-remove-server-member" onclick="removeServerMember('${escapeHtml(m.student_id)}')">Remove</button>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+editServerSearchInput.oninput = () => renderEditServerSearchResults(editServerSearchInput.value.trim());
+
+function renderEditServerSearchResults(query){
+  const existingIds = new Set((activeGroup?.members || []).map(m=>m.student_id));
+  const q = query.toLowerCase().replace(/[^a-z0-9]/g,'');
+  const filtered = verifiedStudentsDirectory.filter(s=>{
+    if(existingIds.has(s.id)) return false;
+    if(!q) return false;
+    const normName = (s.name||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    return normName.includes(q) || s.id.includes(q);
+  }).slice(0,15);
+
+  if(filtered.length===0){
+    editServerSearchResults.innerHTML = query ? `<div class="search-empty">No students found</div>` : '';
+    return;
+  }
+
+  editServerSearchResults.innerHTML = filtered.map(s=>{
+    const isSelected = editServerSelectedStudentIds.has(s.id);
+    const initials = (s.name||'U').split(' ').map(p=>p[0]).slice(0,2).join('').toUpperCase();
+    return `
+      <div class="search-user-item ${isSelected?'active':''}" data-select-edit-student="${escapeHtml(s.id)}" style="${isSelected?'border-color:var(--purple); background:var(--purple-dim);':''}">
+        <div class="avatar-circle" style="width:30px;height:30px;font-size:10px;" data-avatar-name="${escapeHtml(s.name)}">${escapeHtml(initials)}</div>
+        <div class="search-user-info">
+          <div class="search-user-name">${escapeHtml(s.name)}</div>
+          <div class="search-user-id">ID ${escapeHtml(s.id)}</div>
+        </div>
+        <div style="color:${isSelected?'var(--purple)':'var(--text-dim)'}; font-size:16px;">${isSelected?'✓':'+'}</div>
+      </div>
+    `;
+  }).join('');
+  resolveVisibleAvatars();
+}
+
+editServerSearchResults.addEventListener('click', (e)=>{
+  const item = e.target.closest('[data-select-edit-student]');
+  if(!item) return;
+  const id = item.getAttribute('data-select-edit-student');
+  if(editServerSelectedStudentIds.has(id)){
+    editServerSelectedStudentIds.delete(id);
+  } else {
+    editServerSelectedStudentIds.add(id);
+  }
+  renderEditServerSelectedChips();
+  renderEditServerSearchResults(editServerSearchInput.value.trim());
+});
+
+function renderEditServerSelectedChips(){
+  if(editServerSelectedStudentIds.size===0){
+    editServerSelectedChips.style.display = 'none';
+    editServerSelectedChips.innerHTML = '';
+    return;
+  }
+  editServerSelectedChips.style.display = 'flex';
+  editServerSelectedChips.innerHTML = Array.from(editServerSelectedStudentIds).map(id=>{
+    const s = verifiedStudentsDirectory.find(x=>x.id===id);
+    const name = s ? s.name.split(' ')[0] : id;
+    return `
+      <span class="student-chip">
+        <span>${escapeHtml(name)}</span>
+        <button class="btn-chip-remove" onclick="removeEditServerStudent('${escapeHtml(id)}')">✕</button>
+      </span>
+    `;
+  }).join('');
+}
+
+window.removeEditServerStudent = function(id){
+  editServerSelectedStudentIds.delete(id);
+  renderEditServerSelectedChips();
+  renderEditServerSearchResults(editServerSearchInput.value.trim());
+};
+
+window.removeServerMember = async function(studentId){
+  if(!activeGroup || !sbClient) return;
+  if(studentId === activeGroup.created_by){
+    alert("The server owner cannot be removed.");
+    return;
+  }
+  if(!confirm("Remove this member from the server?")) return;
+  try{
+    await sbClient.from('chat_group_members').delete().eq('group_id', activeGroup.id).eq('student_id', studentId);
+    activeGroup.members = activeGroup.members.filter(m=>m.student_id!==studentId);
+    renderEditServerCurrentMembers();
+    renderServerMembersList();
+  }catch(e){ console.error("Remove member error:", e); }
+};
+
+window.saveServerSettings = async function(){
+  if(!activeGroup || !sbClient) return;
+  const newName = editServerNameInput.value.trim();
+  if(!newName){ alert("Please enter a valid server name."); return; }
+
+  btnSaveServerSubmit.disabled = true;
+  try{
+    // Update name
+    if(newName !== activeGroup.name){
+      await sbClient.from('chat_groups').update({ name: newName }).eq('id', activeGroup.id);
+      activeGroup.name = newName;
+      dmTargetName.textContent = newName;
+    }
+
+    // Insert newly added members
+    if(editServerSelectedStudentIds.size > 0){
+      const newInserts = Array.from(editServerSelectedStudentIds).map(id=>{
+        const s = verifiedStudentsDirectory.find(x=>x.id===id);
+        return { group_id: activeGroup.id, student_id: id, student_name: s ? s.name : `Student ${id}` };
+      });
+      await sbClient.from('chat_group_members').insert(newInserts);
+    }
+
+    closeEditServerModal();
+    await loadUserGroups();
+    const refreshed = userGroups.find(g=>g.id===activeGroup.id);
+    if(refreshed) selectGroup(refreshed);
+  }catch(e){ console.error("Save server settings error:", e); }
+  finally{ btnSaveServerSubmit.disabled = false; }
+};
+
+window.leaveActiveServer = async function(){
+  if(!activeGroup || !sbClient) return;
+  if(!confirm(`Are you sure you want to leave #${activeGroup.name}?`)) return;
+  try{
+    await sbClient.from('chat_group_members').delete().eq('group_id', activeGroup.id).eq('student_id', currentUser.id);
+    closeEditServerModal();
+    activeGroup = null;
+    await loadUserGroups();
+    switchMode('servers');
+  }catch(e){ console.error("Leave server error:", e); }
 };
 
 // ── Admin Master All DMs Inspector ──
@@ -1871,6 +2416,7 @@ window.openSearchModal = async function(){
   }
   renderSearchResults("");
 };
+
 window.closeSearchModal = function(){ searchModal.classList.remove('active'); };
 searchStudentsInput.oninput = () => renderSearchResults(searchStudentsInput.value.trim());
 
@@ -1941,17 +2487,17 @@ function updateUnreadBadges(){
 
   const totalGroupUnread = Object.values(unreadGroupsMap).reduce((a,b)=>a+b,0);
   if(totalGroupUnread>0){
-    groupsUnreadBadge.textContent = totalGroupUnread>99?'99+':totalGroupUnread;
-    groupsUnreadBadge.classList.add('active');
-    homeGroupsBadge.textContent = groupsUnreadBadge.textContent;
-    homeGroupsBadge.classList.add('show');
+    serversUnreadBadge.textContent = totalGroupUnread>99?'99+':totalGroupUnread;
+    serversUnreadBadge.classList.add('active');
+    homeServersBadge.textContent = serversUnreadBadge.textContent;
+    homeServersBadge.classList.add('show');
   } else {
-    groupsUnreadBadge.classList.remove('active');
-    homeGroupsBadge.classList.remove('show');
+    serversUnreadBadge.classList.remove('active');
+    homeServersBadge.classList.remove('show');
   }
 
   if(activeMode==='dms') renderDmContactsList();
-  if(activeMode==='groups') renderGroupChatsList();
+  if(activeMode==='servers') renderGroupChatsList();
 }
 
 // ── Load & Render Messages ──
@@ -1989,7 +2535,7 @@ async function loadMessages(){
         }
       });
 
-      // 3. Recalculate Group Unread
+      // 3. Recalculate Server Unread
       unreadGroupsMap = {};
       groupMessages.forEach(m=>{
         if(m.student_id !== currentUser.id && m.group_id){
@@ -1997,7 +2543,7 @@ async function loadMessages(){
           if(isMember){
             const lastRead = lastReadGroupTimes[m.group_id];
             if(!lastRead || new Date(m.created_at) > new Date(lastRead)){
-              if(activeMode!=='groups' || !activeGroup || activeGroup.id !== m.group_id){
+              if(activeMode!=='servers' || !activeGroup || activeGroup.id !== m.group_id){
                 unreadGroupsMap[m.group_id] = (unreadGroupsMap[m.group_id] || 0) + 1;
               }
             }
@@ -2010,7 +2556,7 @@ async function loadMessages(){
       updateUnreadBadges();
 
       if(activeMode==='dms') renderDmContactsList();
-      if(activeMode==='groups') renderGroupChatsList();
+      if(activeMode==='servers') renderGroupChatsList();
       if(activeMode==='admin-dms') renderAdminDmPairsList();
 
       renderMessages();
@@ -2032,9 +2578,9 @@ function renderMessages(){
       (m.student_id===currentUser.id && m.recipient_id===activeDmContact.id) ||
       (m.student_id===activeDmContact.id && m.recipient_id===currentUser.id)
     );
-  } else if(activeMode==='groups'){
+  } else if(activeMode==='servers'){
     if(!activeGroup){
-      messagesContainer.innerHTML = `<div class="thread-empty">Select a group conversation on the left to begin chatting.</div>`;
+      messagesContainer.innerHTML = `<div class="thread-empty">Select a server on the left to begin chatting.</div>`;
       return;
     }
     activeList = groupMessages.filter(m => m.group_id === activeGroup.id);
@@ -2128,6 +2674,7 @@ window.startReply = function(id){
   cancelEdit();
   chatInput.focus();
 };
+
 window.cancelReply = function(){
   activeReply = null;
   replyDockBar.classList.remove('active');
@@ -2145,6 +2692,7 @@ window.startEdit = function(id){
   btnSend.disabled = false;
   chatInput.focus();
 };
+
 window.cancelEdit = function(){
   activeEditMessage = null;
   editDockBar.classList.remove('active');
@@ -2182,7 +2730,7 @@ async function sendMessage(){
   }
 
   if(activeMode==='dms' && !activeDmContact){ alert("Please select a student from the sidebar or click 'New DM' first."); return; }
-  if(activeMode==='groups' && !activeGroup){ alert("Please select a group chat from the sidebar or click 'New Group' first."); return; }
+  if(activeMode==='servers' && !activeGroup){ alert("Please select a server from the sidebar or click 'Create' first."); return; }
 
   if(!currentUser.isAdmin){
     const now = Date.now();
@@ -2194,8 +2742,8 @@ async function sendMessage(){
   const showAdmin = currentUser.isAdmin && chkAdminTag.checked;
   const targetRecipientId = activeMode==='dms' ? activeDmContact.id : null;
   const targetRecipientName = activeMode==='dms' ? activeDmContact.name : null;
-  const targetGroupId = activeMode==='groups' ? activeGroup.id : null;
-  const targetGroupName = activeMode==='groups' ? activeGroup.name : null;
+  const targetGroupId = activeMode==='servers' ? activeGroup.id : null;
+  const targetGroupName = activeMode==='servers' ? activeGroup.name : null;
 
   const replyObj = activeReply ? {
     reply_to_id: String(activeReply.id),
@@ -2218,7 +2766,7 @@ async function sendMessage(){
     }).select();
     if(error){ alert('Failed to send message: ' + error.message); return; }
     if(activeMode==='dms' && activeDmContact) syncDmContactsFromHistory();
-    if(activeMode==='groups' && activeGroup) syncGroupPreviews();
+    if(activeMode==='servers' && activeGroup) syncGroupPreviews();
     scrollToBottom();
   }catch(err){ console.error('Send error:', err); }
 }
@@ -2234,7 +2782,7 @@ window.deleteMessage = async function(id){
     syncDmContactsFromHistory();
     syncGroupPreviews();
     if(activeMode==='dms') renderDmContactsList();
-    if(activeMode==='groups') renderGroupChatsList();
+    if(activeMode==='servers') renderGroupChatsList();
     if(activeMode==='admin-dms') renderAdminDmPairsList();
     renderMessages();
   }catch(err){ console.error('Delete error:', err); }
@@ -2247,7 +2795,7 @@ function updatePurgeButtonVisibility(){
     if(adminMenuPurgeDm) adminMenuPurgeDm.style.display = 'none';
     return;
   }
-  const hasActiveThread = (activeMode === 'dms' && !!activeDmContact) || (activeMode === 'groups' && !!activeGroup) || (activeMode === 'admin-dms' && !!activeAdminDmPair);
+  const hasActiveThread = (activeMode === 'dms' && !!activeDmContact) || (activeMode === 'servers' && !!activeGroup) || (activeMode === 'admin-dms' && !!activeAdminDmPair);
   if(btnThreadPurge) btnThreadPurge.style.display = hasActiveThread ? 'inline-flex' : 'none';
   if(adminMenuPurgeDm) adminMenuPurgeDm.style.display = hasActiveThread ? 'flex' : 'none';
 }
@@ -2258,9 +2806,11 @@ document.addEventListener('click', (e)=>{
     adminCornerPanel.classList.remove('open');
   }
 });
+
 window.onAdminTagToggle = function(){
   sendingAsAdminFlag.classList.toggle('show', chkAdminTag.checked);
 };
+
 window.purgeGlobalChat = async function(){
   if(!currentUser.isAdmin || !sbClient) return;
   adminCornerPanel.classList.remove('open');
@@ -2289,8 +2839,8 @@ window.purgeActiveDmThread = async function(){
       renderDmContactsList();
       renderMessages();
     }catch(e){ console.error("Purge error:", e); }
-  } else if(activeMode==='groups' && activeGroup){
-    label = `Group Chat #${activeGroup.name}`;
+  } else if(activeMode==='servers' && activeGroup){
+    label = `Server #${activeGroup.name}`;
     if(!confirm(`Purge all messages in ${label}? This cannot be undone.`)) return;
     try{
       await sbClient.from('chat_messages').update({ is_deleted:true }).eq('group_id', activeGroup.id);
@@ -2344,6 +2894,7 @@ function scrollToBottom(){
   isUserScrolledUp = false;
   unreadCountWhileScrolled = 0;
 }
+
 messagesContainer.onscroll = () => {
   const scrollPos = messagesContainer.scrollTop + messagesContainer.clientHeight;
   const threshold = messagesContainer.scrollHeight - 60;
@@ -2389,7 +2940,9 @@ function setupRealtimePresence(){
       .on('presence', { event: 'sync' }, () => {
         const state = presenceChannel.presenceState();
         onlineUserIds = new Set(Object.keys(state));
-        if(activeMode==='groups' && activeGroup) renderGroupMembersList();
+        if(activeMode==='global') renderGlobalMembersList();
+        if(activeMode==='servers' && activeGroup) renderServerMembersList();
+        if(activeMode==='dms' && activeDmContact) renderDmProfilePanel();
       })
       .subscribe(async (status) => {
         if(status === 'SUBSCRIBED'){
@@ -2414,7 +2967,7 @@ function setupRealtime(){
           const isFromMe = newMsg.student_id === currentUser.id;
 
           if(newMsg.group_id){
-            // Group Chat Message
+            // Server Message
             if(!groupMessages.some(m=>m.id===newMsg.id)){
               groupMessages.push(newMsg);
               const isMyGroup = userGroups.some(g=>g.id===newMsg.group_id);
@@ -2423,7 +2976,16 @@ function setupRealtime(){
                 saveUserAccountMeta();
                 playBeep(false);
 
-                if(activeMode!=='groups' || !activeGroup || activeGroup.id!==newMsg.group_id){
+                // Desktop Notification
+                if(document.hidden || activeMode!=='servers' || !activeGroup || activeGroup.id!==newMsg.group_id){
+                  sendDesktopNotification({
+                    title: `${newMsg.student_name || 'Student'} in #${newMsg.group_name || 'Server'}`,
+                    body: newMsg.content,
+                    tag: `hz-server-${newMsg.group_id}`
+                  });
+                }
+
+                if(activeMode!=='servers' || !activeGroup || activeGroup.id!==newMsg.group_id){
                   unreadGroupsMap[newMsg.group_id] = (unreadGroupsMap[newMsg.group_id]||0)+1;
                   updateUnreadBadges();
                 } else {
@@ -2432,13 +2994,13 @@ function setupRealtime(){
               }
               syncGroupPreviews();
               renderMessages();
-              if(activeMode==='groups') renderGroupChatsList();
+              if(activeMode==='servers') renderGroupChatsList();
 
-              if(isUserScrolledUp && activeMode==='groups' && activeGroup && activeGroup.id===newMsg.group_id){
+              if(isUserScrolledUp && activeMode==='servers' && activeGroup && activeGroup.id===newMsg.group_id){
                 unreadCountWhileScrolled++;
                 btnScrollBottom.classList.add('visible');
                 btnScrollBottom.querySelector('span').textContent = unreadCountWhileScrolled === 1 ? '1 new message' : `${unreadCountWhileScrolled} new messages`;
-              } else if(!isUserScrolledUp && activeMode==='groups'){
+              } else if(!isUserScrolledUp && activeMode==='servers'){
                 scrollToBottom();
               }
             }
@@ -2456,6 +3018,15 @@ function setupRealtime(){
                   hiddenDmIds.delete(otherUser.id);
                   saveUserAccountMeta();
                   playBeep(false);
+
+                  // Desktop Notification
+                  if(document.hidden || activeMode!=='dms' || !activeDmContact || activeDmContact.id!==otherUser.id){
+                    sendDesktopNotification({
+                      title: `${newMsg.student_name || 'Student'} (Direct Message)`,
+                      body: newMsg.content,
+                      tag: `hz-dm-${otherUser.id}`
+                    });
+                  }
                   
                   if(activeMode!=='dms' || !activeDmContact || activeDmContact.id!==otherUser.id){
                     unreadDmsMap[otherUser.id] = (unreadDmsMap[otherUser.id]||0)+1;
@@ -2494,6 +3065,16 @@ function setupRealtime(){
               globalMessages.push(newMsg);
               if(!isFromMe){
                 playBeep(false);
+
+                // Desktop Notification on background
+                if(document.hidden || activeMode!=='global'){
+                  sendDesktopNotification({
+                    title: `${newMsg.student_name || 'Student'} in Global Chat`,
+                    body: newMsg.content,
+                    tag: 'hz-global'
+                  });
+                }
+
                 if(activeMode!=='global'){
                   unreadGlobalCount++;
                   updateUnreadBadges();
@@ -2530,7 +3111,7 @@ function setupRealtime(){
         syncDmContactsFromHistory();
         syncGroupPreviews();
         if(activeMode==='dms') renderDmContactsList();
-        if(activeMode==='groups') renderGroupChatsList();
+        if(activeMode==='servers') renderGroupChatsList();
         if(activeMode==='admin-dms') renderAdminDmPairsList();
         renderMessages();
       } else if(payload.eventType==='DELETE'){
@@ -2540,7 +3121,7 @@ function setupRealtime(){
         syncDmContactsFromHistory();
         syncGroupPreviews();
         if(activeMode==='dms') renderDmContactsList();
-        if(activeMode==='groups') renderGroupChatsList();
+        if(activeMode==='servers') renderGroupChatsList();
         if(activeMode==='admin-dms') renderAdminDmPairsList();
         renderMessages();
       }
@@ -2551,6 +3132,7 @@ function setupRealtime(){
 }
 
 window.addEventListener('DOMContentLoaded', async () => {
+  updateHomeActionCard();
   const ok = await resolveUserIdentity();
   if(!ok) return;
   homeScreen.style.display = 'flex';
@@ -2569,8 +3151,6 @@ window.addEventListener('beforeinstallprompt', (e) => {
   
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   if (!isStandalone) {
-    const banner = document.getElementById('pwa-install-banner');
-    if (banner) banner.style.display = 'flex';
     const sideBtn = document.getElementById('btn-sidebar-install');
     if (sideBtn) sideBtn.style.display = 'inline-flex';
   }
@@ -2578,7 +3158,7 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 async function triggerPwaInstall() {
   if (!deferredPrompt) {
-    alert("To install Hub Zero Messages on this device, click the Install / '+' icon in your browser's address bar or menu.");
+    alert("To install Hub Zero Messages on this device, click the Install / '+' icon in your browser's address bar or browser menu.");
     return;
   }
   deferredPrompt.prompt();
@@ -2590,8 +3170,6 @@ async function triggerPwaInstall() {
 }
 
 function hideInstallPrompts() {
-  const banner = document.getElementById('pwa-install-banner');
-  if (banner) banner.style.display = 'none';
   const sideBtn = document.getElementById('btn-sidebar-install');
   if (sideBtn) sideBtn.style.display = 'none';
 }
@@ -2599,6 +3177,7 @@ function hideInstallPrompts() {
 window.addEventListener('appinstalled', () => {
   hideInstallPrompts();
   deferredPrompt = null;
+  updateHomeActionCard();
 });
 
 if ('serviceWorker' in navigator) {
