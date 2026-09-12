@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = 'hz-messages-v1';
+const CACHE_NAME = 'hz-messages-v2';
 const PRECACHE_ASSETS = [
   '/chat/',
   '/chat/index.html',
@@ -11,7 +11,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-        console.warn('[SW] Pre-cache error:', err);
+        console.warn('[SW] Pre-cache warning:', err);
       });
     })
   );
@@ -29,6 +29,11 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
+
+  // Strictly only handle http: and https: protocols (skip chrome-extension://, etc.)
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    return;
+  }
 
   // Skip non-GET requests and external API/WebSocket endpoints
   if (
@@ -50,8 +55,8 @@ self.addEventListener('fetch', (event) => {
         if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
           const responseToCache = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+            cache.put(event.request, responseToCache).catch(() => {});
+          }).catch(() => {});
         }
         return networkResponse;
       })
