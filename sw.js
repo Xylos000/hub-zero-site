@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hz-messages-v16';
+const CACHE_NAME = 'hz-messages-v17';
 const PRECACHE_ASSETS = [
   '/chat/',
   '/chat/index.html',
