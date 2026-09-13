@@ -47,7 +47,7 @@ button{font-family:inherit}
 }
 .home-brand{ display:flex; align-items:center; gap:10px; margin-bottom:28px; }
 .home-brand-mark{ font-family:var(--font-display); font-weight:800; font-size:20px; letter-spacing:-.01em; }
-.home-brand-mark em{ font-style:normal; color:var(--amber); }
+.home-brand-mark em{ font-style:normal; color:var(--teal); }
 .home-title{ font-family:var(--font-display); font-weight:800; font-size:clamp(28px,5vw,44px); text-align:center; line-height:1.15; margin-bottom:10px; letter-spacing:-.01em; }
 .home-title span{ color:var(--teal); }
 .home-subtitle{ color:var(--text-muted); font-size:14.5px; text-align:center; margin-bottom:34px; max-width:440px; }
@@ -163,7 +163,7 @@ button{font-family:inherit}
 .sidebar-brand-title{
   font-family:var(--font-display); font-weight:800; font-size:17px; letter-spacing:-.01em; color:#fff;
 }
-.sidebar-brand-title em{ font-style:normal; color:var(--amber); }
+.sidebar-brand-title em{ font-style:normal; color:var(--teal); }
 .sidebar-brand-chip{
   font-family:var(--font-mono); font-size:10px; font-weight:700; color:var(--text-dim);
   background:var(--surface-raised); border:1px solid var(--border); padding:2px 7px; border-radius:6px; letter-spacing:.05em;
@@ -221,9 +221,9 @@ button{font-family:inherit}
 }
 .btn-sidebar-pill:hover{ background:var(--surface-hover); color:#fff; border-color:var(--border-strong); }
 
-/* ─ Extended Context Panel (320px) ─ */
+/* ─ Context Panel (245px) ─ */
 .context-panel{
-  width:320px; background:var(--surface); border-right:1px solid var(--border);
+  width:245px; background:var(--surface); border-right:1px solid var(--border);
   display:none; flex-direction:column; flex-shrink:0; z-index:15;
 }
 .context-panel.active{ display:flex; }
@@ -648,8 +648,8 @@ button{font-family:inherit}
       <div class="choice-icon-wrap">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
       </div>
-      <div class="choice-title">Servers <span class="choice-badge" id="home-servers-badge">0</span></div>
-      <div class="choice-cta">Open Servers →</div>
+      <div class="choice-title">Private Groups <span class="choice-badge" id="home-servers-badge">0</span></div>
+      <div class="choice-cta">Open Private Groups →</div>
     </button>
   </div>
 </div>
@@ -689,7 +689,7 @@ button{font-family:inherit}
           <div class="sidebar-nav-icon">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
           </div>
-          <span class="sidebar-nav-label">Servers</span>
+          <span class="sidebar-nav-label">Private Groups</span>
           <span class="sidebar-nav-badge" id="servers-unread-count">0</span>
         </button>
       </nav>
@@ -743,10 +743,10 @@ button{font-family:inherit}
     <div class="dm-list" id="dm-contacts-list"></div>
   </aside>
 
-  <!-- Context Panel 2: Servers (275px) -->
+  <!-- Context Panel 2: Private Groups -->
   <aside class="context-panel" id="server-sidebar">
     <div class="context-panel-header">
-      <span class="context-panel-title" id="server-sidebar-title">Servers</span>
+      <span class="context-panel-title" id="server-sidebar-title">Private Groups</span>
       <button class="btn-new-server" id="btn-open-server-modal" onclick="openCreateServerModal()">
         <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
         <span>Create</span>
@@ -799,11 +799,11 @@ button{font-family:inherit}
         <div class="right-panel-list" id="global-members-list"></div>
       </aside>
 
-      <!-- Right Panel 2: Server Members & Settings -->
+      <!-- Right Panel 2: Group Members & Settings -->
       <aside class="right-sidebar-panel" id="server-members-panel">
         <div class="right-panel-header">
           <span id="server-members-header-title">MEMBERS</span>
-          <button class="right-panel-header-btn" onclick="openEditServerModal()" title="Edit Server Details">
+          <button class="right-panel-header-btn" onclick="openEditServerModal()" title="Edit Group Details">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
             <span>Edit</span>
           </button>
@@ -927,17 +927,17 @@ button{font-family:inherit}
   </div>
 </div>
 
-<!-- ══════════ CREATE SERVER MODAL (>= 2 STUDENTS) ══════════ -->
+<!-- ══════════ CREATE PRIVATE GROUP MODAL (>= 2 STUDENTS) ══════════ -->
 <div class="modal-overlay" id="create-server-modal">
   <div class="modal-card" style="max-width:480px;">
     <div class="modal-header">
-      <span class="modal-title">Create Server <span style="color:var(--purple); font-size:12px; font-weight:600;">(Min. 2 People)</span></span>
+      <span class="modal-title">Create Private Group <span style="color:var(--purple); font-size:12px; font-weight:600;">(Min. 2 People)</span></span>
       <button class="btn-modal-close" onclick="closeCreateServerModal()">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
     <div style="display:flex; flex-direction:column; gap:6px;">
-      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Server Name</label>
+      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Group Name</label>
       <input type="text" class="search-input" id="server-name-input" placeholder="e.g. Study Group, Year 10 Hangout…" style="background:var(--bg); border:1px solid var(--border-strong); border-radius:10px; padding:8px 12px;" maxlength="40">
     </div>
     <div class="search-input-wrap">
@@ -950,23 +950,23 @@ button{font-family:inherit}
     </div>
     <div style="display:flex; align-items:center; justify-content:space-between; margin-top:4px; padding-top:10px; border-top:1px solid var(--border);">
       <span class="group-req-counter" id="server-selection-count">Select at least 2 students (0 selected)</span>
-      <button class="btn-create-group-submit" id="btn-create-server-submit" onclick="submitCreateServer()" disabled>Create Server</button>
+      <button class="btn-create-group-submit" id="btn-create-server-submit" onclick="submitCreateServer()" disabled>Create Private Group</button>
     </div>
   </div>
 </div>
 
-<!-- ══════════ EDIT SERVER SETTINGS MODAL ══════════ -->
+<!-- ══════════ EDIT PRIVATE GROUP SETTINGS MODAL ══════════ -->
 <div class="modal-overlay" id="edit-server-modal">
   <div class="modal-card" style="max-width:500px;">
     <div class="modal-header">
-      <span class="modal-title">Server Settings</span>
+      <span class="modal-title">Private Group Settings</span>
       <button class="btn-modal-close" onclick="closeEditServerModal()">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
       </button>
     </div>
     <div style="display:flex; flex-direction:column; gap:6px;">
-      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Server Name</label>
-      <input type="text" class="search-input" id="edit-server-name-input" placeholder="Server name…" style="background:var(--bg); border:1px solid var(--border-strong); border-radius:10px; padding:8px 12px;" maxlength="40">
+      <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Group Name</label>
+      <input type="text" class="search-input" id="edit-server-name-input" placeholder="Group name…" style="background:var(--bg); border:1px solid var(--border-strong); border-radius:10px; padding:8px 12px;" maxlength="40">
     </div>
     
     <div style="display:flex; flex-direction:column; gap:6px; margin-top:4px;">
@@ -978,7 +978,7 @@ button{font-family:inherit}
       <label style="font-size:11.5px; font-family:var(--font-mono); color:var(--text-muted);">Add New Members</label>
       <div class="search-input-wrap">
         <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--text-muted)" stroke-width="2.2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" class="search-input" id="edit-server-search-input" placeholder="Search students to add to server…" autocomplete="off">
+        <input type="text" class="search-input" id="edit-server-search-input" placeholder="Search students to add to group…" autocomplete="off">
       </div>
       <div class="selected-chips-container" id="edit-server-selected-chips" style="display:none;"></div>
       <div class="search-results-list" id="edit-server-search-results" style="max-height:140px;"></div>
@@ -986,7 +986,7 @@ button{font-family:inherit}
 
     <div style="display:flex; align-items:center; justify-content:space-between; margin-top:8px; padding-top:12px; border-top:1px solid var(--border);">
       <button class="btn-sidebar-action" onclick="leaveActiveServer()" style="color:var(--rose); border-color:rgba(229,72,77,.3); background:var(--rose-dim); max-width:130px;">
-        Leave Server
+        Leave Group
       </button>
       <button class="btn-create-group-submit" id="btn-save-server-submit" onclick="saveServerSettings()">Save Changes</button>
     </div>
@@ -1613,15 +1613,15 @@ window.switchMode = function(mode){
       const visible = getSortedServerList();
       if(visible.length>0){ selectGroup(visible[0]); }
       else{
-        dmTargetName.textContent = "Select a server";
+        dmTargetName.textContent = "Select a group";
         dmTargetName.classList.remove('gold-admin');
         dmTargetId.textContent = "";
         dmTargetAvatar.removeAttribute('data-avatar-loaded');
         dmTargetAvatar.removeAttribute('data-avatar-name');
         dmTargetAvatar.innerHTML = `<span style="color:var(--purple);font-size:15px;font-weight:700;">#</span>`;
-        chatInput.placeholder = "Select or create a Server…";
+        chatInput.placeholder = "Select or create a Group…";
         serverMembersHeaderTitle.textContent = "MEMBERS (0)";
-        serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
+        serverMembersList.innerHTML = `<div class="dm-list-empty">No group selected</div>`;
         updatePurgeButtonVisibility();
         renderMessages();
       }
@@ -2017,7 +2017,7 @@ function getSortedServerList(){
 function renderGroupChatsList(){
   const visible = getSortedServerList();
   if(visible.length===0){
-    serverChatsList.innerHTML = `<div class="dm-list-empty">no active servers.<br>tap "Create" to build one!</div>`;
+    serverChatsList.innerHTML = `<div class="dm-list-empty">no active groups.<br>tap "Create" to build one!</div>`;
     return;
   }
   serverChatsList.innerHTML = visible.map(g=>{
@@ -2044,7 +2044,7 @@ function renderGroupChatsList(){
         <div class="dm-item-controls">
           <button class="btn-reorder" onclick="moveServerUp('${escapeHtml(g.id)}', event)" title="Move up">▲</button>
           <button class="btn-reorder" onclick="moveServerDown('${escapeHtml(g.id)}', event)" title="Move down">▼</button>
-          <button class="btn-dm-close" onclick="closeGroup('${escapeHtml(g.id)}', event)" title="Close server">✕</button>
+          <button class="btn-dm-close" onclick="closeGroup('${escapeHtml(g.id)}', event)" title="Close group">✕</button>
         </div>
       </div>
     `;
@@ -2095,12 +2095,12 @@ window.closeGroup = function(groupId, e){
   saveUserAccountMeta();
   if(activeGroup && activeGroup.id===groupId){
     activeGroup=null;
-    dmTargetName.textContent = "Select a server";
+    dmTargetName.textContent = "Select a group";
     dmTargetId.textContent = "";
     dmTargetAvatar.className = 'thread-header-icon avatar-circle';
     dmTargetAvatar.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>`;
     serverMembersHeaderTitle.textContent = "MEMBERS (0)";
-    serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
+    serverMembersList.innerHTML = `<div class="dm-list-empty">No group selected</div>`;
   }
   updatePurgeButtonVisibility();
   renderGroupChatsList();
@@ -2134,7 +2134,7 @@ function selectGroup(group){
 function renderServerMembersList(){
   if(!activeGroup || !activeGroup.members){
     serverMembersHeaderTitle.textContent = "MEMBERS (0)";
-    serverMembersList.innerHTML = `<div class="dm-list-empty">No server selected</div>`;
+    serverMembersList.innerHTML = `<div class="dm-list-empty">No group selected</div>`;
     return;
   }
 
@@ -2298,7 +2298,7 @@ window.submitCreateServer = async function(){
 
   let customName = serverNameInput.value.trim();
   if(!customName){
-    customName = `${selectedStudents.map(s=>s.name.split(' ')[0]).join(', ')}'s Server`;
+    customName = `${selectedStudents.map(s=>s.name.split(' ')[0]).join(', ')}'s Group`;
   }
 
   try{
@@ -2309,7 +2309,7 @@ window.submitCreateServer = async function(){
       created_at: new Date().toISOString()
     }).select().single();
 
-    if(grpError || !newGroup){ alert('Failed to create server: ' + (grpError?grpError.message:'')); btnCreateServerSubmit.disabled=false; return; }
+    if(grpError || !newGroup){ alert('Failed to create group: ' + (grpError?grpError.message:'')); btnCreateServerSubmit.disabled=false; return; }
 
     const memberInserts = [
       { group_id: newGroup.id, student_id: currentUser.id, student_name: currentUser.name },
@@ -2440,10 +2440,10 @@ window.removeEditServerStudent = function(id){
 window.removeServerMember = async function(studentId){
   if(!activeGroup || !sbClient) return;
   if(studentId === activeGroup.created_by){
-    alert("The server owner cannot be removed.");
+    alert("The group owner cannot be removed.");
     return;
   }
-  if(!confirm("Remove this member from the server?")) return;
+  if(!confirm("Remove this member from the group?")) return;
   try{
     await sbClient.from('chat_group_members').delete().eq('group_id', activeGroup.id).eq('student_id', studentId);
     activeGroup.members = activeGroup.members.filter(m=>m.student_id!==studentId);
@@ -2455,7 +2455,7 @@ window.removeServerMember = async function(studentId){
 window.saveServerSettings = async function(){
   if(!activeGroup || !sbClient) return;
   const newName = editServerNameInput.value.trim();
-  if(!newName){ alert("Please enter a valid server name."); return; }
+  if(!newName){ alert("Please enter a valid group name."); return; }
 
   btnSaveServerSubmit.disabled = true;
   try{
@@ -2479,7 +2479,7 @@ window.saveServerSettings = async function(){
     await loadUserGroups();
     const refreshed = userGroups.find(g=>g.id===activeGroup.id);
     if(refreshed) selectGroup(refreshed);
-  }catch(e){ console.error("Save server settings error:", e); }
+  }catch(e){ console.error("Save group settings error:", e); }
   finally{ btnSaveServerSubmit.disabled = false; }
 };
 
@@ -2492,7 +2492,7 @@ window.leaveActiveServer = async function(){
     activeGroup = null;
     await loadUserGroups();
     switchMode('servers');
-  }catch(e){ console.error("Leave server error:", e); }
+  }catch(e){ console.error("Leave group error:", e); }
 };
 
 // ── Admin Master All DMs Inspector ──
@@ -2735,7 +2735,7 @@ function renderMessages(){
     );
   } else if(activeMode==='servers'){
     if(!activeGroup){
-      messagesContainer.innerHTML = `<div class="thread-empty">Select a server on the left to begin chatting.</div>`;
+      messagesContainer.innerHTML = `<div class="thread-empty">Select a group on the left to begin chatting.</div>`;
       return;
     }
     activeList = groupMessages.filter(m => m.group_id === activeGroup.id);
@@ -2995,7 +2995,7 @@ window.purgeActiveDmThread = async function(){
       renderMessages();
     }catch(e){ console.error("Purge error:", e); }
   } else if(activeMode==='servers' && activeGroup){
-    label = `Server #${activeGroup.name}`;
+    label = `Group #${activeGroup.name}`;
     if(!confirm(`Purge all messages in ${label}? This cannot be undone.`)) return;
     try{
       await sbClient.from('chat_messages').update({ is_deleted:true }).eq('group_id', activeGroup.id);
@@ -3134,7 +3134,7 @@ function setupRealtime(){
                 // Desktop Notification
                 if(document.hidden || activeMode!=='servers' || !activeGroup || activeGroup.id!==newMsg.group_id){
                   sendDesktopNotification({
-                    title: `${newMsg.student_name || 'Student'} in #${newMsg.group_name || 'Server'}`,
+                    title: `${newMsg.student_name || 'Student'} in #${newMsg.group_name || 'Group'}`,
                     body: newMsg.content,
                     tag: `hz-server-${newMsg.group_id}`
                   });
