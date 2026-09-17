@@ -1375,10 +1375,17 @@ function formatAEST(dateStr, isSidebar=false){
 }
 
 // ── Dropbox avatar sync ──
+const pendingPhotoRequests = new Map();
+
 async function initDropbox(){
   try{
     const cachedFiles = sessionStorage.getItem('hz_dropbox_files');
-    if(cachedFiles) dropboxFiles = JSON.parse(cachedFiles);
+    if(cachedFiles){
+      try {
+        const parsed = JSON.parse(cachedFiles);
+        if(parsed && Object.keys(parsed).length > 0) dropboxFiles = parsed;
+      } catch(e){}
+    }
     const r = await fetch('https://api.dropboxapi.com/oauth2/token', {
       method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'},
       body:new URLSearchParams({ grant_type:'refresh_token', refresh_token:DROPBOX_CONFIG.refreshToken, client_id:DROPBOX_CONFIG.appKey, client_secret:DROPBOX_CONFIG.appSecret })
@@ -1386,7 +1393,9 @@ async function initDropbox(){
     const d = await r.json();
     if(d.access_token){
       dropboxToken = d.access_token;
-      if(Object.keys(dropboxFiles).length===0) await loadDropboxFiles(dropboxToken);
+      if(Object.keys(dropboxFiles).length === 0){
+        await loadDropboxFiles(dropboxToken);
+      }
       resolveVisibleAvatars();
     }
   }catch(err){ console.warn('Dropbox avatar notice:', err); }
@@ -1403,22 +1412,26 @@ async function loadDropboxFiles(token){
       if(!r.ok) break;
       for(const e of d.entries||[]){
         if(e['.tag']!=='file' || !/\.(jpe?g|png)$/i.test(e.name)) continue;
-        const norm = e.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[^a-z0-9]/g,'');
-        map[norm] = e.path_lower;
+        const norm = e.name.replace(/\.(jpe?g|png)$/i, '').replace(/_/g, ' ').toLowerCase().trim();
+        map[norm] = e.path_display || e.path_lower;
       }
-      hasMore = d.has_more; cursor = d.cursor;
+      hasMore = !!d.has_more; cursor = d.cursor;
     }
-    dropboxFiles = map;
-    sessionStorage.setItem('hz_dropbox_files', JSON.stringify(map));
+    if(Object.keys(map).length > 0){
+      dropboxFiles = map;
+      try { sessionStorage.setItem('hz_dropbox_files', JSON.stringify(map)); } catch(e){}
+      resolveVisibleAvatars();
+    }
   }catch(err){ console.warn('Dropbox file listing notice:', err); }
 }
 
 function findPhotoPath(name){
   if(!name) return null;
-  const norm = name.toLowerCase().replace(/[^a-z0-9]/g,'');
+  const norm = name.replace(/_/g, ' ').toLowerCase().trim();
   if(dropboxFiles[norm]) return dropboxFiles[norm];
-  for(const [k,p] of Object.entries(dropboxFiles)){
-    if(norm.length>5 && (k.includes(norm) || norm.includes(k))) return p;
+  const words = norm.split(/\s+/).filter(Boolean);
+  for(const [k, p] of Object.entries(dropboxFiles)){
+    if(words.length > 0 && words.every(w => k.includes(w))) return p;
   }
   return null;
 }
@@ -1429,39 +1442,100 @@ async function getPhotoUrl(token, path){
   const sKey = `hz_photo_${path}`;
   const cached = sessionStorage.getItem(sKey);
   if(cached){ photoCache[path]=cached; return cached; }
-  try{
-    const lr = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({ path, direct_only:true }) });
-    const ld = await lr.json();
-    let url = ld.links && ld.links.length>0 ? ld.links[0].url : null;
-    if(!url){
-      const cr = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', { method:'POST', headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'}, body:JSON.stringify({ path, settings:{ requested_visibility:'public' } }) });
-      const cd = await cr.json();
-      url = cd.url;
+
+  if(pendingPhotoRequests.has(path)){
+    return pendingPhotoRequests.get(path);
+  }
+
+  const fetchPromise = (async () => {
+    try{
+      let url = null;
+      const lr = await fetch('https://api.dropboxapi.com/2/sharing/list_shared_links', {
+        method:'POST',
+        headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},
+        body:JSON.stringify({ path, direct_only:true })
+      });
+      if(lr.ok){
+        const ld = await lr.json();
+        if(ld.links && ld.links.length > 0){
+          url = ld.links[0].url;
+        }
+      }
+      if(!url){
+        const cr = await fetch('https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings', {
+          method:'POST',
+          headers:{'Authorization':`Bearer ${token}`,'Content-Type':'application/json'},
+          body:JSON.stringify({ path, settings:{ requested_visibility:'public' } })
+        });
+        if(cr.ok){
+          const cd = await cr.json();
+          url = cd.url;
+        }
+      }
+      if(url){
+        url = url.replace('www.dropbox.com', 'dl.dropboxusercontent.com');
+        if(url.includes('?')){
+          url = url.replace(/\?.*$/, '?raw=1');
+        } else {
+          url += '?raw=1';
+        }
+        photoCache[path] = url;
+        try{ sessionStorage.setItem(sKey, url); }catch(e){}
+        return url;
+      }
+    }catch(e){
+      console.warn('Get photo URL error:', e);
+    } finally {
+      pendingPhotoRequests.delete(path);
     }
-    if(url){
-      url = url.replace('www.dropbox.com','dl.dropboxusercontent.com');
-      photoCache[path]=url;
-      try{ sessionStorage.setItem(sKey, url); }catch(e){}
-      return url;
-    }
-  }catch(e){}
-  return null;
+    return null;
+  })();
+
+  pendingPhotoRequests.set(path, fetchPromise);
+  return fetchPromise;
 }
 
 async function resolveVisibleAvatars(){
-  const avatarElements = document.querySelectorAll('[data-avatar-name]:not([data-avatar-loaded="true"])');
-  for(const el of avatarElements){
+  if(!dropboxToken && !sessionStorage.getItem('hz_dropbox_files')){
+    return;
+  }
+  const avatarElements = Array.from(document.querySelectorAll('[data-avatar-name]:not([data-avatar-loaded="true"]):not([data-avatar-loaded="pending"])'));
+  if(avatarElements.length === 0) return;
+
+  avatarElements.forEach(async (el) => {
     const name = el.getAttribute('data-avatar-name');
-    if(!name) continue;
+    if(!name) return;
     const path = findPhotoPath(name);
-    if(path && dropboxToken){
+    if(!path){
+      if(Object.keys(dropboxFiles).length > 0){
+        el.setAttribute('data-avatar-loaded', 'none');
+      }
+      return;
+    }
+    if(!dropboxToken) return;
+
+    el.setAttribute('data-avatar-loaded', 'pending');
+    try{
       const url = await getPhotoUrl(dropboxToken, path);
       if(url){
-        el.innerHTML = `<img src="${url}" alt="${escapeHtml(name)}" onerror="this.remove()">`;
-        el.setAttribute('data-avatar-loaded','true');
+        const img = new Image();
+        img.onload = () => {
+          el.innerHTML = '';
+          el.appendChild(img);
+          el.setAttribute('data-avatar-loaded', 'true');
+        };
+        img.onerror = () => {
+          el.setAttribute('data-avatar-loaded', 'failed');
+        };
+        img.alt = name;
+        img.src = url;
+      } else {
+        el.setAttribute('data-avatar-loaded', 'failed');
       }
+    }catch(err){
+      el.removeAttribute('data-avatar-loaded');
     }
-  }
+  });
 }
 
 // ── Account-Based Cross-Device Sync (chat_user_meta) ──
