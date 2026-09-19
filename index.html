@@ -878,6 +878,77 @@
     color: #64748b;
   }
 
+  /* ─── DISCORD PROMO BOX ─── */
+  .discord-card-box {
+    background: linear-gradient(135deg, rgba(88, 101, 242, 0.08) 0%, rgba(17, 17, 17, 0.95) 100%);
+    border: 1px solid rgba(88, 101, 242, 0.35);
+    border-radius: 14px;
+    padding: 36px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4), 0 0 24px rgba(88, 101, 242, 0.08);
+  }
+  .discord-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #818cf8;
+    background: rgba(88, 101, 242, 0.15);
+    border: 1px solid rgba(88, 101, 242, 0.35);
+    padding: 4px 10px;
+    border-radius: 4px;
+    align-self: flex-start;
+  }
+  .discord-box-title {
+    font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #f8fafc;
+    letter-spacing: -0.01em;
+    line-height: 1.35;
+  }
+  .discord-why-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #a5b4fc;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .discord-feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .discord-feature-list li {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: #cbd5e1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.4;
+  }
+  .discord-feature-list li::before {
+    content: '→';
+    color: #818cf8;
+    font-weight: 700;
+  }
+  .discord-box-actions {
+    margin-top: 6px;
+    display: flex;
+  }
+
   /* ─── ALLOW PASTING TROUBLESHOOTING BOX ─── */
   .allow-pasting-box {
     background: var(--surface);
@@ -1216,9 +1287,8 @@
       <span class="line"><span id="line2">Zero<em>.</em></span></span>
     </h1>
 
-    <div class="hero-sub" id="hero-sub" style="font-family: 'JetBrains Mono', monospace; font-size: 14.5px; line-height: 1.9; color: #cbd5e1;">
-      <div><span style="color: var(--accent); font-weight: 700; margin-right: 6px;">-</span> Realm (Student Searcher)</div>
-      <div><span style="color: var(--accent); font-weight: 700; margin-right: 6px;">-</span> Education Perfect</div>
+    <div class="hero-sub" id="hero-sub" style="font-family: 'JetBrains Mono', monospace; font-size: 13.5px; line-height: 1.8; color: #cbd5e1; max-width: 620px;">
+      A secret, high quaility and very useful service provider for SPC Students. Made by professionals. ACCESS LIMITED TO SPC STUDENTS
     </div>
 
     <!-- Non-logged in actions -->
@@ -1271,23 +1341,23 @@
         <div class="about-card reveal d1" id="card-realm">
           <h3>Student Searcher</h3>
           <ul class="feature-list">
-            <li>Search students by name or year level</li>
-            <li>Instant homepage impersonation</li>
-            <li>Direct email shortcut</li>
-            <li>Browse entire school directory</li>
-            <li>Regular updates &amp; new tools</li>
+            <li>Sort by name</li>
+            <li>Sort by year level</li>
+            <li>Sort by House</li>
+            <li>View Student Info</li>
+            <li>Send email, download photo, get realm id</li>
           </ul>
         </div>
 
         <!-- Card 2 -->
         <div class="about-card reveal d2" id="card-ep">
-          <h3>EP Script Hub</h3>
+          <h3>EP Hub</h3>
           <ul class="feature-list">
-            <li>Auto-complete any task</li>
-            <li>100% correct answers</li>
-            <li>Custom cheer credits &amp; gifting</li>
-            <li>Instant cheer sender</li>
-            <li>Auto-skip information slides</li>
+            <li>Instant task completion</li>
+            <li>Add or Set cheer credits</li>
+            <li>Cheer anyone by search</li>
+            <li>Toggle &quot;Always correct&quot;</li>
+            <li>+ More</li>
           </ul>
         </div>
       </div>
@@ -1374,6 +1444,35 @@
 
       <div class="code-meta-hint">
         <span>Tip: To open console on Realm or EP run <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>J</kbd></span>
+      </div>
+    </div>
+
+    <!-- Discord Community Box -->
+    <div class="discord-card-box" id="discord-community">
+      <div class="discord-badge">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
+        <span>Discord Community</span>
+      </div>
+      <h3 class="discord-box-title">Join the discord community of other SPC students (Hub Zero users)</h3>
+      
+      <div>
+        <p class="discord-why-label">Why you should join?</p>
+        <ul class="discord-feature-list">
+          <li>Updates on the scripts</li>
+          <li>Help and support</li>
+          <li>Updates if the script or website is blocked</li>
+        </ul>
+      </div>
+
+      <div class="discord-box-actions">
+        <a class="btn btn-discord" href="https://dsc.gg/hubzero" target="_blank" rel="noopener noreferrer" style="font-size: 12px; padding: 12px 24px;">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.929 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.893.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+          </svg>
+          Join Discord (dsc.gg/hubzero)
+        </a>
       </div>
     </div>
 
